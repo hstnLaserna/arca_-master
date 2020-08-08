@@ -4,32 +4,43 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Arca Medicina - <?php echo $login_session; ?></title>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <link href="../css/style3.css" rel="stylesheet" type="text/css">
-    <!------ Include the above in your HEAD tag ---------->
+    <title>OSCA - <?php echo $first_name; ?></title>
+    <link rel="icon" href="../resources/images/OSCA_square.png">
 
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    
+    <link href="../css/style2.css" rel="stylesheet" type="text/css">
+    <link href="../css/osca.css" rel="stylesheet" type="text/css">
+
   </head>
   <body class="home">
       <div class="container-fluid display-table">
           <div class="row display-table-row">
-              <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
+              <div class="col-sm-1 col-md-2 hidden-xs display-table-cell v-align box" id="navigation">
                   <div class="logo">
-                      <a hef="home.html"><img src="../resources/images/Arca_Medicina_2.png" alt="merkery_logo" class="hidden-xs hidden-sm">
-                          <img src="http://jskrishna.com/work/merkury/images/circle-logo.png" alt="merkery_logo" class="visible-xs visible-sm circle-logo">
+                      <a hef="home.php">
+                          <img src="../resources/images/OSCA_full.png" alt="1" class="d-none d-lg-block">
+                          <img src="../resources/images/OSCA_square.png" alt="2" class="d-lg-none">
                       </a>
                   </div>
                   <div class="navi">
                       <ul>
-                          <li class="active"><a href="#"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a></li>
-                          <li><a href="#"><i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Schedules</span></a></li>
-                          <li><a href="#"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Statistics</span></a></li>
-                          <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Calender</span></a></li>
-                          <li><a href="#"><i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-xs hidden-sm">History</span></a></li>
-                          <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Setting</span></a></li>
+                          <li class="active"><a href="?page=home"><i class="fa fa-home" aria-hidden="true"></i><span class="d-none d-lg-block">Home</span></a></li>
+                          <li><a href="?page=schedules"><i class="fa fa-tasks" aria-hidden="true"></i><span class="d-none d-lg-block">Schedules</span></a></li>
+                          <li><a href="?page=members"><i class="fa fa-user" aria-hidden="true"></i><span class="d-none d-lg-block">Members</span></a></li>
+                          <?php if($position == "admin")
+                          {?>
+                            <li><a href="?page=management"><i class="fa fa-calendar" aria-hidden="true"></i><span class="d-none d-lg-block">Management</span></a></li>
+                            <?php
+                          } else {}
+
+                          ?>
+
                       </ul>
                   </div>
               </div>
@@ -48,11 +59,8 @@
                                       </button>
                                   </div>
                               </nav>
-                              <div class="search hidden-xs hidden-sm">
-                                  <input type="text" placeholder="Search" id="search">
-                              </div>
                           </div>
-                          <div class="col-md-5">
+                          <div class="col-md-12">
                               <div class="header-rightside">
                                   <ul class="list-inline header-top pull-right">
                                       <li class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Add Project</a></li>
@@ -64,18 +72,15 @@
                                           </a>
                                       </li>
                                       <li class="dropdown">
-                                          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="../resources/images/Icon.png" alt="user">
-                                              <b class="caret"></b></a>
+                                          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="../resources/avatars/<?php echo $user_avatar ?>" alt="<?php echo $user_name ?> avatar"></a>
                                           <ul class="dropdown-menu">
                                               <li>
                                                   <div class="navbar-content">
-                                                      <span>JS Krishna</span>
-                                                      <p class="text-muted small">
-                                                          me@jskrishna.com
-                                                      </p>
+                                                      <span><?php echo $first_name . " " . $last_name; ?></span>
                                                       <div class="divider">
                                                       </div>
                                                       <a href="#" class="view btn-sm active">View Profile</a>
+                                                      <a href="../backend/logout.php" class="view btn-sm active">Log Out</a>
                                                   </div>
                                               </li>
                                           </ul>
@@ -86,76 +91,33 @@
                       </header>
                   </div>
                   <div class="user-dashboard">
-                      <h1>Hello, JS</h1>
-                      <div class="row">
-                          <div class="col-md-5 col-sm-5 col-xs-12 gutter">
-
-                              <div class="sales">
-                                  <h2>Your Sale</h2>
-
-                                  <div class="btn-group">
-                                      <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <span>Period:</span> Last Year
-                                      </button>
-                                      <div class="dropdown-menu">
-                                          <a href="#">2012</a>
-                                          <a href="#">2014</a>
-                                          <a href="#">2015</a>
-                                          <a href="#">2016</a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="col-md-7 col-sm-7 col-xs-12 gutter">
-
-                              <div class="sales report">
-                                  <h2>Report</h2>
-                                  <div class="btn-group">
-                                      <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <span>Period:</span> Last Year
-                                      </button>
-                                      <div class="dropdown-menu">
-                                          <a href="#">2012</a>
-                                          <a href="#">2014</a>
-                                          <a href="#">2015</a>
-                                          <a href="#">2016</a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+                    <?php
+                      if (!isset($_GET['page'])) {
+                          include "home.php";
+                      } else {
+                      switch ($_GET['page']) {
+                          case "home":
+                               include "home.php";
+                          break;
+                          case "schedules":
+                               include "schedules.php";
+                          break;
+                          case "members":
+                               include "members.php";
+                          break;
+                          case "management":
+                               include "management.php";
+                          break;
+                          default:
+                               include "home.php";
+                          };
+                      }
+                    ?>
                   </div>
               </div>
           </div>
 
       </div>
-
-
-
-      <!-- Modal -->
-      <div id="add_project" class="modal fade" role="dialog">
-          <div class="modal-dialog">
-
-              <!-- Modal content-->
-              <div class="modal-content">
-                  <div class="modal-header login-header">
-                      <button type="button" class="close" data-dismiss="modal">×</button>
-                      <h4 class="modal-title">Add Project</h4>
-                  </div>
-                  <div class="modal-body">
-                              <input type="text" placeholder="Project Title" name="name">
-                              <input type="text" placeholder="Post of Post" name="mail">
-                              <input type="text" placeholder="Author" name="passsword">
-                              <textarea placeholder="Desicrption"></textarea>
-                      </div>
-                  <div class="modal-footer">
-                      <button type="button" class="cancel" data-dismiss="modal">Close</button>
-                      <button type="button" class="add-project" data-dismiss="modal">Save</button>
-                  </div>
-              </div>
-
-          </div>
-      </div>
-
   </body>
-</head>
+
+</html>

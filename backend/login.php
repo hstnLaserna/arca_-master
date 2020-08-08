@@ -1,23 +1,18 @@
 <?php
 include('backend/conn.php');
   session_start(); // Starting Session
-  $error=''; // Variable To Store Error Message
+  $error='';
   if (isset($_POST['submit'])) {
     if (empty($_POST['username']) || empty($_POST['password'])) {
     $error = "Username or Password must not be blank";
     }
     else
     {
-      // Establishing Connection with Server by passing server_name, user_id and password as a parameter
       $mysqli = new mysqli($host,$user,$pass,$schema) or die($mysqli->error);
 
-
-      // To protect MySQL injection for Security purpose
       $username = strtolower($mysqli->escape_string($_POST['username']));
       $password = $mysqli->escape_string($_POST['password']);
 
-
-      // Selecting Database
       $db = mysqli_connect($host,$user,$pass,$schema);
 
       $query1 = "SELECT * FROM `admin` WHERE `user_name`='$username'";
@@ -34,7 +29,13 @@ include('backend/conn.php');
         if($rows2 == 1) {
           if($rows3 == 1) {
             $_SESSION['login_user'] = $username; // Initializing Session
-            header("location: ../frontend/gpio.php"); // Redirecting To Other Page
+            //$row = mysqli_fetch_array($result3);
+            //$_SESSION['username'] = $row['username'];
+            //$_SESSION['first_name'] = $row['first_name'];
+            //$_SESSION['middle_name'] = $row['middle_name'];
+            //$_SESSION['last_name'] = $row['last_name'];
+            //$_SESSION['sex'] = $row['sex'];
+            header("location: ../frontend/dashboard.php"); // Redirecting To Other Page
           }
           else {
             $error = "User is deactivated";

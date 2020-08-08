@@ -1,0 +1,47 @@
+img.avatar{
+  height: 80px;
+  width: 80px;
+}
+
+img.table_icon{
+  height:30px;
+  width:30px;
+}
+img.member_picture{
+  height: 80px;
+  width: 80px;
+}
+
+.textboxhighlight {
+    background-color: red;
+}
+
+.input_error {
+  outline: 1px solid red;
+}
+
+.edit_button {
+  opacity: 0;
+}
+
+table.users, tr:hover .edit_button {
+  opacity: 1;
+}
+
+table.users, tr, td{
+  vertical-align: middle !important;
+}
+
+td.active{
+  background-image: url("../resources/images/check.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 45%;
+}
+
+td.inactive{
+  background-image: url("../resources/images/cross.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 45%;
+}

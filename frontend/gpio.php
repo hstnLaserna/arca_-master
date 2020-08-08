@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Arca Medicina - <?php echo $login_session; ?></title>
+    <title>Arca Medicina - <?php echo $user_name; ?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 
@@ -15,7 +15,7 @@
   <body class="control-1">
     <div class="container-fluid">
       <div class="header">
-        <b id="welcome">Welcome <i><?php echo $login_session; ?></i>! :)</b>
+        <b id="welcome">Welcome <i><?php echo $user_name; ?></i>! :)</b>
         <b id="logout"><a href="../backend/logout.php">Log Out</a></b>
       </div>
 
