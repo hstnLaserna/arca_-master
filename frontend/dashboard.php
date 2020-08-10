@@ -38,9 +38,7 @@
                             <li><a href="?page=management"><i class="fa fa-calendar" aria-hidden="true"></i><span class="d-none d-lg-block">Management</span></a></li>
                             <?php
                           } else {}
-
                           ?>
-
                       </ul>
                   </div>
               </div>
@@ -63,7 +61,7 @@
                           <div class="col-md-12">
                               <div class="header-rightside">
                                   <ul class="list-inline header-top pull-right">
-                                      <li class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Add Project</a></li>
+                                      <li class="hidden-xs"><a href="#" class="add-project">Add Project</a></li>
                                       <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
                                       <li>
                                           <a href="#" class="icon-info">
@@ -79,7 +77,7 @@
                                                       <span><?php echo $first_name . " " . $last_name; ?></span>
                                                       <div class="divider">
                                                       </div>
-                                                      <a href="#" class="view btn-sm active">View Profile</a>
+                                                      <a href="?page=profile" class="view btn-sm active">View Profile</a>
                                                       <a href="../backend/logout.php" class="view btn-sm active">Log Out</a>
                                                   </div>
                                               </li>
@@ -107,6 +105,9 @@
                           break;
                           case "management":
                                include "management.php";
+                          break;
+                          case "profile":
+                               include "user_profile.php";
                           break;
                           default:
                                include "home.php";

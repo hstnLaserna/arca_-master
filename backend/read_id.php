@@ -1,9 +1,6 @@
 <?php
   include('../backend/conn.php');
-
   $db = mysqli_connect($host,$user,$pass,$schema);
-
-  $input_nfc = $_GET['input_nfc'];
 
   if(!isset($_GET['input_id'])) {
       $input_nfc = $_GET['input_nfc'];
@@ -11,7 +8,7 @@
       $query = "SELECT `id`,	`osca_id`,	`nfc_serial`,	`password`,	`first_name`,	`middle_name`,	`last_name`,	`birth_date`,	`sex`,	`contact_number`,	 $dateformat `memship_date`,	`picture` FROM `member` WHERE `nfc_serial` = '$input_nfc'";
       $result = $mysqli->query($query);
       $row_count = mysqli_num_rows($result);
-      if($row_count == 0) { echo "ID Does not exist $query";} else
+      if($row_count == 0) { echo "ID Does not exist";} else
       {
         if($row_count > 1) { echo "ID returns more than 1 record";} else{}
           ?>
@@ -53,6 +50,6 @@
       }
       mysqli_close($mysqli);// Closing Connection
   } else {
-      echo "invalid id";
+      echo "Invalid id";
   }
 ?>

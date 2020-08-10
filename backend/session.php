@@ -13,6 +13,7 @@
   // SQL Query To Fetch Complete Information Of User
   $ses_sql = $mysqli->query("SELECT * FROM `admin` WHERE `user_name`='$user_check'");
   $row = mysqli_fetch_assoc($ses_sql);
+  $logged_user_id = $row['id'];
   $user_name = $row['user_name'];
   $first_name = ucfirst($row['first_name']);
   $middle_name = ucfirst($row['middle_name']);

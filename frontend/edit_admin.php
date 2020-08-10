@@ -32,112 +32,92 @@
           ?>
             <div class="modal-body">
               <form method="post" enctype="multipart/form-data" autocomplete="off" id="editUser">
-              <table class="table align-middle">
-                <tr>
-                  <td class="align-middle">
-                    Username
-                  </td>
-                  <td class="align-middle">
-                    <input type="text" class="form-control " name="edit_user_name" placeholder="<?php echo $user_name?>" value="<?php echo $user_name?>">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Password
-                  </td>
-                  <td class="align-middle">
-                    <input type="password" class="form-control " name="edit_password">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Firstname
-                  </td>
-                  <td class="align-middle">
-                    <input type="text" class="form-control " name="edit_first_name" placeholder="<?php echo $first_name?>" value="<?php echo $first_name?>">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Middlename
-                  </td>
-                  <td class="align-middle">
-                    <input type="text" class="form-control " name="edit_middle_name"placeholder="<?php echo $middle_name?>" value="<?php echo $middle_name?>">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Lastname
-                  </td>
-                  <td class="align-middle">
-                    <input type="text" class="form-control " name="edit_last_name" placeholder="<?php echo $last_name?>" value="<?php echo $last_name?>">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Birthdate
-                  </td>
-                  <td class="align-middle">
-                    <input type="date" class="form-control" name="edit_birthdate" value="<?php echo $birthdate?>">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Gender
-                  </td>
-                  <td class="align-middle">
-                    <div class="form-group">
-                      <select class="form-control" name="edit_gender">
-                        <option <?php if($sex2 == 'f'){echo "selected";}else{};?>>Female</option>
-                        <option <?php if($sex2 == 'm'){echo "selected";}else{};?>>Male</option>
-                      </select>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Position
-                  </td>
-                  <td class="align-middle">
-                    <div class="form-group">
-                      <select class="form-control" name="edit_position">
-                        <option <?php if($position == 'admin'){echo "selected";}else{echo "$position";};?>>Admin</option>
-                        <option <?php if($position == 'user'){echo "selected";}else{};?>>User</option>
-                      </select>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Security Answer 1
-                  </td>
-                  <td class="align-middle">
-                    <input type="text" class="form-control" name="edit_security_answer_1"  placeholder="<?php echo $answer1?>" value="<?php echo $answer1?>">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">
-                    Security Answer 2
-                  </td>
-                  <td class="align-middle">
-                    <input type="text" class="form-control" name="edit_security_answer_2"  placeholder="<?php echo $answer2?>" value="<?php echo $answer2?>">
-                  </td>
-                </tr>
-                <!--
-                <tr>
-                  <td class="align-middle">
-                    Picture
-                  </td>
-                  <td class="align-middle">
-                    <input type="file" name="photo" id="fileSelect" >
-                  </td>
-                </tr>
-                -->
+                <table class="table modal-form">
+                  <tr>
+                    <td colspan="2">
+                      Username
+                      <input type="text" class="form-control " name="user_name" placeholder="<?php echo $user_name?>" value="<?php echo $user_name?>">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Password <small> <i> (leave blank to keep old password) </i> </small>
+                      <input type="password" class="form-control " name="password">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Firstname
+                      <input type="text" class="form-control " name="first_name" placeholder="<?php echo $first_name?>" value="<?php echo $first_name?>">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Middlename
+                      <input type="text" class="form-control " name="middle_name" id="midname" placeholder="<?php echo $middle_name?>" value="<?php echo $middle_name?>">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Lastname
+                      <input type="text" class="form-control " name="last_name" placeholder="<?php echo $last_name?>" value="<?php echo $last_name?>">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Birthdate
+                      <input type="date" class="form-control" name="birthdate" value="<?php echo $birthdate?>">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Gender
+                      <div class="form-group">
+                        <select class="form-control" name="gender">
+                          <option <?php if($sex2 == 'f'){echo "selected";}else{};?>>Female</option>
+                          <option <?php if($sex2 == 'm'){echo "selected";}else{};?>>Male</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td>
+                      Position
+                      <div class="form-group">
+                        <select class="form-control" name="position">
+                          <option <?php if($position == 'admin'){echo "selected";}else{echo "$position";};?>>Admin</option>
+                          <option <?php if($position == 'user'){echo "selected";}else{};?>>User</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Security Answer 1
+                      <input type="text" class="form-control" name="security_answer_1"  placeholder="<?php echo $answer1?>" value="<?php echo $answer1?>">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Security Answer 2
+                      <input type="text" class="form-control" name="security_answer_2"  placeholder="<?php echo $answer2?>" value="<?php echo $answer2?>">
+                    </td>
+                  </tr>
+                  <!--
+                  <tr>
+                    <td colspan="2">
+                      Picture
+                    </td>
+                    <td colspan="2">
+                      <input type="file" name="photo" id="fileSelect" >
+                    </td>
+                  </tr>
+                  -->
 
-              </table>
+                </table>
+                <input type="hidden" name="selected_id" value="<?php echo $admin_id;?>">
+              </form>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit" value="Submit">Ipasa</button>
+              <button type="button" class="btn btn-primary btn-lg btn-block" id="commit_edit" value="Submit">Ipasa</button>
               <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Close</button>
             </div>
           <?php
@@ -158,8 +138,8 @@
 <script>
   $(document).ready(function(){
 
-    $('#editUser input').blur(function(){
-      if($(this).val().length === 0 ) {
+    $('input[name!="middle_name"]').blur(function(){
+      if($(this).val().length === 0) {
           $(this).addClass('input_error');
       }
       else{
@@ -167,9 +147,9 @@
       }
     });
 
-    $("#submit").click(function(){
-      $.post("../backend/add_admin.php", $("#newAdmin").serialize(), function(d){
-       alert(d);
+    $("#commit_edit").click(function(){
+      $.post("../backend/update_admin.php", $("#editUser").serialize(), function(d){
+        alert(d);
       });
     });
   });

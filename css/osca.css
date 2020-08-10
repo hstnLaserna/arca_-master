@@ -24,12 +24,14 @@ img.member_picture{
   opacity: 0;
 }
 
-table.users, tr:hover .edit_button {
-  opacity: 1;
+table.modal-form td{
+  vertical-align: middle !important;
 }
 
-table.users, tr, td{
+
+table.users td{
   vertical-align: middle !important;
+  cursor: pointer;
 }
 
 td.active{

@@ -15,8 +15,7 @@
     <th>Firstname</th>
     <th>Lastname</th>
     <th>Position</th>
-    <th>Active</th>
-    <th></th>
+    <th style="text-align: center;">Active</th>
   </tr>
 
 
@@ -25,14 +24,13 @@
 while($row = mysqli_fetch_array($result))
 {
 ?>
-  <tr class="admin-row" id="adminNum_<?php echo $row['id']?>">
-    <td><img src="../resources/<?php if($row['avatar'] == "null"){echo "images/unknown_m_f.png";}else{echo "avatars/".$row['avatar'];}?>" class="avatar rounded" alt="<?php echo $row['user_name'] ?>"></td>
-    <td><?php echo $row['user_name'] ?></td>
-    <td><?php echo $row['first_name'] ?></td>
-    <td><?php echo $row['last_name'] ?></td>
-    <td><?php echo ucfirst($row['position']) ?></td>
+  <tr id="adminNum_<?php echo $row['id']?>">
+    <td class="admin-row"><img src="../resources/<?php if($row['avatar'] == "null"){echo "images/unknown_m_f.png";}else{echo "avatars/".$row['avatar'];}?>" class="avatar rounded" alt="<?php echo $row['user_name'] ?>"></td>
+    <td class="admin-row"><?php echo $row['user_name'] ?></td>
+    <td class="admin-row"><?php echo $row['first_name'] ?></td>
+    <td class="admin-row"><?php echo $row['last_name'] ?></td>
+    <td class="admin-row"><?php echo ucfirst($row['position']) ?></td>
     <td class="<?php if($row['is_enabled'] == 1){echo "active";}else{echo "inactive";}?>"></td>
-    <td><button class="edit_button">...</button></td>
   </tr>
 <?php
 
