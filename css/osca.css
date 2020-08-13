@@ -1,16 +1,22 @@
+.modal.fade .modal-dialog {
+  transition: -webkit-transform .1s ease-out  !important;
+  transition: transform .1s ease-out  !important;
+  transition: transform .1s ease-out, -webkit-transform .1s ease-out  !important;
+}
+
+small.text-muted{
+  font-style: italic;
+}
 img.avatar{
   height: 80px;
   width: 80px;
+  cursor: pointer;
+  opacity: 1;
+}
+img.avatar:hover {
+  opacity: 0.75;
 }
 
-img.table_icon{
-  height:30px;
-  width:30px;
-}
-img.member_picture{
-  height: 80px;
-  width: 80px;
-}
 
 .textboxhighlight {
     background-color: red;
@@ -31,7 +37,11 @@ table.modal-form td{
 
 table.users td{
   vertical-align: middle !important;
-  cursor: pointer;
+}
+
+img.table_icon{
+  height:30px;
+  width:30px;
 }
 
 td.active{
@@ -46,4 +56,17 @@ td.inactive{
   background-repeat: no-repeat;
   background-position: center;
   background-size: 45%;
+}
+
+.user-card > img{
+  max-width: 150px !important;
+}
+
+button.edit {
+  padding: 0px !important;
+}
+
+.modal-edit-address
+{
+  max-width: 800px !important;
 }

@@ -3,24 +3,26 @@
   $db = mysqli_connect($host,$user,$pass,$schema);
   $query = "";
   $selected_id = $_POST['selected_id'];
-  if(isset($_POST['selected_id'])) {
+    if(isset($_POST['selected_id'])) {
         // Check connection
         if($db === false){
             die("ERROR: Could not connect. " . mysqli_connect_error());
             echo "Error: Could not connect to db ". mysqli_connect_error();
         }
         else { }
-        $query = "SELECT `id` FROM `member` WHERE `id` = '$selected_id'";
+        $query = "SELECT `id` FROM `admin` WHERE `id` = '$selected_id'";
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);
-        if($row_count == 0) { echo "ID Does not exist $query";} else
-        {    
-            include('../backend/import_post_variables.php');
-            include('../backend/validate_user_inputs.php');
+        if($row_count == 0) { echo "ID Does not exist $query";} else {
 
-
-            if($array_length == 0)
             {
+                $user_type = "osca";
+                $with_address = false;
+                include('../backend/import_post_variables.php');
+                include('../backend/validate_user_inputs.php');
+            }
+
+            if($array_length == 0) {
                 $query1 = "SELECT `id`, `user_name`, `first_name`, `last_name` FROM `admin` WHERE `user_name` = '$username' AND `id` != '$selected_id';";
                 $result1 = $mysqli->query($query1);
                 $rows1 = mysqli_num_rows($result1);
@@ -33,9 +35,9 @@
                         $query = "CALL `edit_admin_no_pw`('$username', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$position', '$answer1', '$answer2', $selected_id)";
                     }
                     if(mysqli_query($db, $query)){
-                        echo "Records for $username updated successfully.";
+                        echo "true";
                     } else {
-                        echo "ERROR: Could not able to execute [$query]" . mysqli_error($db);
+                        echo "ERROR: Could not execute. ". mysqli_error($db);
                     }
                 } else {
                     echo "Username exists";
@@ -52,7 +54,6 @@
 
                 $errors= array();
             }
-                //echo "Query: " . $query;
                 
             mysqli_close($db);
         }

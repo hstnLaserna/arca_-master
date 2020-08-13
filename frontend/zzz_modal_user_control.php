@@ -1,14 +1,3 @@
-<div id="management">
-  MANAGEMENT
-  <div>
-    <button type="button" class="btn btn-info btn-lg" id="addNewAdmin">Add</button>
-  </div>
-
-  <div id="admin">
-    <?php
-      include("../backend/display_admin.php")
-    ?>
-  </div>
   <!-- Modal Create -->
   <div id="modal_newAdmin" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -17,9 +6,8 @@
         <div class="modal-header">
           <h4 class="modal-title">Add Admin Account</h4>
         </div>
-
         <div class="modal-body">
-          <form method="post" enctype="multipart/form-data" autocomplete="off" id="newAdmin">
+          <form method="post" enctype="multipart/form-data" autocomplete="off" id="modal_id">
             <table class="table modal-form">
               <tr>
                 <td colspan="2">
@@ -104,78 +92,10 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block" id="submit" value="Submit">Ipasa</button>
           <button type="button" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Close</button>
         </div>
       </div>
 
     </div>
   </div> <!-- End modal -->
-
-  <div>
-    <!-- Modal Edit -->
-    <div id="modal_editAdmin" class="modal fade" role="dialog">
-    </div> <!-- End modal -->
-  </div>
-
-
-  
-  <div>
-    <!-- Modal Edit -->
-    <div id="modal_displayAdmin" class="modal fade" role="dialog">
-    </div> <!-- End modal -->
-
-  </div>
-</div>
-
-
-
-
-<script>
-  $(document).ready(function(){
-    $("#addNewAdmin").click(function(){
-      $('#modal_newAdmin').modal();
-    });
-
-    $( ".inactive" ).parent().css({"background-color": "#d3d3d3", "font-style": "italic"});
-
-    $('input[name!="middle_name"]').blur(function(){
-      if($(this).val().length === 0 ) {
-          $(this).addClass('input_error');
-      }
-      else{
-            $(this).removeClass('input_error');
-      }
-    });
-
-    $("#submit").click(function(){
-      $.post("../backend/create_admin.php", $("#newAdmin").serialize(), function(d){
-        alert(d);
-      });
-    });
-
-    $('.active').click(function () {
-      var admin_id = $(this).parent().attr("id").replace("adminNum_", "");
-      $("#admin").load("../backend/deactivate_admin.php" + " #admin",{ admin_id: admin_id }, function(d){
-        location.reload();
-      });
-    });
-
-    $('.inactive').click(function () {
-      var admin_id= $(this).parent().attr("id").replace("adminNum_", "");
-      $("#admin").load("../backend/activate_admin.php" + " #admin",{ admin_id: admin_id }, function(d){
-        location.reload();
-      });
-    });
-
-    $('.view-admin').click(function () {
-      var admin_id= $(this).closest("tr").attr("id").replace("adminNum_", "");
-      $('#modal_displayAdmin').load("../frontend/admin_profile_card.php", { admin_id: admin_id },function(){
-        $('#modal_displayAdmin').modal();
-      });
-    });
-
-  //*************************************//
-
-  });
-</script>

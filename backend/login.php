@@ -1,6 +1,6 @@
 <?php
 include('backend/conn.php');
-  session_start(); // Starting Session
+  session_start();
   $error='';
   if (isset($_POST['submit'])) {
     if (empty($_POST['username']) || empty($_POST['password'])) {
@@ -28,14 +28,14 @@ include('backend/conn.php');
       if ($rows1 == 1) {
         if($rows2 == 1) {
           if($rows3 == 1) {
-            $_SESSION['login_user'] = $username; // Initializing Session
-            //$row = mysqli_fetch_array($result3);
-            //$_SESSION['username'] = $row['username'];
-            //$_SESSION['first_name'] = $row['first_name'];
-            //$_SESSION['middle_name'] = $row['middle_name'];
-            //$_SESSION['last_name'] = $row['last_name'];
-            //$_SESSION['sex'] = $row['sex'];
-            header("location: ../frontend/dashboard.php"); // Redirecting To Other Page
+            $_SESSION['login_user'] = $username;
+            $row = mysqli_fetch_array($result3);
+            $_SESSION['user_name'] = $row['user_name'];
+            $_SESSION['first_name'] = $row['first_name'];
+            $_SESSION['middle_name'] = $row['middle_name'];
+            $_SESSION['last_name'] = $row['last_name'];
+            $_SESSION['sex'] = $row['sex'];
+            header("location: ../frontend/dashboard.php");
           }
           else {
             $error = "User is deactivated";
@@ -50,7 +50,7 @@ include('backend/conn.php');
       else {
           $error = "Username does not exist";
       }
-      mysqli_close($mysqli);// Closing Connection
+      mysqli_close($mysqli);
     }
   }
 ?>

@@ -9,17 +9,17 @@
     exit();
   }
 
-  $user_check=$_SESSION['login_user'];
+  $user_name=$_SESSION['login_user'];
   // SQL Query To Fetch Complete Information Of User
-  $ses_sql = $mysqli->query("SELECT * FROM `admin` WHERE `user_name`='$user_check'");
+  $ses_sql = $mysqli->query("SELECT * FROM `admin` WHERE `user_name`='$user_name'");
   $row = mysqli_fetch_assoc($ses_sql);
   $logged_user_id = $row['id'];
-  $user_name = $row['user_name'];
+  $logged_user_name = $row['user_name'];
   $first_name = ucfirst($row['first_name']);
   $middle_name = ucfirst($row['middle_name']);
   $last_name = ucfirst($row['last_name']);
   $sex = $row['sex'];
-  $position = strtolower($row['position']);
+  $logged_position = strtolower($row['position']);
   $user_avatar = $row['avatar'];
 
 ?>
