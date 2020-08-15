@@ -5,8 +5,19 @@
     <?php
     include('../frontend/display_member_profile.php');
     ?>
-    <button type="button" id="edit_basic" class="btn btn-light">Edit Basic Details</button>
 </div>
+
+<?php
+    if(isset($member_id))
+    {
+        echo '<div class="card transactions">';
+        $selected_id = $member_id;
+        include("../backend/read_transactions.php");
+        echo '</div>';
+    }
+
+?>
+
 
 <div>
     <!-- Modal Edit -->
@@ -44,5 +55,23 @@ $(document).ready(function(){
             $('#modal_edit_address').modal();
         });
     });
+
+        //*************************************//
+    { // Sort thru Table headers
+        $('th').click(function(){
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc){rows = rows.reverse()}
+        for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+        });
+        function comparer(index) {
+            return function(a, b) {
+                var valA = getCellValue(a, index), valB = getCellValue(b, index)
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+        }
+        function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+    }
 });
 </script>

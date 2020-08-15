@@ -25,18 +25,19 @@
                 <div class="sm-1 md-2 display-table-cell v-align box" id="navigation">
                     <div class="logo">
                         <a hef="home.php">
-                            <img src="../resources/images/OSCA_full.png" alt="1" class="d-none d-lg-block">
+                            <img src="../resources/images/OSCA_full.png" alt="1">
                             <img src="../resources/images/OSCA_square.png" alt="2" class="d-lg-none">
                         </a>
                     </div>
                     <div class="nav">
                         <ul class="">
-                            <li class="active"><a href="../frontend/dashboard.php?page=home"><i class="fa fa-home" aria-hidden="true"></i><span class="d-none d-lg-block">Home</span></a></li>
-                            <li><a href="../frontend/dashboard.php?page=search"><i class="fa fa-tasks" aria-hidden="true"></i><span class="d-none d-lg-block">Search</span></a></li>
-                            <li><a href="../frontend/dashboard.php?page=members"><i class="fa fa-user" aria-hidden="true"></i><span class="d-none d-lg-block">Members</span></a></li>
+                            <li><a href="../frontend/dashboard.php?page=home"><i class="fa fa-home" aria-hidden="true"></i><span>Home</span></a></li>
+                            <li><a href="../frontend/dashboard.php?page=scan"><i class="fa fa-qrcode" aria-hidden="true"></i><span>Scan</span></a></li>
+                            <li><a href="../frontend/dashboard.php?page=search"><i class="fa fa-search" aria-hidden="true"></i><span>Search</span></a></li>
+                            <li class="active" ><a href="../frontend/dashboard.php?page=members"><i class="fa fa-users" aria-hidden="true"></i><span>Members</span></a></li>
                             <?php if($logged_position == "admin")
                             {?>
-                            <li><a href="../frontend/dashboard.php?page=management"><i class="fa fa-calendar" aria-hidden="true"></i><span class="d-none d-lg-block">Management</span></a></li>
+                            <li><a href="../frontend/dashboard.php?page=management"><i class="fa fa-tasks" aria-hidden="true"></i><span>Management</span></a></li>
                             <?php
                             } else {}
                             ?>

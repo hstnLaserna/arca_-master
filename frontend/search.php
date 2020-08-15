@@ -1,42 +1,32 @@
-SENIOR CITIZEN LOOKUP
+    SENIOR CITIZEN LOOKUP
 
+<div id="lookup">
+    <form method="post" enctype="multipart/form-data" autocomplete="off" id="lookup_form">
+        <input type="text" name="first_name" id="first_name" placeholder="First name">
+        <input type="text" name="middle_name" id="middle_name" placeholder="Middle name">
+        <input type="text" name="last_name" id="last_name" placeholder="Last name">
+        <input type="text" name="osca_id" id="osca_id" placeholder="OSCA ID">
+        <button type="button" class="btn btn-dark" id="search">Search</button>
+    </form>
+</div>
+
+<div id="display_search">
+</div>
 <div>
-  <input type="text" id="sr_serial">
-  <button id="read_serial">Read ID</button>
-  <button id="clear">Clear</button>
-
-  <div>
     <!-- Modal Edit -->
-    <div id="modal_displayMember" class="modal fade" role="dialog">
+    <div id="modal_display_search" class="modal fade" role="dialog">
     </div> <!-- End modal -->
 
   </div>
-  <div id="read_nfc"> </div>
-
-</div>
 
 <script>
-  $(document).ready(function(){
+$(document).ready(function(){
 
-
-    $('#read_serial2').click(function () {
-      var input_nfc= $("#sr_serial").val();
-        $('#modal_displayMember').load("../frontend/member_profile_card.php", { input_nfc: input_nfc },function(){
-          $('#modal_displayMember').modal();
-        });
+    $("#search").click(function() {
+        $("#display_search").load("../backend/display_members_search.php", $("#lookup_form").serializeArray());
     });
 
-    $('#read_serial').click(function () {
-      var input_nfc= $("#sr_serial").val();
-        $('#read_nfc').load("../frontend/member_profile_card.php", { input_nfc: input_nfc });
-    });
-
-    $('#clear').click(function () {
-        $('#sr_serial').val('');
-        $('#read_nfc').replaceWith('<div id="read_nfc"> </div>');
-    });
-
-  });
+});
 </script>
 
 

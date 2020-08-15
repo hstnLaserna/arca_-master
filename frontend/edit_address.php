@@ -158,9 +158,6 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
             }
         });
     });
-    $("#address_form").submit(function(){
-        alert("submitted!");
-    });
 
   });
 </script>

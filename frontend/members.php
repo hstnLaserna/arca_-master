@@ -141,12 +141,7 @@
       $('#modal_newMember').modal();
     });
 
-    $('.view-member').click(function () {
-      var member_id= $(this).closest("tr").attr("id").replace("memNum_", "");
-      $('#modal_displayMember').load("../frontend/member_profile_card.php", { member_id: member_id },function(){
-        $('#modal_displayMember').modal();
-      });
-    });
+
 
     $("#submit").click(function(){
       $.post("../backend/create_member.php", $("#newMember").serialize(), function(d){

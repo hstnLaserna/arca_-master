@@ -22,6 +22,7 @@
             $last_name =  $row['last_name'];
             $sex =  $row['sex'];
             $bdate =  $row['bdate'];
+            $memship_date =  $row['memship_date'];
             $contact_number =  $row['contact_number'];
             
             ?>
@@ -31,6 +32,7 @@
                 <p><?php echo $last_name; ?>,</p>
                 <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
                 <p>OSCA ID: <?php echo $osca_id; ?> </p>
+                <p>Member since: <?php echo $memship_date; ?> </p>
                 <p>Sex: <?php if($sex == 'f'|| $sex == 'F'){echo "Female";}else{echo "Male";} ?> </p>
                 <p>Birthdate: <?php echo $bdate; ?> </p>
                 <?php
@@ -42,12 +44,14 @@
                 <p>E-mail:  </p>
                 
             </div>
+            
+            <button type="button" id="edit_basic" class="btn btn-light">Edit Basic Details</button>
                     
             <?php
 
         }
         mysqli_close($mysqli);// Closing Connection
     } else {
-        echo "Invalid data"; 
+        echo "No selected user"; 
     }
 ?>

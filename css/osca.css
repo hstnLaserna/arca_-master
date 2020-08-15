@@ -57,6 +57,17 @@ td.inactive{
   background-position: center;
   background-size: 45%;
 }
+th {
+  cursor: pointer;
+  text-align: center;
+}
+
+i.sort_icon{
+  /*position: absolute;*/
+  top: 50%;
+  margin-top: -8px;
+  right: 0;
+}
 
 .user-card > img{
   max-width: 150px !important;
@@ -69,4 +80,8 @@ button.edit {
 .modal-edit-address
 {
   max-width: 800px !important;
+}
+
+.nav {
+  display: block !important;
 }

@@ -9,6 +9,9 @@
 
 
 <div class="container">
+</div>
+
+
 <?php
   include('../frontend/foot.php');
   if($logged_position == "admin" && !$personal_profile)

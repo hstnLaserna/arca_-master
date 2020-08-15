@@ -13,6 +13,9 @@
             case "search":
                 include "search.php";
                 break;
+            case "scan":
+                include "scan.php";
+                break;
             case "members":
                 include "members.php";
                 break;

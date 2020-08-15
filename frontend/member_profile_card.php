@@ -23,9 +23,11 @@
             {
                 $member_id = $_POST['member_id'];
                 $nfc_or_id = "`id` = '$member_id'";
+                $is_modal = true;
             } else {
                 $input_nfc = $_POST['input_nfc'];
                 $nfc_or_id = "`nfc_serial` = '$input_nfc'";
+                $is_modal = false;
             }
             $format_memdate = "concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`))";
             $format_bdate = "concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`))";
@@ -43,6 +45,7 @@
                 $last_name =  $row['last_name'];
                 $sex =  $row['sex'];
                 $bdate =  $row['bdate'];
+                $memship_date =  $row['memship_date'];
                 $contact_number =  $row['contact_number'];
                 
                 ?>
@@ -52,6 +55,7 @@
                         <img src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'" class="rounded-circle"'; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
                         <p><?php echo $last_name; ?>,</p>
                         <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
+                        <p>Member since: <?php echo $memship_date; ?> </p>
                         <p>OSCA ID: <?php echo $osca_id; ?> </p>
                         <p>Sex: <?php if($sex == 'f'|| $sex == 'F'){echo "Female";}else{echo "Male";} ?> </p>
                         <p>Birthdate: <?php echo $bdate; ?> </p>
@@ -68,12 +72,11 @@
                 
                 <div class="footer">
                     <button type="button" id="view" class="btn btn-light btn-lg btn-block">View</button>
-                    <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
-                </div>
-
-
-                
-                <?php
+                    <?php if($is_modal)
+                    {
+                        echo '<button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button></div>';
+                    
+                    } else { echo "</div>";}
 
             }
             mysqli_close($mysqli);// Closing Connection

@@ -4,7 +4,9 @@
     if(isset($selected_id))
     {
         $mysqli1 = new mysqli($host,$user,$pass,$schema) or die($mysqli1->error);
-        $address_query = "SELECT `address1`, `address2`, `city`, `province`, `is_active` FROM `member` `m` LEFT JOIN `address` a ON m.`id` = a.`member_id` WHERE m.`id` = $selected_id";
+        $address_query = "SELECT `address1`, `address2`, `city`, `province`, `is_active` 
+                            FROM `member` `m` LEFT JOIN `address` a 
+                            ON m.`id` = a.`member_id` WHERE m.`id` = $selected_id";
         $result = $mysqli1->query($address_query);
         $row_count = mysqli_num_rows($result);
         if($row_count == 0) { echo "<p class='lead'>No address on record</p>";} else
