@@ -1,54 +1,43 @@
-<?php
-    $ismodal = true;
-    if($ismodal) { ?>
+<div class="modal-dialog personal-card">
+    <div class="modal-content">
+        <div class="modal-body">
+        <?php
 
-        <div class="modal-dialog personal-card">
-            <div class="modal-content">
-                <div class="modal-body">
-            <?php
-    }else { ?>
-        <div class="mbody">
-    <?php
-    }
+        include('../backend/conn.php');
+        $db = mysqli_connect($host,$user,$pass,$schema);
 
-?>
-
-    <?php
-    include('../backend/conn.php');
-    $db = mysqli_connect($host,$user,$pass,$schema);
-
-        if(isset($_POST['member_id']) || isset($_POST['input_nfc']))
-        {
-            if(isset($_POST['member_id']))
+            if(isset($_POST['member_id']) || isset($_POST['input_nfc']))
             {
-                $member_id = $_POST['member_id'];
-                $nfc_or_id = "`id` = '$member_id'";
-                $is_modal = true;
-            } else {
-                $input_nfc = $_POST['input_nfc'];
-                $nfc_or_id = "`nfc_serial` = '$input_nfc'";
-                $is_modal = false;
-            }
-            $format_memdate = "concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`))";
-            $format_bdate = "concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`))";
-            $query = "SELECT `id`,	`osca_id`,	`nfc_serial`,	`password`,	`first_name`,	`middle_name`,	`last_name`,	$format_bdate  `bdate`,	`sex`,	`contact_number`,	 $format_memdate `memship_date`,	`picture` FROM `member` WHERE $nfc_or_id";
-            $result = $mysqli->query($query);
-            $row_count = mysqli_num_rows($result);
-            $row = mysqli_fetch_assoc($result);
-            if($row_count == 0) { echo 'No record found';} else
-            {
-                if($row_count > 1) { echo 'Member returns more than 1 record';} else{}
-                $member_id = $row['id'];
-                $osca_id = $row['osca_id'];
-                $first_name = $row['first_name'];
-                $middle_name =  $row['middle_name'];
-                $last_name =  $row['last_name'];
-                $sex =  $row['sex'];
-                $bdate =  $row['bdate'];
-                $memship_date =  $row['memship_date'];
-                $contact_number =  $row['contact_number'];
-                
-                ?>
+                if(isset($_POST['member_id']))
+                {
+                    $member_id = $_POST['member_id'];
+                    $nfc_or_id = "`id` = '$member_id'";
+                    $is_modal = true;
+                } else {
+                    $input_nfc = $_POST['input_nfc'];
+                    $nfc_or_id = "`nfc_serial` = '$input_nfc'";
+                    $is_modal = false;
+                }
+                $format_memdate = "concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`))";
+                $format_bdate = "concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`))";
+                $query = "SELECT `id`,	`osca_id`,	`nfc_serial`,	`password`,	`first_name`,	`middle_name`,	`last_name`,	$format_bdate  `bdate`,	`sex`,	`contact_number`,	 $format_memdate `memship_date`,	`picture` FROM `member` WHERE $nfc_or_id";
+                $result = $mysqli->query($query);
+                $row_count = mysqli_num_rows($result);
+                $row = mysqli_fetch_assoc($result);
+                if($row_count == 0) { echo 'No record found';} else
+                {
+                    if($row_count > 1) { echo 'Member returns more than 1 record';} else{}
+                    $member_id = $row['id'];
+                    $osca_id = $row['osca_id'];
+                    $first_name = $row['first_name'];
+                    $middle_name =  $row['middle_name'];
+                    $last_name =  $row['last_name'];
+                    $sex =  $row['sex'];
+                    $bdate =  $row['bdate'];
+                    $memship_date =  $row['memship_date'];
+                    $contact_number =  $row['contact_number'];
+                    
+                    ?>
 
                 
                     <div class="card">
@@ -83,18 +72,11 @@
         } else {
             echo 'Invalid member'; 
         }
-    if($ismodal) { ?>
+        ?>
 
-                    </div>
-                </div>
-            </div>
-            <?php
-    }else { ?>
-            </div>
-    <?php
-    }
-
-    ?>
+        </div>
+    </div>
+</div>
 
 
 <script>

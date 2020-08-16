@@ -1,7 +1,5 @@
 <?php
   include('../frontend/head.php');
-?>
-    <?php
     
     include('../backend/conn.php');
 
