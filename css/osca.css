@@ -10,6 +10,7 @@ small.text-muted{
 img.avatar{
   height: 80px;
   width: 80px;
+  border-radius: 50% !important;
   cursor: pointer;
   opacity: 1;
 }
@@ -59,7 +60,6 @@ td.inactive{
 }
 th {
   cursor: pointer;
-  text-align: center;
 }
 
 i.sort_icon{
@@ -69,9 +69,25 @@ i.sort_icon{
   right: 0;
 }
 
-.user-card > img{
-  max-width: 150px !important;
+.personal-card {
+  max-width: 900px;
 }
+
+.card-picture{
+  border-radius: 50%;
+  max-width: 150px !important;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.profile-picture{
+  border-radius: 1rem;
+  max-width: 150px !important;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 
 button.edit {
   padding: 0px !important;

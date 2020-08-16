@@ -25,7 +25,7 @@ while($row = mysqli_fetch_array($result))
 {
 ?>
   <tr id="adminNum_<?php echo $row['id']?>">
-    <td><img src="<?php $picture = '../resources/avatars/'.$row["avatar"]; if (file_exists($picture)) { echo $picture; } else{ echo "../resources/images/unknown_m_f.png"; } ?>" class="avatar rounded-circle view-admin" alt="<?php echo $row['user_name'] ?>"></td>
+    <td><img src="<?php $picture = '../resources/avatars/'.$row["avatar"]; if (file_exists($picture)) { echo $picture; } else{ echo "../resources/images/unknown_m_f.png"; } ?>" class="avatar view-admin" alt="<?php echo $row['user_name'] ?>"></td>
     <td><?php echo $row['user_name'] ?></td>
     <td><?php echo $row['first_name'] ?></td>
     <td><?php echo $row['last_name'] ?></td>

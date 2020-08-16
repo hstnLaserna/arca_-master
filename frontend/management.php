@@ -1,7 +1,6 @@
 <div id="management">
-  MANAGEMENT
   <div>
-    <button type="button" class="btn btn-info btn-lg" id="addNewAdmin">Add</button>
+    <button type="button" class="btn btn-secondary btn-lg" id="addNewAdmin">Add</button>
   </div>
 
   <div id="admin">

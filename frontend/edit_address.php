@@ -85,7 +85,7 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                             </tr>
                             <tr> 
                                 <td>
-                                    <label for="address_2">Line 2 <small> <em> (Brgy/Subdivision, Municipality) </em> </small></label>
+                                    <label for="address_2">Line 2 <small> <em> (Brgy/Subdivision) </em> </small></label>
                                     <input type="text" class="form-control" name="address_line2" <?php echo $placeholder_and_value_add2?>>
                                 </td>
                             </tr>

@@ -2,7 +2,7 @@
     $ismodal = true;
     if($ismodal) { ?>
 
-        <div class="modal-dialog">
+        <div class="modal-dialog personal-card">
             <div class="modal-content">
                 <div class="modal-body">
             <?php
@@ -51,8 +51,8 @@
                 ?>
 
                 
-                    <div class="card user-card">
-                        <img src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'" class="rounded-circle"'; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
+                    <div class="card">
+                        <img class="card-picture" src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'" '; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
                         <p><?php echo $last_name; ?>,</p>
                         <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
                         <p>Member since: <?php echo $memship_date; ?> </p>

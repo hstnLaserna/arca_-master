@@ -1,5 +1,5 @@
 
-<div class="modal-dialog">
+<div class="modal-dialog personal-card">
     <div class="modal-content">
         <div class="modal-body">
 
@@ -31,8 +31,8 @@
                     ?>
 
                     
-                        <div class="card user-card">
-                            <img src=<?php $avatar = '../resources/avatars/'.$row["avatar"]; if (file_exists($avatar) && $row["avatar"] != null) { echo '"'.$avatar.'" class="rounded-circle"'; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
+                        <div class="card">
+                            <img class="card-picture" src=<?php $avatar = '../resources/avatars/'.$row["avatar"]; if (file_exists($avatar) && $row["avatar"] != null) { echo '"'.$avatar.'"'; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
                             <p><?php echo $last_name; ?>,</p>
                             <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
                             <p>Username: <?php echo $user_name; ?> </p>

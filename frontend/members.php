@@ -1,7 +1,6 @@
 <div id="members">
-  MEMBERS
   <div>
-    <button type="button" class="btn btn-info btn-lg" id="addNewMember">Add</button>
+    <button type="button" class="btn btn-secondary btn-lg" id="addNewMember">Add</button>
   </div>
 
   <div id="member">
@@ -148,17 +147,30 @@
       alert(d);
       });
     });
-
-
-/*
-    $( "form" ).on( "submit", function() {
-       var has_empty = false;
-       $(this).find( 'input[type!="hidden"]' ).each(function () {
-          if ( ! $(this).val() ) { has_empty = true; return false; }
-       });
-       if ( has_empty ) { return false; }
+    
+    $('.view-member').click(function () {
+      var member_id= $(this).closest("tr").attr("id").replace("memNum_", "");
+      $('#modal_displayMember').load("../frontend/member_profile_card.php", { member_id: member_id },function(){
+        $('#modal_displayMember').modal();
+      });
     });
-*/
+
+    { // Sort thru Table headers
+        $('th').click(function(){
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc){rows = rows.reverse()}
+        for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+        });
+        function comparer(index) {
+            return function(a, b) {
+                var valA = getCellValue(a, index), valB = getCellValue(b, index)
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+        }
+        function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+    }
 
   });
 </script>
