@@ -13,9 +13,12 @@
         $selected_member_id = $_POST['selected_member_id'];
         $selected_address_id = $_POST['selected_address_id'];
         //$query = "SELECT `id` FROM `member` WHERE `id` = '$selected_id'";
-        $address_query = "  SELECT * FROM `member` `m` 
-                            LEFT JOIN `address` `a` ON m.`id` = `a`.`member_id` 
-                            WHERE `m`.`id` = '$selected_member_id' AND `a`.`id` = '$selected_address_id';";
+        $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active` 
+                            FROM member m
+                            INNER JOIN `address_jt` `ajt` ON `ajt`.`member_id` = m.`id`
+                            INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                            WHERE m.`id` = '$selected_member_id' AND `a`.`id` = '$selected_address_id';";
+                            
         $result = $mysqli->query($address_query);
         $row_count = mysqli_num_rows($result);
         if($row_count == 0) { echo "ID Does not exist $address_query";} else 

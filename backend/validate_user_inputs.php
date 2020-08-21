@@ -13,7 +13,7 @@
     {
         if($sex != "female")
         {
-        array_push($errors, "Gender must either be Male or Female. Selected: " . $_POST['edit_gender']);
+            array_push($errors, "Gender must either be Male or Female.");
         }
     }
     if(strlen($password) != 0)
@@ -22,6 +22,14 @@
         {
             array_push($errors, "Password length must be between 8 to 20 characters");
         }
+    }
+    if(strlen($contact_number) < 4 || strlen($contact_number) > 30)
+    {
+        array_push($errors, "Contact number must be between 4 - 30 digits");
+    }
+    if(strlen($email) < 4 || strlen($email) > 30)
+    {
+        array_push($errors, "Email must be valid");
     }
 
 
@@ -40,7 +48,7 @@
         {
             if($position != "admin")
             {
-            array_push($errors, "Position must either be User or Admin. Selected: " . $_POST['edit_position']);
+            array_push($errors, "Position must either be User or Admin.");
             }
         }
         if(strlen($answer1) < 4 || strlen($answer1) > 20)
@@ -73,10 +81,6 @@
         if(strlen($nfc_serial) != 16)
         {
             array_push($errors, "NFC must be between 16 characters");
-        }
-        if(strlen($contact_number) < 4 || strlen($contact_number) > 30)
-        {
-            array_push($errors, "Contact numbermust be between 4 - 30 digits");
         }
     }
     if($with_address)

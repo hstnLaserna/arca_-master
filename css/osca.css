@@ -4,9 +4,51 @@
   transition: transform .1s ease-out, -webkit-transform .1s ease-out  !important;
 }
 
+.navbar {
+  padding: 0 3rem;
+}
+.navbar-brand > img {
+  width: 50px;
+  height: 50px;
+}
+.profile-dropdown .dropdown-menu {
+  border: medium none;
+  padding: 17px;
+}
+
+ul.dropdown-menu {
+  text-align: center;
+  position: absolute;
+transform: translate3d(-85px, 32px, 0px);
+top: 0px;
+left: 0px;
+will-change: transform;
+  
+}
+.profile-dropdown li {
+  display: inline-block;
+  text-align: center;
+}
+
+
+.view {
+  background: #5584ff none repeat scroll 0 0;
+  border-radius: 100px;
+  color: #ffffff;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  padding: 10px 15px;
+}
+
+.workspace {
+  padding: 0 20px;
+}
 small.text-muted{
   font-style: italic;
 }
+
 img.avatar{
   height: 80px;
   width: 80px;
@@ -22,7 +64,17 @@ img.avatar:hover {
 .textboxhighlight {
     background-color: red;
 }
+.registration-title {  
+  padding: 1rem 5rem;
+}
 
+
+
+.registration-form {
+  padding: 1rem 5rem;
+  width: 75%;
+  margin: auto;
+}
 .input_error {
   outline: 1px solid red;
 }
@@ -69,25 +121,58 @@ i.sort_icon{
   right: 0;
 }
 
-.personal-card {
+.digital-card {
   max-width: 900px;
 }
+.digital-card-contents {
+  min-height: 350px;
+  padding: 10px 1rem;
+  margin-bottom: 1rem;
+}
 
-.card-picture{
-  border-radius: 50%;
-  max-width: 150px !important;
+.card-left {
+  width: 75%;
+}
+
+.card-right {
   position: absolute;
+  width: 25%;
   top: 0;
   right: 0;
+
+  text-align: center;
+  padding-top : 1rem;
 }
+.card-bottom-right {
+  position: absolute;
+  width: 25%;
+  bottom: 0;
+  right: 0;
+
+  text-align: center;
+  padding : 1rem 0;
+}
+
+
+.card-right>img{
+  max-width: 150px !important;
+  border-radius: 1rem;
+}
+.card-right > p {
+  margin-top: 20px;
+}
+
+
 .profile-picture{
   border-radius: 1rem;
   max-width: 150px !important;
-  position: absolute;
-  top: 0;
-  right: 0;
 }
 
+/*
+.transaction-list {
+  col col-md-11 m-auto p-3 border border-dark rounded overflow-auto
+}
+*/
 
 button.edit {
   padding: 0px !important;

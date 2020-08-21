@@ -1,15 +1,19 @@
 <?php
-include('head.php');
+include('header.php');
+include('../backend/php_functions.php');
 if(isset($_GET['admin_id']) && $logged_position == "admin")
 {
+    $full_edit = true;
     $admin_id = $_GET['admin_id'];
     $query_basis = "`id` = $admin_id";
 } else {
+    $full_edit = false;
     $user_name=$_SESSION['login_user'];
     $query_basis = "`user_name` = '$user_name'";
 }
 {
-    $query = "SELECT `id`, `user_name`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `answer1`, `answer2`, `avatar` FROM `admin` WHERE $query_basis";
+    $query = "SELECT `id`, `user_name`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `position`, `answer1`, `answer2`, `avatar`
+                FROM `admin` WHERE $query_basis";
     $result = $mysqli->query($query);
     $row_count = mysqli_num_rows($result);
 
@@ -23,6 +27,8 @@ if(isset($_GET['admin_id']) && $logged_position == "admin")
             $last_name = $row['last_name'];
             $birthdate = $row['birth_date'];
             $sex2 = $row['sex'];
+            $contact_number = $row['contact_number'];
+            $email = $row['email'];
             $position = strtolower($row['position']);
             $answer1 = $row['answer1'];
             $answer2 = $row['answer2'];
@@ -87,25 +93,50 @@ if(isset($_GET['admin_id']) && $logged_position == "admin")
                         <td>
                         <div class="form-group">
                         <select class="form-control" name="gender">
-                            <option <?php if($sex2 == 'f'){echo "selected";}else{};?>>Female</option>
-                            <option <?php if($sex2 == 'm'){echo "selected";}else{};?>>Male</option>
+                            <option <?php if($sex2 == "0" || $sex2 > "2"){echo "selected";}else{}; ?>>-</option>
+                            <option <?php if($sex2 == "2"){echo "selected";}else{}; ?>>Female</option>
+                            <option <?php if($sex2 == "1"){echo "selected";}else{}; ?>>Male</option>
                         </select>
                         </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            Contact Number
+                        </td>
+                        <td>
+                            <input type="text" class="form-control " name="contact_number" placeholder="<?php echo $last_name?>" value="<?php echo $contact_number?>">
                         </td>
                     </tr>
                     <tr>
                         <td>
-                        Position
+                            Email
                         </td>
                         <td>
-                        <div class="form-group">
-                        <select class="form-control" name="position">
-                            <option <?php if($position == 'admin'){echo "selected";}else{echo "$position";};?>>Admin</option>
-                            <option <?php if($position == 'user'){echo "selected";}else{};?>>User</option>
-                        </select>
-                        </div>
+                            <input type="text" class="form-control " name="email" placeholder="<?php echo $email?>" value="<?php echo $email?>">
                         </td>
                     </tr>
+
+                    <?php
+                     if($full_edit && $_SESSION['user_name'] != $user_name)
+                     { ?>
+                        <tr>
+                            <td>
+                            Position
+                            </td>
+                            <td>
+                            <div class="form-group">
+                            <select class="form-control" name="position">
+                                <option <?php if($position != 'admin' & $position != "user"){echo "selected";}else{echo "$position";};?>>-</option>
+                                <option <?php if($position == 'admin'){echo "selected";}else{echo "$position";};?>>Admin</option>
+                                <option <?php if($position == 'user'){echo "selected";}else{};?>>User</option>
+                            </select>
+                            </div>
+                            </td>
+                        </tr>
+                        <?php 
+                    }?>
                     <tr>
                         <td>
                         Security Answer 1

@@ -33,16 +33,16 @@
                 
                 if ($rows1 == 0 && $rows2 == 0) { // OSCA ID && NFC serial doesn't match other member's
                     if(strlen($password) != 0){
-                        $query = "CALL `edit_member_with_pw`('$osca_id', '$nfc_serial', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$contact_number', '$sex2', '$membership_date', $selected_id)";
+                        $query = "CALL `edit_member_with_pw`('$osca_id', '$nfc_serial', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$contact_number', '$email',  '$sex2', '$membership_date', $selected_id)";
                     } else
                     {
-                        $query = "CALL `edit_member_no_pw`('$osca_id', '$nfc_serial', '$firstname', '$middlename', '$lastname', '$birthdate', '$contact_number', '$sex2', '$membership_date', $selected_id)";
+                        $query = "CALL `edit_member_no_pw`('$osca_id', '$nfc_serial', '$firstname', '$middlename', '$lastname', '$birthdate', '$contact_number', '$email', '$sex2', '$membership_date', $selected_id)";
                     }
                     if(mysqli_query($db, $query)){
                         if(strtolower($sex2) == "f") {$salutation = "Ms.";} else  {$salutation = "Mr.";}
                         echo "true";
                     } else {
-                        echo "ERROR: Could not execute. " . mysqli_error($db);
+                        echo "ERROR: Could not execute. $query \r\n" . mysqli_error($db);
                     }
                 } else {
                     if($rows1 >= 1){ echo "OSCA ID is already registered to other records.";}

@@ -1,10 +1,11 @@
 <?php
-include('head.php');
+include('header.php');
+include('../backend/php_functions.php');
 if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
 {
     $member_id = $_GET['member_id'];
     $query = "SELECT 	`id`,	`osca_id`,	`nfc_serial`,	`password`,	`first_name`,	`middle_name`,	`last_name`,	`birth_date`,
-                        `sex`,	`contact_number`, `membership_date`,	`picture` FROM `member` WHERE `id` = $member_id";
+                        `sex`,	`contact_number`, `email`, `membership_date`,	`picture` FROM `member` WHERE `id` = $member_id";
     $result = $mysqli->query($query);
     $row_count = mysqli_num_rows($result);
 
@@ -17,6 +18,7 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
             $birthdate = $row['birth_date'];
             $sex2 = $row['sex'];
             $contact_number = $row['contact_number'];
+            $email =  $row['email'];
             $osca_id = $row['osca_id'];
             $nfc_serial = $row['nfc_serial'];
             $membership_date = $row['membership_date'];
@@ -65,8 +67,9 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
                         <td>
                             <div class="form-group">
                             <select class="form-control" name="gender">
-                                <option <?php if($sex2 == 'f'){echo "selected";}else{};?>>Female</option>
-                                <option <?php if($sex2 == 'm'){echo "selected";}else{};?>>Male</option>
+                                <option <?php if($sex2 == "0" || $sex2 > "2"){echo "selected";}else{}; ?>>-</option>
+                                <option <?php if($sex2 == "2"){echo "selected";}else{}; ?>>Female</option>
+                                <option <?php if($sex2 == "1"){echo "selected";}else{}; ?>>Male</option>
                             </select>
                             </div>
                         </td>
@@ -85,6 +88,14 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
                         </td>
                         <td>
                             <input type="text" class="form-control " name="contact_number" placeholder="<?php echo $last_name?>" value="<?php echo $contact_number?>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Email
+                        </td>
+                        <td>
+                            <input type="text" class="form-control " name="email" placeholder="<?php echo $email?>" value="<?php echo $email?>">
                         </td>
                     </tr>
                     <tr>

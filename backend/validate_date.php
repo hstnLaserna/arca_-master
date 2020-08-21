@@ -22,7 +22,7 @@ if(isset($date_to_validate)  && $date_to_validate != "")
     if($is_senior_birthdate){
         $valid_date = strtotime(date("Y-m-d").' -60 year');
     } else {
-        $valid_date = strtotime(date("Y-m-d").' +0 day');
+        $valid_date = strtotime(date("Y-m-d").' +1 day');
     }
 
     if (count($test_arr) == 3) {

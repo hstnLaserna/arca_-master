@@ -24,12 +24,12 @@
     $rows2 = mysqli_num_rows($result2);
 
     if ($rows1 == 0 && $rows2 == 0) { // OSCA ID doesn't exist
-      $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$contact_number', '$membership_date', '$password', '$osca_id', '$nfc_serial', '$address_line1', '$address_line2', '$address_city', '$address_province')";
+      $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$contact_number', '$email', '$membership_date', '$password', '$osca_id', '$nfc_serial', '$address_line1', '$address_line2', '$address_city', '$address_province')";
       if(mysqli_query($db, $query)){
         echo "Records inserted successfully.";
       }
       else {
-        echo "ERROR: Could not able to execute. \r\n" . mysqli_error($db);
+        echo "ERROR: Unable to execute. \r\n" . mysqli_error($db);
       }
     }
     else {

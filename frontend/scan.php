@@ -12,14 +12,16 @@
                 <button class="btn btn-dark btn-block" type="button" id="clear"> Clear </button>
         </form>
     </div>
-    
-    <button class="btn btn-dark" type="button" id="clear"> Clear </button>
 </div>
 
 <div id="display_nfcread">
 </div>
 
 <script>
+
+$("#scan").addClass('active').siblings().removeClass('active');
+$('title').replaceWith('<title>Scan OSCA Member tag</title>');
+
 $(document).ready(function(){
 
     $('#read_serial').click(function () {

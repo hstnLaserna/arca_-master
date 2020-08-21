@@ -18,7 +18,11 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                     if(isset($_POST['address_id']))
                     {
                         $selected_address_id = $_POST['address_id'];
-                        $query_1 = "SELECT `a`.`id` `address_id`,`address1`, `address2`, `city`, `province`, `is_active` FROM `member` `m` LEFT JOIN `address` a ON m.`id` = a.`member_id` WHERE m.`id` = '$selected_member_id' AND `a`.`id` = '$selected_address_id';";
+                        $query_1 = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active` 
+                                    FROM member m
+                                    INNER JOIN `address_jt` `ajt` ON `ajt`.`member_id` = m.`id`
+                                    INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                    WHERE m.`id` = '$selected_member_id' AND `a`.`id` = '$selected_address_id';";
                         $msg = "<p class='lead'>No address on record</p>";
                     }
                     else if ($_GET['action'] == "add")
@@ -30,7 +34,7 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                     
                     $result = $mysqli1->query($query_1);
                     $row_count = mysqli_num_rows($result);
-                    if($row_count == 0) { echo $msg;} else
+                    if($row_count == 0) { echo $query_1;} else
                     {
                         while($row = mysqli_fetch_array($result))
                         {

@@ -10,6 +10,7 @@
   }
   else { }
   $user_type = "osca";
+  $with_address = false;
   include('../backend/import_post_variables.php');
   include('../backend/validate_user_inputs.php');
 
@@ -20,7 +21,7 @@
     $rows1 = mysqli_num_rows($result1);
 
     if ($rows1 == 0) { // username doesn't exist
-      $query = "CALL `add_admin`('$username', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$position', '1', '$answer1', '$answer2', @`msg`)";
+      $query = "CALL `add_admin`('$username', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$contact_number', '$email', '$position', '1', '$answer1', '$answer2', @`msg`)";
       if(mysqli_query($db, $query)){
         echo "Records inserted successfully.";
       }

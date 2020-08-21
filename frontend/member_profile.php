@@ -1,20 +1,17 @@
 <?php
-  include('../frontend/head.php');
-    
+    include('../frontend/header.php');
+    include('../backend/php_functions.php');
     include('../backend/conn.php');
 
     if(isset($_GET['member_id']))
     {
-        ?>
-        <div class="member-profile">
-        <?php
         $member_id = $_GET['member_id'];
         
-        $format_memdate = "concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`))";
         $format_bdate = "concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`))";
-        $query = "SELECT `id`,	`osca_id`,	`nfc_serial`,	`password`,	`first_name`,	`middle_name`,	`last_name`,	
-                            $format_bdate  `bdate`,	`sex`,	`contact_number`,	 $format_memdate `memship_date`, 
-                            `picture` `pix` FROM `member` WHERE `id` = $member_id;";
+        $format_memdate = "concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`))";
+        $query = "SELECT * FROM `view_members_with_guardian`
+                    WHERE `member_id` = $member_id;";
+                            
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);
         $row = mysqli_fetch_assoc($result);
@@ -25,46 +22,82 @@
             $first_name = $row['first_name'];
             $middle_name =  $row['middle_name'];
             $last_name =  $row['last_name'];
-            $sex =  $row['sex'];
-            $bdate =  $row['bdate'];
-            $memship_date =  $row['memship_date'];
+            $sex2 =  $row['sex'];
             $contact_number =  $row['contact_number'];
+            $email =  $row['email'];
+            $bdate =  $row['bdate'];
+            $age =  $row['age'];
+            $memship_date =  $row['memship_date'];
+
+            
+            $g_first_name = $row['g_first_name'];
+            $g_last_name =  $row['g_last_name'];
+            $g_sex2 =  $row['g_sex'];
+            $g_contact_number =  $row['g_contact_number'];
+            $g_email =  $row['g_email'];
+            $g_relationship =  $row['g_relationship'];
             
             ?>
 
-            <div class="col col-md-11 mx-auto mb-3 border p-0 border-dark rounded">
-                <div class="user-card px-3">
-                    <img class="profile-picture" src=<?php $picture = '../resources/members/'.$row["pix"]; if (file_exists($picture) && $row["pix"] != null) { echo '"'.$picture.'" '; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
-                    <p>Lastname: <?php echo $last_name; ?>,</p>
-                    <p>Firstname: <?php echo $first_name; ?> </p>
-                    <p>Middlename: <?php echo $middle_name; ?></p>
-                    <p>Sex: <?php if($sex == 'f'|| $sex == 'F'){echo "Female";}else{echo "Male";} ?> </p>
-                    <p>Birthdate: <?php echo $bdate; ?> </p>
-                    <?php
-                        $selected_id = $member_id;
-                        include("../backend/read_address_with_edit.php");
-                    ?>
-                    <button type="button" id="add_address" class="btn btn-info">Add Address</button>
-                    <p>Phone Number: <?php echo $contact_number; ?> </p>
-                    <p>E-mail:  </p>
-                    <p>OSCA ID: <?php echo $osca_id; ?> </p>
-                    <p>Member since: <?php echo $memship_date; ?> </p>
+            <div class="card digital-card-contents">
+                <div class="card-right">
+                    <img class="profile-picture" src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'" '; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
                 </div>
-            
-                <button type="button" id="edit_basic" class="btn btn-secondary btn-block">Edit Basic Details</button>
+                <div class="card-bottom-right">
+                    <button type="button" id="edit_basic" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>
+                    <button type="button" id="add_address" class="btn btn-secondary m   -2 w-75">Add Address</button>
+                </div>
+                <div class="card-left">
+                    <div class="card">
+                        <p>Lastname: <?php echo $last_name; ?>,</p>
+                        <p>Firstname: <?php echo $first_name; ?> </p>
+                        <p>Middlename: <?php echo $middle_name; ?></p>
+                        <p>Sex:  <?php echo determine_sex($sex2, "display_long"); ?> </p>
+                        <p>Birthdate: <?php echo "$bdate (Age: $age y.o.)"; ?></p>
+                        <?php
+                            read_address($member_id, true);
+                        ?>
+                        <p>Phone Number: <?php echo $contact_number; ?> </p>
+                        <p>E-mail: <?php echo $email; ?></p>
+                        <p>OSCA ID: <?php echo $osca_id; ?> </p>
+                        <p>Member since: <?php echo $memship_date; ?> </p>
+                    </div>
+
+                    <div class="card">
+                        <h3> Guardian's Details </h3>
+                        <p>Full Name: <?php echo "$g_first_name $g_last_name"; ?></p>
+                        <p>Relationship: <?php echo "$g_relationship"; ?></p>
+                        <p>Sex: <?php echo determine_sex($g_sex2, "display_long"); ?> </p>
+                        <p>Contact Number: <?php echo "$g_contact_number"; ?></p>
+                        <p>Email: <?php echo "$g_email"; ?></p>
+                    </div>
+                </div>
             </div>
                     
             <?php
 
         }
 
-        $transaction_query = "SELECT `member_id`, trans_date, vat_exempt_price, discount_price , `desc`, 
-                                company_name `company`, branch `branch`, `business_type`
-                                FROM view_all_transactions WHERE member_id = $selected_id ORDER BY trans_date;";
+        
+
+        $transaction_query = "SELECT *
+                                FROM view_all_transactions
+                                WHERE member_id = $member_id --  AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10))
+                                ORDER BY trans_date ASC";
 
         $result = $mysqli->query($transaction_query);
-        $row_count = mysqli_num_rows($result);
-        if($row_count != 0)
+        $row_count_orig = mysqli_num_rows($result);
+
+
+        $transaction_query = "SELECT * FROM (SELECT `member_id`, trans_date, vat_exempt_price, discount_price , `desc`, 
+                                company_name `company`, branch `branch`, `business_type`
+                                FROM view_all_transactions
+                                WHERE member_id = $member_id AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10))
+                                ORDER BY trans_date ASC) ttt ORDER BY `trans_date` DESC  LIMIT 3;";
+
+        $result = $mysqli->query($transaction_query);
+        $row_count_display = mysqli_num_rows($result);
+        if($row_count_display != 0)
         {
             ?>
             <div class="col col-md-11 m-auto p-3 border border-dark rounded overflow-auto">
@@ -102,9 +135,16 @@
                         <?php
                 
                     }
-                    
                     ?>
                     </table>
+                    <?php 
+                    if ($row_count_orig > $row_count_display)
+                    {?>
+                        <button class="btn btn-block btn-secondary">Display All Transactions</button><br>
+                        <?php
+                    }
+                    //echo "$row_count_orig,  $row_count_display";
+                    ?>
                 </div>
             </div>
             <?php
@@ -132,6 +172,7 @@
 </div>
 
 <script>
+$('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
 $(document).ready(function(){
     $('#edit_basic').click(function () {
         var url = 'edit_member.php';

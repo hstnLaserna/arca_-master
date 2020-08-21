@@ -29,10 +29,10 @@
 
                 if ($rows1 == 0) { // username doesn't exist
                     if(strlen($password) != 0){
-                        $query = "CALL `edit_admin_with_pw`('$username', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$position', '$answer1', '$answer2','$password', $selected_id)";
+                        $query = "CALL `edit_admin_with_pw`('$username', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2',  '$contact_number', '$email', '$position', '$answer1', '$answer2','$password', $selected_id)";
                     } else
                     {
-                        $query = "CALL `edit_admin_no_pw`('$username', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$position', '$answer1', '$answer2', $selected_id)";
+                        $query = "CALL `edit_admin_no_pw`('$username', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2',  '$contact_number', '$email', '$position', '$answer1', '$answer2', $selected_id)";
                     }
                     if(mysqli_query($db, $query)){
                         echo "true";

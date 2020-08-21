@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>OSCA - <?php echo $first_name; ?></title>
+        <title>OSCA</title>
         <link rel="icon" href="../resources/images/OSCA_square.png">
 
 
@@ -30,13 +30,21 @@
                 </div>
                 <div class="nav">
                     <ul class="pl-0">
-                        <li><a href="../frontend/dashboard.php?page=home"><i class="fa fa-home" aria-hidden="true"></i><span>Home</span></a></li>
-                        <li><a href="../frontend/dashboard.php?page=scan"><i class="fa fa-qrcode" aria-hidden="true"></i><span>Scan</span></a></li>
-                        <li><a href="../frontend/dashboard.php?page=search"><i class="fa fa-search" aria-hidden="true"></i><span>Search</span></a></li>
-                        <li class="active" ><a href="../frontend/dashboard.php?page=members"><i class="fa fa-users" aria-hidden="true"></i><span>Members</span></a></li>
+                        <li id="home"><a href="../frontend/dashboard.php?page=home"><i class="fa fa-home" aria-hidden="true"></i><span>Home</span></a></li>
+                        <li id="scan"><a href="../frontend/dashboard.php?page=scan"><i class="fa fa-qrcode" aria-hidden="true"></i><span>Scan</span></a></li>
+                        <li id="search"><a href="../frontend/search.php"><i class="fa fa-search" aria-hidden="true"></i><span>Search</span></a></li>
+                        <li id="members"><a href="../frontend/members.php"><i class="fa fa-users" aria-hidden="true"></i><span>Members</span></a></li>
                         <?php if($logged_position == "admin")
                         {?>
-                        <li><a href="../frontend/dashboard.php?page=management"><i class="fa fa-tasks" aria-hidden="true"></i><span>Management</span></a></li>
+                            <li class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a href="../frontend/management.php"><i class="fa fa-tasks" aria-hidden="true"></i><span>Management</span></a>
+                            </li>
+                            <div class="dropdown-menu" aria-labelledby="dropdown_search">
+                                <ul>
+                                    <li><a href="#">Members </a></li>
+                                    <li><a href="#">Administration </a></li>
+                                </ul>
+                            </div>
                         <?php
                         } else {}
                         ?>
@@ -54,17 +62,19 @@
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <img src="../resources/avatars/<?php echo $user_avatar ?>" alt="<?php echo $user_name ?> avatar" class="rounded-circle">
                                         </a>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <div class="navbar-content">
-                                                    <span><?php echo $first_name . " " . $last_name; ?></span>
-                                                    <div class="divider">
+                                        <div class="profile-dropdown">
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <div class="navbar-content">
+                                                        <span><?php echo $first_name . " " . $last_name; ?></span>
+                                                        <div class="divider">
+                                                        </div>
+                                                        <a href="user_profile.php" class="view btn-sm active">View Profile</a>
+                                                        <a href="../backend/logout.php" class="view btn-sm active">Log Out</a>
                                                     </div>
-                                                    <a href="user_profile.php" class="view btn-sm active">View Profile</a>
-                                                    <a href="../backend/logout.php" class="view btn-sm active">Log Out</a>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
