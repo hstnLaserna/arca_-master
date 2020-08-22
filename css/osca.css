@@ -68,12 +68,31 @@ img.avatar:hover {
   padding: 1rem 5rem;
 }
 
+.edit{
+  display: none;
+}
+
+.disp_address:hover .edit{
+  display: inline;
+}
+
+.disp_guardian:hover .edit{
+  display: inline;
+  top: .5rem;
+  right: .5rem;
+}
 
 
 .registration-form {
   padding: 1rem 5rem;
   width: 75%;
   margin: auto;
+}
+
+.form-contents > div{
+  padding: 0.2rem;
+  margin-bottom: 0.8rem;
+
 }
 .input_error {
   outline: 1px solid red;
@@ -176,6 +195,8 @@ i.sort_icon{
 
 button.edit {
   padding: 0px !important;
+  margin-left: 10px !important;
+  position: absolute;
 }
 
 .modal-edit-address

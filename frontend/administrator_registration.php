@@ -10,102 +10,81 @@
 
     <div class="registration-form">
       <form method="post" enctype="multipart/form-data" autocomplete="off" id="newAdmin">
-        <table class="table modal-form">
-          <tr>
-            <td colspan="2">
+        <div class="form-contents">
+          <div>
               Username
               <input type="text" class="form-control " name="user_name">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Password
               <input type="password" class="form-control " name="password">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Firstname
               <input type="text" class="form-control " name="first_name">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Middlename
               <input type="text" class="form-control " name="middle_name">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Lastname
               <input type="text" class="form-control " name="last_name">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Birthdate
               <input type="date" class="form-control" name="birthdate" >
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Gender
-              <div class="form-group">
-                <select class="form-control" name="gender">
-                  <option>Female</option>
-                  <option>Male</option>
-                </select>
+          </div>
+          <div>
+            <div class ="row">
+              <div class ="col col-lg-6 col-12">
+                Gender
+                <div class="form-group">
+                  <select class="form-control" name="gender">
+                    <option>-</option>
+                    <option>Female</option>
+                    <option>Male</option>
+                  </select>
+                </div>
               </div>
-            </td>
-            <td>
-              Position
-              <div class="form-group">
-                <select class="form-control" name="position">
-                  <option>Admin</option>
-                  <option>User</option>
-                </select>
+              <div class ="col col-lg-6 col-12">
+                Position
+                <div class="form-group">
+                  <select class="form-control" name="position">
+                    <option>-</option>
+                    <option>Admin</option>
+                    <option>User</option>
+                  </select>
+                </div>
               </div>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+            </div>
+          </div>
+          <div>
               Contact Number
               <input type="text" class="form-control " name="contact_number">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Email
               <input type="text" class="form-control " name="email">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Security Answer 1
               <input type="text" class="form-control" name="security_answer_1">
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+          </div>
+          <div>
               Security Answer 2
               <input type="text" class="form-control" name="security_answer_2">
-            </td>
-          </tr>
+          </div>
           <!--
-          <tr>
-            <td colspan="2">
+          <div>
               Picture
-            </td>
-            <td colspan="2">
               <input type="file" name="photo" id="fileSelect" >
-            </td>
-          </tr>
+          </div>
           -->
-
-        </table>
+       </div>
       </form>
+      <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
     </div>
-    <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
 
   </div>
 </div>

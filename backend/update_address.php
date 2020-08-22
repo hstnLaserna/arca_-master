@@ -70,7 +70,7 @@
                     if(mysqli_query($db, $query)){
                         echo "true";
                     } else {
-                        echo "ERROR: Could not able to execute [$query]" . mysqli_error($db);
+                        echo "ERROR: Could not able to execute.\r\n" . mysqli_error($db);
                     }
                 } else {
                     echo "Errors have been found. Could not execute update of address.";

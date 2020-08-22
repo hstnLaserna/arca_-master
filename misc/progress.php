@@ -111,11 +111,11 @@ tables:
             [x] query of display transportation transaction
             [] contact details
             [] guardian
-                [] table
-                [] create
-                [] read
-                [] update
-                [] delete
+                [x] table
+                [x] create
+                [x] read
+                [x] update
+                [x] delete
 
 [] administration
     [x] user profile

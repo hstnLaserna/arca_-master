@@ -5,12 +5,12 @@
 
     if(isset($_GET['member_id']))
     {
-        $member_id = $_GET['member_id'];
+        $osca_id = $_GET['member_id'];
         
         $format_bdate = "concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`))";
         $format_memdate = "concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`))";
         $query = "SELECT * FROM `view_members_with_guardian`
-                    WHERE `member_id` = $member_id;";
+                    WHERE `osca_id` = '$osca_id';";
                             
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);
@@ -19,6 +19,7 @@
         {
             if($row_count > 1) { echo "ID returns more than 1 record";} else{}
             $osca_id = $row['osca_id'];
+            $member_id = $row['member_id'];
             $first_name = $row['first_name'];
             $middle_name =  $row['middle_name'];
             $last_name =  $row['last_name'];
@@ -45,7 +46,7 @@
                 </div>
                 <div class="card-bottom-right">
                     <button type="button" id="edit_basic" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>
-                    <button type="button" id="add_address" class="btn btn-secondary m   -2 w-75">Add Address</button>
+                    <button type="button" id="add_address" class="btn btn-secondary m-2 w-75">Add Address</button>
                 </div>
                 <div class="card-left">
                     <div class="card">
@@ -63,13 +64,11 @@
                         <p>Member since: <?php echo $memship_date; ?> </p>
                     </div>
 
-                    <div class="card">
+                    <div class="card disp_guardian">
                         <h3> Guardian's Details </h3>
-                        <p>Full Name: <?php echo "$g_first_name $g_last_name"; ?></p>
-                        <p>Relationship: <?php echo "$g_relationship"; ?></p>
-                        <p>Sex: <?php echo determine_sex($g_sex2, "display_long"); ?> </p>
-                        <p>Contact Number: <?php echo "$g_contact_number"; ?></p>
-                        <p>Email: <?php echo "$g_email"; ?></p>
+                        <div>
+                            <?php read_guardian($osca_id);?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -159,41 +158,54 @@
 ?>
 
 
-<div>
+<div class="container">
     <!-- Modal Edit -->
-    <div id="modal_edit_address" class="modal fade" role="dialog">
+    <div id="_kf939s" class="modal fade" role="dialog">
     </div> <!-- End modal -->
 
 </div>
-<div class="container">
-    <?php
-    include('../frontend/foot.php');
-    ?>
-</div>
+
+<?php
+include('../frontend/foot.php');
+?>
 
 <script>
 $('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
 $(document).ready(function(){
+    
+
     $('#edit_basic').click(function () {
         var url = 'edit_member.php';
         var form = $(   '<form action="' + url + '" method="get">' +
-                            '<input type="hidden" name="member_id" value="' + <?php echo $member_id?> + '" />' +
+                            '<input type="hidden" name="member_id" value="' + <?php echo $osca_id?> + '" />' +
                         '</form>');
         $('div.container').append(form);
         form.submit();
         
     });
-    $('.edit_address').click(function () {
-        var address_id= $(this).parent().attr("id").replace("memNum_", "");
-        var member_id= <?php echo $member_id;?>;
-        $('#modal_edit_address').load("../frontend/edit_address.php?action=edit", {member_id:member_id, address_id:address_id},function(){
-            $('#modal_edit_address').modal();
-        });
-    });
+    
     $('#add_address').click(function () {
         var member_id= <?php echo $member_id;?>;
-        $('#modal_edit_address').load("../frontend/edit_address.php?action=add", {member_id:member_id},function(){
-            $('#modal_edit_address').modal();
+        $('#_kf939s').load("../frontend/edit_address.php?action=add", {member_id:member_id},function(){
+            $('#_kf939s').modal();
+        });
+    });
+    
+    $('.edit_address').click(function () {
+        var address_id= $(this).parent().attr("id").replace("addNum_", "");
+        var member_id= <?php echo $member_id;?>;
+        $('#_kf939s').load("../frontend/edit_address.php?action=edit", {member_id:member_id, address_id:address_id},function(){
+            $('#_kf939s').modal();
+        });
+    });
+
+    
+    $('.edit_guardian').click(function () {
+        //var member_id= $(this).closest("tr").attr("id").replace("memNum_", "");
+        var gid = $(this).parent().attr("id").replace("gid","");
+        var osca_id= <?php echo $osca_id;?>;
+        $('#_kf939s').load("../frontend/edit_guardian.php?action=edit", {osca_id:osca_id, gid:gid}, function(){
+            $('#_kf939s').modal();
         });
     });
 

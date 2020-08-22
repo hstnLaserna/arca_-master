@@ -1,16 +1,10 @@
 <?php
   include('../backend/conn.php');
-  $db = mysqli_connect($host,$user,$pass,$schema);
-  $errors = array();
+  if(!isset($errors)) {$errors = array();}
   $query = "";
-  // Check connection
-  if($db === false){
-      die("ERROR: Could not connect. " . mysqli_connect_error());
-      echo "Error: Could not connect to db ". mysqli_connect_error();
-  }
-  else { }
   $user_type = "senior citizen";
   $with_address = true;
+  $with_guardian = true;
   include('../backend/import_post_variables.php');
   include('../backend/validate_user_inputs.php');
 
@@ -23,13 +17,21 @@
     $result2 = $mysqli->query($query2);
     $rows2 = mysqli_num_rows($result2);
 
-    if ($rows1 == 0 && $rows2 == 0) { // OSCA ID doesn't exist
-      $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$contact_number', '$email', '$membership_date', '$password', '$osca_id', '$nfc_serial', '$address_line1', '$address_line2', '$address_city', '$address_province')";
-      if(mysqli_query($db, $query)){
-        echo "Records inserted successfully.";
+    if ($rows1 == 0 && $rows2 == 0) { // OSCA ID is unique
+      $mysqli->query("START TRANSACTION;");
+      $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', 
+                  '$sex2', '$contact_number', '$email', 
+                  '$address_line1', '$address_line2', '$address_city', '$address_province', 
+                  '$nfc_serial', '$osca_id', '$password', 
+                  '$g_firstname', '$g_middlename', '$g_lastname',
+                  '$g_contact_number', '$g_sex2', '$g_relationship', '$g_email')";
+      if($mysqli->query($query)){
+        
+        echo "true";
+        $mysqli->query("commit;");
       }
       else {
-        echo "ERROR: Unable to execute. \r\n" . mysqli_error($db);
+        echo "ERROR: Unable to execute. \r\n" . mysqli_error($mysqli);
       }
     }
     else {
@@ -49,6 +51,6 @@
 
     $errors= array();
   }
-  mysqli_close($db);
+  mysqli_close($mysqli);
 
 ?>

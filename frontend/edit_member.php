@@ -3,15 +3,17 @@ include('header.php');
 include('../backend/php_functions.php');
 if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
 {
-    $member_id = $_GET['member_id'];
+    $osca_id = $_GET['member_id'];
     $query = "SELECT 	`id`,	`osca_id`,	`nfc_serial`,	`password`,	`first_name`,	`middle_name`,	`last_name`,	`birth_date`,
-                        `sex`,	`contact_number`, `email`, `membership_date`,	`picture` FROM `member` WHERE `id` = $member_id";
+                        `sex`,	`contact_number`, `email`, `membership_date`,	`picture` FROM `member` WHERE `osca_id` = $osca_id";
     $result = $mysqli->query($query);
     $row_count = mysqli_num_rows($result);
 
     if($row_count == 1) {
         $row = mysqli_fetch_assoc($result);
         {
+            $member_id = $row['id'];
+            $osca_id = $row['osca_id'];
             $first_name = $row['first_name'];
             $middle_name = $row['middle_name'];
             $last_name = $row['last_name'];
@@ -25,116 +27,73 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
             $membership_date = date('Y-m-d', strtotime($membership_date));
         }
         ?>
-        <div>
+        <div class="registration-form" id="accordion">
             <form method="post" enctype="multipart/form-data" autocomplete="off" id="editMember">
-                <table class="table modal-form">
-                    <tr>
-                        <td>
+            
+                    <div class="collapse-header" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <h3> PERSONAL DETAILS</H3>
+                    </div>
+                    <div id="collapseOne" class="form-contents collapse show" aria-labelledby="headingOne">
+                        <div>
                             Firstname
-                        </td>
-                        <td>
                             <input type="text" class="form-control " name="first_name" placeholder="<?php echo $first_name?>" value="<?php echo $first_name?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        </div>
+                        <div>
                             Middlename
-                        </td>
-                        <td>
                             <input type="text" class="form-control " name="middle_name" id="midname" placeholder="<?php echo $middle_name?>" value="<?php echo $middle_name?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        </div>
+                        <div>
                             Lastname
-                        </td>
-                        <td>
                             <input type="text" class="form-control " name="last_name" placeholder="<?php echo $last_name?>" value="<?php echo $last_name?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Birthdate
-                        </td>
-                        <td>
-                            <input type="date" class="form-control" name="birthdate" value="<?php echo $birthdate?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Gender
-                        </td>
-                        <td>
-                            <div class="form-group">
-                            <select class="form-control" name="gender">
-                                <option <?php if($sex2 == "0" || $sex2 > "2"){echo "selected";}else{}; ?>>-</option>
-                                <option <?php if($sex2 == "2"){echo "selected";}else{}; ?>>Female</option>
-                                <option <?php if($sex2 == "1"){echo "selected";}else{}; ?>>Male</option>
-                            </select>
+                        </div>
+                        <div class ="row">
+                            <div class ="col col-lg-6 col-12">
+                                Birthdate
+                                <input type="date" class="form-control" name="birthdate" value="<?php echo $birthdate?>">
                             </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Membership date
-                        </td>
-                        <td>
-                            <input type="date" class="form-control" name="membership_date" value="<?php echo $membership_date?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                            <div class ="col col-lg-6 col-12">
+                                Gender
+                                <div class="form-group">
+                                <select class="form-control" name="gender">
+                                    <option <?php if($sex2 == "0" || $sex2 > "2"){echo "selected";}else{}; ?>>-</option>
+                                    <option <?php if($sex2 == "2"){echo "selected";}else{}; ?>>Female</option>
+                                    <option <?php if($sex2 == "1"){echo "selected";}else{}; ?>>Male</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
                             Contact Number
-                        </td>
-                        <td>
                             <input type="text" class="form-control " name="contact_number" placeholder="<?php echo $last_name?>" value="<?php echo $contact_number?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        </div>
+                        <div>
                             Email
-                        </td>
-                        <td>
                             <input type="text" class="form-control " name="email" placeholder="<?php echo $email?>" value="<?php echo $email?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        </div>
+                    </div>
+                    <div class="collapse-header" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <h3> MEMBERSHIP DETAILS </H3>
+                    </div>
+                    <div id="collapseTwo" class="form-contents collapse" aria-labelledby="headingTwo">
+                        <div>
+                            Membership date
+                            <input type="date" class="form-control" name="membership_date" value="<?php echo $membership_date?>">
+                        </div>
+                        <div>
                             OSCA ID
-                        </td>
-                        <td>
                             <input type="text" class="form-control" name="osca_id"  placeholder="<?php echo $osca_id?>" value="<?php echo $osca_id?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        </div>
+                        <div>
                             NFC Serial
-                        </td>
-                        <td>
                             <input type="text" class="form-control" name="nfc_serial"  placeholder="<?php echo $nfc_serial?>" value="<?php echo $nfc_serial?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        </div>
+                        <div>
                             Password 
                             </br><small> <i> (leave blank to keep old password) </i> </small>
-                        </td>
-                        <td>
                             <input type="password" class="form-control " name="password">
-                        </td>
-                    </tr>
-                        <!--
-                    <tr>
-                        <td>
-                            Picture
-                        </td>
-                        <td>
-                            <input type="file" name="photo" id="fileSelect" >
-                        </td>
-                    </tr>
-                        -->
+                        </div>
+                    </div>
 
-                </table>
                 <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $member_id;?>">
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
                 <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>

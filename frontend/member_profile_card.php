@@ -92,7 +92,7 @@ $(document).ready(function(){
     $('#view').click(function () {
         var url = '../frontend/member_profile.php';
         var form = $(   '<form action="' + url + '" method="get">' +
-                            '<input type="hidden" name="member_id" value="' + <?php echo $member_id?> + '" />' +
+                            '<input type="hidden" name="member_id" value="' + <?php echo $osca_id ?> + '" />' +
                         '</form>');
         $('div.card').append(form);
         form.submit();

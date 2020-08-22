@@ -42,7 +42,7 @@
                         if(strtolower($sex2) == "f") {$salutation = "Ms.";} else  {$salutation = "Mr.";}
                         echo "true";
                     } else {
-                        echo "ERROR: Could not execute. $query \r\n" . mysqli_error($db);
+                        echo "ERROR: Could not execute. \r\n" . mysqli_error($db);
                     }
                 } else {
                     if($rows1 >= 1){ echo "OSCA ID is already registered to other records.";}

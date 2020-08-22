@@ -84,8 +84,9 @@ YEAR(CURDATE()) -
 YEAR(birth_date) -
 IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(birth_date), '-', DAY(birth_date)) ,'%Y-%c-%e') > CURDATE(), 1, 0) age,
 concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`)) `memship_date`, 
-m.`contact_number`, m.`email`, m.`picture` `picture`, g.first_name `g_first_name`, 
-g.last_name `g_last_name`, g.sex `g_sex`, g.contact_number `g_contact_number`, g.email `g_email`, g.relationship `g_relationship` 
+m.`contact_number`, m.`email`, m.`picture` `picture`, 
+g.first_name `g_first_name`, g.middle_name `g_middle_name`, g.last_name `g_last_name`, g.sex `g_sex`, 
+g.contact_number `g_contact_number`, g.email `g_email`, g.relationship `g_relationship` 
 FROM `member` m INNER JOIN guardian g ON g.member_id = m.id
 );
 

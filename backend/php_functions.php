@@ -81,9 +81,9 @@
                         $city = $row['city'];
                         $province = $row['province'];
                         if($row['is_active'] == '1'){$is_active = true;}else{$is_active=false;}
-                        echo "<p id='memNum_$address_id'>Address $address_counter: $address1, $address2, $city, $province ";
+                        echo "<p class='disp_address' id='addNum_$address_id'>Address $address_counter: $address1, $address2, $city, $province ";
                         if($is_active){echo "<small class='text-muted'>(Primary)</small> ";}else{}
-                        echo '<button class="btn btn-link edit edit_address"><i class="fa fa-edit"></i></button></p>';
+                        echo '<button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button></p>';
                         $address_counter++;
                     }
                 }
@@ -113,6 +113,45 @@
             }
             mysqli_close($mysqli);
         } else {echo "ID does not exist";}
+    }
+
+    function read_guardian($osca_id, $edit=true){
+        if(isset($osca_id))
+        {
+            include('../backend/conn.php');
+            if($edit) {
+                $query = "SELECT * FROM `view_members_with_guardian`
+                    WHERE `osca_id` = '$osca_id';";
+
+                $result = $mysqli->query($query);
+                $row_count = mysqli_num_rows($result);
+                if($row_count == 0) { echo "<p class='lead'>No guardian on record</p>";} else
+                {
+                    while($row = mysqli_fetch_array($result))
+                    {
+                        $g_id = $row['g_id'];
+                        $g_first_name = $row['g_first_name'];
+                        $g_middle_name = $row['g_middle_name'];
+                        $g_last_name =  $row['g_last_name'];
+                        $g_sex2 =  $row['g_sex'];
+                        $g_contact_number =  $row['g_contact_number'];
+                        $g_email =  $row['g_email'];
+                        $g_relationship =  $row['g_relationship'];
+                        ?>
+                        <div id="gid<?php echo $g_id ?>">
+                            <p>Full Name: <?php echo "$g_first_name $g_middle_name $g_last_name"; ?></p>
+                            <p>Relationship: <?php echo "$g_relationship"; ?></p>
+                            <p>Sex: <?php echo determine_sex($g_sex2, "display_long"); ?> </p>
+                            <p>Contact Number: <?php echo "$g_contact_number"; ?></p>
+                            <p>Email: <?php echo "$g_email"; ?></p>
+                            <button class="btn btn-link edit edit_guardian"><i class="fa fa-edit"></i></button></p>
+                        </div>
+                        <?php
+                    }
+                }
+            }
+            mysqli_close($mysqli);
+        } else {echo "Member does not exist";}
     }
 
 ?>
