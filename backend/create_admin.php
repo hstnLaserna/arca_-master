@@ -11,6 +11,7 @@
   else { }
   $user_type = "osca";
   $with_address = false;
+  $with_guardian = false;
   include('../backend/import_post_variables.php');
   include('../backend/validate_user_inputs.php');
 

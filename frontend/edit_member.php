@@ -64,7 +64,7 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
                         </div>
                         <div>
                             Contact Number
-                            <input type="text" class="form-control " name="contact_number" placeholder="<?php echo $last_name?>" value="<?php echo $contact_number?>">
+                            <input type="text" class="form-control " name="contact_number" placeholder="<?php echo $contact_number?>" value="<?php echo $contact_number?>">
                         </div>
                         <div>
                             Email

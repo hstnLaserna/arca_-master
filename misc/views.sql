@@ -87,8 +87,13 @@ concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`mem
 m.`contact_number`, m.`email`, m.`picture` `picture`, 
 g.first_name `g_first_name`, g.middle_name `g_middle_name`, g.last_name `g_last_name`, g.sex `g_sex`, 
 g.contact_number `g_contact_number`, g.email `g_email`, g.relationship `g_relationship` 
-FROM `member` m INNER JOIN guardian g ON g.member_id = m.id
+FROM `member` m
+INNER JOIN `guardian` g ON g.`member_id` = m.id
+INNER JOIN `address_jt` ajt on ajt.`member_id` = m.id
+INNER JOIN `address` a on ajt.`address_id` = a.id;
 );
+
+
 
 
 /*
