@@ -37,14 +37,32 @@
 
     while($row = mysqli_fetch_array($result))
     {
+      $id = $row['id'];
+      $user_name = $row['user_name'];
+      $first_name = $row['first_name'];
+      $last_name = $row['last_name'];
+      $position = ucfirst($row['position']);
+      if($row['is_enabled'] == 1){
+        $is_active =  "active";
+      } else {
+        $is_active = "inactive";
+      }
+
+
+      $avatar = '../resources/avatars/'.$row["avatar"];
+      if (file_exists($avatar) && $row["avatar"] != null) { 
+        // something
+      } else {
+        $avatar = "../resources/images/unknown_m_f.png"; 
+      }
     ?>
-      <tr id="adminNum_<?php echo $row['id']?>">
-        <td><img src="<?php $picture = '../resources/avatars/'.$row["avatar"]; if (file_exists($picture)) { echo $picture; } else{ echo "../resources/images/unknown_m_f.png"; } ?>" class="avatar view-admin" alt="<?php echo $row['user_name'] ?>"></td>
-        <td><?php echo $row['user_name'] ?></td>
-        <td><?php echo $row['first_name'] ?></td>
-        <td><?php echo $row['last_name'] ?></td>
-        <td><?php echo ucfirst($row['position']) ?></td>
-        <td class="<?php if($row['is_enabled'] == 1){echo "active";}else{echo "inactive";}?>"></td>
+      <tr id="admin_<?php echo $user_name; ?>" >
+        <td><img src="<?php echo $avatar ?>" alt="<?php echo $user_name?>" class="avatar view-admin"></td>
+        <td><?php echo $user_name; ?></td>
+        <td><?php echo $first_name; ?></td>
+        <td><?php echo $last_name; ?></td>
+        <td><?php echo $position; ?></td>
+        <td class="isEnabled <?php echo $is_active ?>"></td>
       </tr>
     <?php
 

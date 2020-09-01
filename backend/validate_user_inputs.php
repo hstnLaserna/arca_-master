@@ -1,5 +1,5 @@
 <?php
-
+/*
     if(!isset($errors)) {$errors = array();}
 
     if(strlen($firstname) < 1 || strlen($firstname) > 120)
@@ -24,6 +24,46 @@
     if(strlen($email) < 4 || strlen($email) > 30)
     {
         array_push($errors, "Email must be valid");
+    }
+    if(count($errors) > 0)
+    {
+        array_push($errors, "");
+    }
+    
+    if($with_guardian)
+    {
+        if(strlen($g_firstname) < 1 || strlen($g_firstname) > 120)
+        {
+            array_push($errors, "Guardian:   Firstname must be less than 120 characters");
+        }
+        if(strlen($g_lastname) < 1 || strlen($g_lastname) > 120)
+        {
+            array_push($errors, "Guardian:   Lastname must be less than 120 characters");
+        }
+        if($g_sex != "male")
+        {
+            if($g_sex != "female")
+            {
+                array_push($errors, "Guardian:   Gender must either be Male or Female.");
+            }
+        }
+        if(strlen($g_relationship) < 1 || strlen($g_relationship) > 120)
+        {
+            array_push($errors, "Guardian:   Relationship must be less than 120 characters");
+        }
+        if(strlen($g_contact_number) < 4 || strlen($g_contact_number) > 30)
+        {
+            array_push($errors, "Guardian:   Contact number must be between 4 - 30 digits");
+        }
+        if(strlen($g_email) < 4 || strlen($g_email) > 30)
+        {
+            array_push($errors, "Guardian:   Email must be valid");
+        }
+        if(count($errors) > 0)
+        {
+            array_push($errors, "");
+        }
+        $with_guardian = false;
     }
     
     if(isset($user_type)) {
@@ -61,6 +101,7 @@
                 array_push($errors, "Second Security answer must be between 4 - 20 characters");
             }
         }
+
         if($user_type == "senior citizen")
         {
             { // validate senior citizen's birthdate
@@ -91,7 +132,14 @@
                 }
             }
         }
+
+        if(count($errors) > 0)
+        {
+            array_push($errors, "");
+        }
+        unset($user_type);
     }
+
     if($with_address)
     {
         if(strlen($address_line1) < 4 || strlen($address_line1) > 50)
@@ -110,42 +158,17 @@
         {
             array_push($errors, "Province must be between 4 - 50 digits");
         }
+
+        if(count($errors) > 0)
+        {
+            array_push($errors, "");
+        }
+
         $with_address = false;
-    }
-    
-    if($with_guardian)
-    {
-        if(strlen($g_firstname) < 1 || strlen($g_firstname) > 120)
-        {
-            array_push($errors, "Guardian's Firstname must be less than 120 characters");
-        }
-        if(strlen($g_lastname) < 1 || strlen($g_lastname) > 120)
-        {
-            array_push($errors, "Guardian's Lastname must be less than 120 characters");
-        }
-        if($g_sex != "male")
-        {
-            if($g_sex != "female")
-            {
-                array_push($errors, "Guardian's Gender must either be Male or Female.");
-            }
-        }
-        if(strlen($g_relationship) < 1 || strlen($g_relationship) > 120)
-        {
-            array_push($errors, "Guardian's Relationship must be less than 120 characters");
-        }
-        if(strlen($g_contact_number) < 4 || strlen($g_contact_number) > 30)
-        {
-            array_push($errors, "Guardian's Contact number must be between 4 - 30 digits");
-        }
-        if(strlen($g_email) < 4 || strlen($g_email) > 30)
-        {
-            array_push($errors, "Guardian's Email must be valid");
-        }
     }
 
     $array_length=count($errors);
 
-
+*/
 
 ?>

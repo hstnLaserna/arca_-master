@@ -1,6 +1,6 @@
 <?php
 
-if(isset($date_to_validate)  && $date_to_validate != "")
+if(isset($date_to_validate)  && (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$date_to_validate)))
 {
     if(!isset($is_senior_birthdate)){ $is_senior_birthdate = false;} else {}
     //if(!isset($is_birthdate)){ $is_birthdate = false;} else {}
@@ -37,6 +37,6 @@ if(isset($date_to_validate)  && $date_to_validate != "")
     $is_senior_birthdate = false;
     $date_to_validate = null;
 } else {
-    array_push($errors, "No date to validate. See instruction");
+    array_push($errors, "Invalid date");
 }
 ?>

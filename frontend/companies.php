@@ -4,14 +4,16 @@
 
 <div id="members">
     <?php
-      include("../backend/display_members.php")
+      include("../backend/display_companies.php")
     ?>
 
   <div>
-    <div id="modal_displayMember" class="modal fade" role="dialog">
+    <div id="modal_displayCompany" class="modal fade" role="dialog">
     </div>
 
   </div>
+</div>
+<div class="_dfg987">
 </div>
 
 <?php
@@ -20,15 +22,19 @@
 
 
 <script>
-$("#members_management").addClass('active').siblings().removeClass('active');
-$('title').replaceWith('<title>OSCA - Members</title>');
+$("#company_management").addClass('active').siblings().removeClass('active');
+$('title').replaceWith('<title>OSCA - Companies</title>');
   $(document).ready(function(){
     
-    $('.view-member').click(function () {
-      var member_id= $(this).closest("tr").attr("id").replace("memNum_", "");
-      $('#modal_displayMember').load("../frontend/member_profile_card.php", { member_id: member_id },function(){
-        $('#modal_displayMember').modal();
-      });
+    $('.view-company').click(function () {
+      var company_tin= $(this).attr("id").replace("ct_", "");
+        
+      var url = '../frontend/company_profile.php';
+      var form = $(   '<form action="' + url + '" method="get">' +
+                          '<input type="hidden" name="company_tin" value="' + company_tin + '" />' +
+                      '</form>');
+      $('._dfg987').append(form);
+      form.submit();
     });
 
     { // Sort thru Table headers

@@ -21,7 +21,6 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
             $sex2 = $row['sex'];
             $contact_number = $row['contact_number'];
             $email =  $row['email'];
-            $osca_id = $row['osca_id'];
             $nfc_serial = $row['nfc_serial'];
             $membership_date = $row['membership_date'];
             $membership_date = date('Y-m-d', strtotime($membership_date));
@@ -94,7 +93,7 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
                         </div>
                     </div>
 
-                <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $member_id;?>">
+                <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $osca_id;?>">
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
                 <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
             </form>

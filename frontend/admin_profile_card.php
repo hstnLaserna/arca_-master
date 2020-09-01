@@ -2,13 +2,13 @@
     <div class="modal-content">
         <div class="modal-body">
             <?php
-                if(isset($_POST['admin_id']))
+                if(isset($_POST['user']))
                 {
                     include('../backend/conn.php');
                     include('../backend/php_functions.php');
-                    $admin_id = $_POST['admin_id'];
+                    $user = $_POST['user'];
                     $query = "SELECT `user_name`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `position`, `answer1`, `answer2`, `avatar`
-                                FROM `admin` WHERE `id` = $admin_id";
+                                FROM `admin` WHERE `user_name` = '$user'";
                     $result = $mysqli->query($query);
                     $row_count = mysqli_num_rows($result);
                     $row = mysqli_fetch_assoc($result);
@@ -27,14 +27,19 @@
                             $position = strtolower($row['position']);
                             $answer1 = $row['answer1'];
                             $answer2 = $row['answer2'];
-                            $avatar = $row['avatar'];
+                            $avatar = '../resources/avatars/'.$row["avatar"];
+                            if (file_exists($avatar) && $row["avatar"] != null) { 
+                                // something
+                            } else {
+                                $avatar = "../resources/images/unknown_m_f.png"; 
+                            }
                         }
                         ?>
 
                         
                             <div class="card card digital-card-contents">
                                 <div class="card-right">
-                                    <img class="picture" src=<?php $avatar = '../resources/avatars/'.$row["avatar"]; if (file_exists($avatar) && $row["avatar"] != null) { echo '"'.$avatar.'"'; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
+                                    <img class="picture" src=<?php echo $avatar;?>>
                                 </div>
                                 <p><?php echo $last_name; ?>,</p>
                                 <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
@@ -53,6 +58,7 @@
                                 <button type="button" id="view" class="btn btn-light btn-lg btn-block">View</button>
                                 <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
                             </div>
+                            <input type="hidden" id="user_<?php echo $user_name;?>" name="user_name">
                         
                         <?php
 
@@ -70,9 +76,12 @@
 <script>
 $(document).ready(function(){
     $('#view').click(function () {
+        
+        
+        var user = $('input[name="user_name"]').attr("id").replace("user_", "")
         var url = '../frontend/user_profile.php';
         var form = $(   '<form action="' + url + '" method="get">' +
-                            '<input type="hidden" name="admin_id" value="' + <?php echo $admin_id?> + '" />' +
+                            '<input type="hidden" name="user" value="' + user + '" />' +
                         '</form>');
         $('div.card').append(form);
         form.submit();

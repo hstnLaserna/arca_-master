@@ -1,14 +1,14 @@
 <?php
   include('../backend/conn.php');
-  if(!isset($errors)) {$errors = array();}
   $query = "";
   $user_type = "senior citizen";
+  $personal_details = true;
+  $with_password = true;
   $with_address = true;
   $with_guardian = true;
   include('../backend/import_post_variables.php');
-  include('../backend/validate_user_inputs.php');
-
-  if($array_length == 0)
+  
+  if($array_length == 0 && isset($validated) && $validated)
   {
     $query1 = "SELECT `osca_id` FROM `member` WHERE `osca_id` = '$osca_id';";
     $result1 = $mysqli->query($query1);
@@ -20,18 +20,18 @@
     if ($rows1 == 0 && $rows2 == 0) { // OSCA ID is unique
       $mysqli->query("START TRANSACTION;");
       $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', 
-                  '$sex2', '$contact_number', '$email', 
+                  '$sex2', '$contact_number', '$email', '$membership_date',
                   '$address_line1', '$address_line2', '$address_city', '$address_province', 
                   '$nfc_serial', '$osca_id', '$password', 
                   '$g_firstname', '$g_middlename', '$g_lastname',
                   '$g_contact_number', '$g_sex2', '$g_relationship', '$g_email')";
       if($mysqli->query($query)){
         
-        echo "true";
+        echo "$query";
         $mysqli->query("commit;");
       }
       else {
-        echo "ERROR: Unable to execute. \r\n" . mysqli_error($mysqli);
+        echo "ERROR: Unable to execute. \r\n $query" . mysqli_error($mysqli);
       }
     }
     else {
@@ -40,7 +40,7 @@
     }
   }
   else {
-    echo "Errors have been found. Could not execute addition of account.";
+    echo "Errors have been found. Could not execute addition of account. ";
     // Displaying records from external php file "validate_user_inputs.php"
     echo "\r\n";
     for( $i = 0 ; $i < $array_length ; $i++ )

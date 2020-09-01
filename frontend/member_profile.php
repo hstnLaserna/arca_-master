@@ -3,50 +3,79 @@
     include('../backend/php_functions.php');
     include('../backend/conn.php');
 
+    // declare variables 
+
+    $osca_id = "null";
+    $member_id = "null";
+    $first_name = "null";
+    $middle_name =  "null";
+    $last_name =  "null";
+    $sex2 =  "null";
+    $contact_number =  "null";
+    $email =  "null";
+    $bdate =  "null";
+    $age =  "null";
+    $memship_date =  "null";
+    $picture = "../resources/images/unknown_m_f.png";
+    $member_buttons = '';
+
     if(isset($_GET['member_id']))
     {
         $osca_id = $_GET['member_id'];
-        
-        $format_bdate = "concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`))";
-        $format_memdate = "concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`))";
-        $query = "SELECT * FROM `view_members_with_guardian`
+
+        $query = "SELECT m.`id` member_id, m.`osca_id`, m.`nfc_serial`, m.`password`, m.`first_name`, m.`middle_name`, m.`last_name`, m.`sex`, 
+                    concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`)) `bdate`, 
+                    YEAR(CURDATE()) - YEAR(birth_date) - IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(birth_date), '-', DAY(birth_date)) ,'%Y-%c-%e') > CURDATE(), 1, 0) age,
+                    concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`)) `memship_date`, 
+                    m.`contact_number`, m.`email`, m.`picture` `picture`
+                    FROM `member` m
                     WHERE `osca_id` = '$osca_id';";
-                            
+                    
         $result = $mysqli->query($query);
-        $row_count = mysqli_num_rows($result);
-        $row = mysqli_fetch_assoc($result);
-        if($row_count == 0) { echo "ID Does not exist";} else
+        $row_count_member = mysqli_num_rows($result);
+        $row_member = mysqli_fetch_assoc($result);
+
+        if($row_count_member == 1)
         {
-            if($row_count > 1) { echo "ID returns more than 1 record";} else{}
-            $osca_id = $row['osca_id'];
-            $member_id = $row['member_id'];
-            $first_name = $row['first_name'];
-            $middle_name =  $row['middle_name'];
-            $last_name =  $row['last_name'];
-            $sex2 =  $row['sex'];
-            $contact_number =  $row['contact_number'];
-            $email =  $row['email'];
-            $bdate =  $row['bdate'];
-            $age =  $row['age'];
-            $memship_date =  $row['memship_date'];
-
+            $osca_id = $row_member['osca_id'];
+            $member_id = $row_member['member_id'];
+            $first_name = $row_member['first_name'];
+            $middle_name =  $row_member['middle_name'];
+            $last_name =  $row_member['last_name'];
+            $sex2 =  $row_member['sex'];
+            $contact_number =  $row_member['contact_number'];
+            $email =  $row_member['email'];
+            $bdate =  $row_member['bdate'];
+            $age =  $row_member['age'];
+            $memship_date =  $row_member['memship_date'];
             
-            $g_first_name = $row['g_first_name'];
-            $g_last_name =  $row['g_last_name'];
-            $g_sex2 =  $row['g_sex'];
-            $g_contact_number =  $row['g_contact_number'];
-            $g_email =  $row['g_email'];
-            $g_relationship =  $row['g_relationship'];
-            
-            ?>
+            $picture =  "../resources/members/".$row_member["picture"]; 
 
+            if (file_exists($picture) && $row_member["picture"] != null) {
+                $picture =  "../resources/members/".$row_member["picture"]; 
+            } else {
+                echo $picture;
+                $picture = "../resources/images/unknown_m_f.png";
+            }
+
+            $member_buttons = '
+            <button type="button" id="edit_basic" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>
+            <button type="button" id="add_address" class="btn btn-secondary m-2 w-75">Add Address</button>';
+        } else {
+        }
+
+        
+        mysqli_close($mysqli);
+
+    } else {
+    }
+?>
             <div class="card digital-card-contents">
                 <div class="card-right">
-                    <img class="profile-picture" src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'" '; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
+                    <img class="profile-picture" src="<?php echo $picture; ?>">
                 </div>
                 <div class="card-bottom-right">
-                    <button type="button" id="edit_basic" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>
-                    <button type="button" id="add_address" class="btn btn-secondary m-2 w-75">Add Address</button>
+                <?php echo $member_buttons;?>
                 </div>
                 <div class="card-left">
                     <div class="card">
@@ -64,98 +93,32 @@
                         <p>Member since: <?php echo $memship_date; ?> </p>
                     </div>
 
-                    <div class="card disp_guardian">
+                    <div class="card">
                         <h3> Guardian's Details </h3>
                         <div>
-                            <?php read_guardian($osca_id);?>
+                            <?php
+                                read_guardian($osca_id);
+                            ?>
                         </div>
                     </div>
                 </div>
             </div>
-                    
-            <?php
+            
+            <div class="row">
+                <div class="col col-md-3 p-3 border border-dark rounded">
+                    <button class="btn btn-block btn-secondary" id="all">All Transactions</button>
+                    <button class="btn btn-block btn-secondary" id="ph">Pharmacy</button>
+                    <button class="btn btn-block btn-secondary" id="res">Restaurant</button>
+                    <button class="btn btn-block btn-secondary" id="transpo">Transportation</button>
+                </div>
 
-        }
-
-        
-
-        $transaction_query = "SELECT *
-                                FROM view_all_transactions
-                                WHERE member_id = $member_id --  AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10))
-                                ORDER BY trans_date ASC";
-
-        $result = $mysqli->query($transaction_query);
-        $row_count_orig = mysqli_num_rows($result);
-
-
-        $transaction_query = "SELECT * FROM (SELECT `member_id`, trans_date, vat_exempt_price, discount_price , `desc`, 
-                                company_name `company`, branch `branch`, `business_type`
-                                FROM view_all_transactions
-                                WHERE member_id = $member_id AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10))
-                                ORDER BY trans_date ASC) ttt ORDER BY `trans_date` DESC  LIMIT 3;";
-
-        $result = $mysqli->query($transaction_query);
-        $row_count_display = mysqli_num_rows($result);
-        if($row_count_display != 0)
-        {
-            ?>
-            <div class="col col-md-11 m-auto p-3 border border-dark rounded overflow-auto">
-                <div class="table-responsive">
-                    <table class="table table-hover users">
-                        <th>Transaction Type</th>
-                        <th>Transaction date</th>
-                        <th>vat_exempt_price</th>
-                        <th>Discount</th>
-                        <th>Description</th>
-                        <th>Company</th>
-                        <th>Branch</th>
-                                            
-                        <?php
-                    while($row = mysqli_fetch_array($result))
-                    {
-                        $business_type = $row['business_type'];
-                        $transaction_date = $row['trans_date'];
-                        $vat_exempt_price = $row['vat_exempt_price'];
-                        $discount_price = $row['discount_price'];
-                        $description = $row['desc'];
-                        $company = $row['company'];
-                        $branch = $row['branch'];
-                        
-                        ?>
-                        <tr>
-                            <td><?php echo $business_type ?></td>
-                            <td><?php echo $transaction_date ?></td>
-                            <td><?php echo $vat_exempt_price ?></td>
-                            <td><?php echo $discount_price ?></td>
-                            <td><?php echo $description ?></td>
-                            <td><?php echo $company ?></td>
-                            <td><?php echo $branch ?></td>
-                        </tr>
-                        <?php
-                
-                    }
-                    ?>
-                    </table>
-                    <?php 
-                    if ($row_count_orig > $row_count_display)
-                    {?>
-                        <button class="btn btn-block btn-secondary">Display All Transactions</button><br>
-                        <?php
-                    }
-                    //echo "$row_count_orig,  $row_count_display";
-                    ?>
+                <div class="col col-md-9 p-3 border border-dark rounded overflow-auto" class="transactions">
+                    <div class="table-responsive" id="transactions_list">
+                        <table class="table table-hover users" id="trans">
+                        </table>
+                    </div>
                 </div>
             </div>
-            <?php
-        } else {echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No user transaction in the record</div>";}
-        mysqli_close($mysqli);
-        ?>
-
-        <?php
-
-    }
-
-?>
 
 
 <div class="container">
@@ -172,6 +135,33 @@ include('../frontend/foot.php');
 <script>
 $('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
 $(document).ready(function(){
+    var member_id = <?php echo $member_id; ?>;
+    var counter = 1;
+    var type = "";
+
+
+    $("#transactions_list").load("../backend/display_transactions.php", {member_id : member_id, business_type: "pharma" });
+    
+    $("#all").click(function() {
+        var type = "all";
+        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
+    });    
+    $("#ph").click(function() {
+        var type = "pharmacy";
+        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
+    });    
+    $("#res").click(function() {
+        var type = "restaurant";
+        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
+    });    
+    $("#transpo").click(function() {
+        var type = "transportation";
+        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
+    });    
+
+
+
+
     
 
     $('#edit_basic').click(function () {
@@ -194,37 +184,26 @@ $(document).ready(function(){
     $('.edit_address').click(function () {
         var address_id= $(this).parent().attr("id").replace("addNum_", "");
         var member_id= <?php echo $member_id;?>;
-        $('#_kf939s').load("../frontend/edit_address.php?action=edit", {member_id:member_id, address_id:address_id},function(){
+        alert(address_id + " , " + member_id);
+        $('#_kf939s').load("../frontend/edit_address.php?action=edit", {id:member_id, address_id:address_id, type:"member"},function(){
             $('#_kf939s').modal();
         });
     });
-
     
     $('.edit_guardian').click(function () {
-        //var member_id= $(this).closest("tr").attr("id").replace("memNum_", "");
-        var gid = $(this).parent().attr("id").replace("gid","");
+        var gid= $(this).parent().attr("id").replace("gid", "");
         var osca_id= <?php echo $osca_id;?>;
         $('#_kf939s').load("../frontend/edit_guardian.php?action=edit", {osca_id:osca_id, gid:gid}, function(){
             $('#_kf939s').modal();
         });
     });
-
-        //*************************************//
-    { // Sort thru Table headers
-        $('th').click(function(){
-        var table = $(this).parents('table').eq(0)
-        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
-        this.asc = !this.asc
-        if (!this.asc){rows = rows.reverse()}
-        for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+    
+    $('.add_guardian').click(function () {
+        var osca_id= <?php echo $osca_id;?>;
+        $('#_kf939s').load("../frontend/edit_guardian.php?action=add", {osca_id:osca_id}, function(){
+            $('#_kf939s').modal();
         });
-        function comparer(index) {
-            return function(a, b) {
-                var valA = getCellValue(a, index), valB = getCellValue(b, index)
-                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-            }
-        }
-        function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
-    }
+    });
+    
 });
 </script>

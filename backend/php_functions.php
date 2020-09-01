@@ -59,15 +59,32 @@
         else {return false;}
     }
 
-    function read_address($selected_id, $edit=false){
+    function read_address($selected_id, $edit=false, $type="member"){
         if(isset($selected_id))
         {
             include('../backend/conn.php');
-            if($edit) {
-                $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  FROM member m
+            if($type=="member"){
+                $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
+                                FROM `member` m
                                 INNER JOIN `address_jt` `ajt` ON `ajt`.`member_id` = m.`id`
                                 INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
                                 WHERE m.`id` = $selected_id";
+            } else if($type == "company") {
+                $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
+                                FROM `company` c
+                                INNER JOIN `address_jt` `ajt` ON `ajt`.`company_id` = c.`id`
+                                INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                WHERE c.`company_tin` = $selected_id";
+            } else if($type == "guardian") {
+                $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
+                                FROM `guardian` g
+                                INNER JOIN `address_jt` `ajt` ON `ajt`.`guardian_id` = g.`id`
+                                INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                WHERE g.`id` = $selected_id";
+            }
+            else {}
+
+            if($edit) {
                 $result = $mysqli->query($address_query);
                 $row_count = mysqli_num_rows($result);
                 if($row_count == 0) { echo "<p class='lead'>No address on record</p>";} else
@@ -88,11 +105,7 @@
                     }
                 }
             }
-            else { 
-                $address_query = " SELECT `address1`, `address2`, `city`, `province`, `is_active`  FROM member m
-                                INNER JOIN `address_jt` `ajt` ON `ajt`.`member_id` = `m`.`id`
-                                INNER JOIN `address` `a` ON `ajt`.`address_id` = `a`.`id`
-                                WHERE `m`.`id` = $selected_id";
+            else {
                 $result = $mysqli->query($address_query);
                 $row_count = mysqli_num_rows($result);
                 if($row_count == 0) { echo "<p class='lead'>No address on record</p>";} else
@@ -119,39 +132,90 @@
         if(isset($osca_id))
         {
             include('../backend/conn.php');
-            if($edit) {
-                $query = "SELECT * FROM `view_members_with_guardian`
-                    WHERE `osca_id` = '$osca_id';";
+            $query = "SELECT * 
+            FROM member m
+            INNER JOIN guardian g ON g.member_id = m.id
+            WHERE m.`osca_id` = '$osca_id';";
 
-                $result = $mysqli->query($query);
-                $row_count = mysqli_num_rows($result);
-                if($row_count == 0) { echo "<p class='lead'>No guardian on record</p>";} else
-                {
-                    while($row = mysqli_fetch_array($result))
+            $result = $mysqli->query($query);
+            $row_count = mysqli_num_rows($result);
+            if($row_count = 1) {
+                if($edit) {
+                    $query = "SELECT g.id `g_id`, g.`first_name` `g_first_name`, g.`middle_name` `g_middle_name`, g.`last_name` `g_last_name`, 
+                                g.`sex` `g_sex`, g.`contact_number` `g_contact_number`, g.`email` `g_email`, g.`relationship` `g_relationship`
+                                FROM `guardian` g
+                                INNER JOIN `member` m on g.`member_id` = m.`id`        
+                                WHERE m.`osca_id` = '$osca_id';";
+
+                    $result = $mysqli->query($query);
+                    $row_count = mysqli_num_rows($result);
+                    if($row_count == 0) { echo "<p class='disp_guardian'>No guardian on record
+                        <button class='btn btn-link edit add_guardian'><i class='fa fa-edit'></i></button>
+                        </p> ";} else
                     {
-                        $g_id = $row['g_id'];
-                        $g_first_name = $row['g_first_name'];
-                        $g_middle_name = $row['g_middle_name'];
-                        $g_last_name =  $row['g_last_name'];
-                        $g_sex2 =  $row['g_sex'];
-                        $g_contact_number =  $row['g_contact_number'];
-                        $g_email =  $row['g_email'];
-                        $g_relationship =  $row['g_relationship'];
-                        ?>
-                        <div id="gid<?php echo $g_id ?>">
-                            <p>Full Name: <?php echo "$g_first_name $g_middle_name $g_last_name"; ?></p>
-                            <p>Relationship: <?php echo "$g_relationship"; ?></p>
-                            <p>Sex: <?php echo determine_sex($g_sex2, "display_long"); ?> </p>
-                            <p>Contact Number: <?php echo "$g_contact_number"; ?></p>
-                            <p>Email: <?php echo "$g_email"; ?></p>
-                            <button class="btn btn-link edit edit_guardian"><i class="fa fa-edit"></i></button></p>
-                        </div>
-                        <?php
+                        while($row = mysqli_fetch_array($result))
+                        {
+                            $g_id = $row['g_id'];
+                            $g_first_name = $row['g_first_name'];
+                            $g_middle_name = $row['g_middle_name'];
+                            $g_last_name =  $row['g_last_name'];
+                            $g_sex2 =  $row['g_sex'];
+                            $g_contact_number =  $row['g_contact_number'];
+                            $g_email =  $row['g_email'];
+                            $g_relationship =  $row['g_relationship'];
+                            ?>
+                            <div class="card disp_guardian" id="gid<?php echo $g_id ?>" >
+                                <p>Full Name: <?php echo "$g_first_name $g_middle_name $g_last_name"; ?></p>
+                                <p>Relationship: <?php echo "$g_relationship"; ?></p>
+                                <p>Sex: <?php echo determine_sex($g_sex2, "display_long"); ?> </p>
+                                <p>Contact Number: <?php echo "$g_contact_number"; ?></p>
+                                <p>Email: <?php echo "$g_email"; ?></p>
+                                
+                                <button class="btn btn-link edit edit_guardian"><i class="fa fa-edit"></i></button>
+                            </div>
+                            <?php
+                        }
                     }
                 }
             }
+
             mysqli_close($mysqli);
         } else {echo "Member does not exist";}
+    }
+
+    function validate_date($date_to_validate = "", $year_offset = 0){
+        if($date_to_validate != "" && (preg_match("/^((18|19|20)[0-9]{2}[\-.](0[13578]|1[02])[\-.](0[1-9]|[12][0-9]|3[01]))|(18|19|20)[0-9]{2}[\-.](0[469]|11)[\-.](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[\-.](02)[\-.](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[\-.](02)[\-.]29$/",$date_to_validate)))
+        {
+            // Year offset is the valid date from the CURRENT DATE.
+            // e.g. Year offset : "-60" means must be 60 years prior the date of input
+
+
+            $test_arr  = explode('-', $date_to_validate);
+            $timestamp = mktime(0, 0, 0, $test_arr[1], $test_arr[2], $test_arr[0]);
+
+
+
+            //if($is_birthdate){
+            //    $valid_date = strtotime(date("Y-m-d").' -18 year');
+            //} else
+            if($year_offset != 0){
+                $valid_date = strtotime(date("Y-m-d").' '. $year_offset .' year');
+            } else {
+                $valid_date = strtotime(date("Y-m-d").' +1 day');
+            }
+
+            if (count($test_arr) == 3) {
+                if (checkdate($test_arr[1], $test_arr[2], $test_arr[0]) && $timestamp <= $valid_date) {
+                    return true;
+                 } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        //} else {
+        //    array_push($errors, "Invalid date");
+        }
     }
 
 ?>

@@ -1,29 +1,49 @@
 <?php
+
+
+
+
+            // CREATE STORED PROCEDURE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   include('../backend/conn.php');
   $query = "";
-    if(isset($_POST['selected_id'])) {
+    if(isset($_POST['selected_osca_id'])) {
 
-        $selected_id = $_POST['selected_id'];
+        $selected_osca_id = $_POST['selected_osca_id'];
         //$query = "SELECT `id` FROM `member` WHERE `id` = '$selected_id'";
-        $address_query = "  SELECT * FROM `member` `m` 
-                            WHERE `m`.`id` = '$selected_id';";
-        $result = $mysqli->query($address_query);
+        $query = "  SELECT * FROM `member` `m` 
+                            WHERE `m`.`osca_id` = '$selected_osca_id';";
+        $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);
-        if($row_count == 0) { echo "ID Does not exist $address_query";} else {
+        if($row_count == 0) { echo "ID Does not exist $query";} else {
+            $row = mysqli_fetch_array($result);
+            $m_id = $row['id'];
             
-            $with_address = true;
+            $with_guardian = true;
             include('../backend/import_post_variables.php');
             
             if($array_length == 0) {
-
-                $query = "CALL `add_address`('$address_line1', '$address_line2', '$address_city', '$address_province', '$address_is_active', '$selected_id', @`mem_exists`)";
+                $query = "CALL `add_guardian`('$g_firstname', '$g_middlename', '$g_lastname', '$g_sex2', '$g_relationship', '$g_contact_number',  '$g_email', '$m_id', @`msg`)";
                 if($mysqli->query($query)){
                     echo "true";
                 } else {
                     echo "ERROR: Could not execute query" . mysqli_error($mysqli);
                 }
             } else {
-                echo "Errors have been found. Could not execute update of address.";
+                echo "Errors on inputs have been found. Could not add guardian.";
 
                 echo "\r\n";
                 for( $i = 0 ; $i < $array_length ; $i++ )
@@ -38,6 +58,6 @@
             mysqli_close($mysqli);
         }
     } else {
-        echo "Invalid id Member ID : $selected_id";
+        echo "Invalid Member OSCA ID : $selected_osca_id";
     }
 ?>

@@ -100,7 +100,7 @@ tables:
 
 
 [X} search pagination
-[] members
+[x] members
     // [XXXX] landing page
     [x] registration
     [x] master list
@@ -109,20 +109,36 @@ tables:
             [x] query of display pharmacy transaction
             [x] query of display food transaction
             [x] query of display transportation transaction
-            [] contact details
-            [] guardian
+            [X} pagination of transactions
+                [x] pharmacy
+                [x] food
+                [x] transportation
+                [x] all
+            [x] contact details
+            [x] guardian
                 [x] table
                 [x] create
                 [x] read
                 [x] update
                 [x] delete
+[] reports
+	[] lost
+    [] complaints
+        [] display on member profile
+        [] display all latest complaints
+        [] dispaly all complaints from a company
 
 [] administration
     [x] user profile
     [] access of user and admin levels
     [x] registration of new admin
+[] company
+    [] registration of new company
+    [] display list of companies
+    [] edit of company details
+    [] edit of company address
 
-[] Validate inputs alphanumeric, valid symbols only
+[x] Validate inputs alphanumeric, valid symbols only
 
 [x] address table and address junction table
 
@@ -130,7 +146,7 @@ tables:
 
 [] change implementation of forgot password
 
-[] phone number and email validation in javascript and php
+[x] phone number and email validation in javascript and php
 
 [] Picture upload
 
@@ -165,3 +181,9 @@ The OSCA can still issue physical IDs for the senior citizens. Pero to avail dis
     If walang details ng guardian’s contact, baka maeliminate kasi yung usability ng physical OSCA ID
 
     Pano natin ide-defend? Hahaha
+
+// Proposed Title
+    NFC Wristband for Senior Citizens 
+    as Alternative to Traditional ID and Booklet System
+    via Senior Citizen Information Terminal
+

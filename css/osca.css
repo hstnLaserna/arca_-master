@@ -78,9 +78,9 @@ img.avatar:hover {
 
 .disp_guardian:hover .edit{
   display: inline;
-  top: .5rem;
   right: .5rem;
 }
+
 
 
 .registration-form {
@@ -123,12 +123,19 @@ td.active{
   background-size: 45%;
 }
 
+tr.inactive{
+  background-color: #d3d3d3;
+  font-style: italic;
+}
+
+  
 td.inactive{
   background-image: url("../resources/images/cross.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 45%;
 }
+
 th {
   cursor: pointer;
 }
@@ -196,6 +203,11 @@ i.sort_icon{
 button.edit {
   padding: 0px !important;
   margin-left: 10px !important;
+  position: absolute;
+}
+
+button.edit_guardian {
+  padding: 0px !important;
   position: absolute;
 }
 

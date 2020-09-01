@@ -1,6 +1,15 @@
-
+<div class="table-responsive" id="query-rows">
+<table class="table table-hover users">
+    <th>Picture</th>
+    <th>OSCA ID</th>
+    <th>Firstname</th>
+    <th>Middlename</th>
+    <th>Lastname</th>
+    <th>City</th>
+    <th>Province</th>
 <?php
     include('../backend/conn.php');
+    $search_true = false;
 
     $page=1;
     if(!empty($_GET['page'])) {
@@ -17,6 +26,7 @@
     
     if(($_POST['fname'] == "" && $_POST['mname'] == "" && $_POST['lname'] == "" && $_POST['oid'] == "") == "")
     {
+        $search_true = true;
         $where_query = "";
         $where_appended = false;
         $get_next_page ="";
@@ -81,90 +91,68 @@
         $row_count = mysqli_num_rows($result);
         if($row_count > 0) 
         {
-            ?>
-            <div class="table-responsive" id="query-rows">
-                <table class="table table-hover users">
-                    <th>Picture</th>
-                    <th>OSCA ID</th>
-                    <th>Firstname</th>
-                    <th>Middlename</th>
-                    <th>Lastname</th>
-                    <th>City</th>
-                    <th>Province</th>
-            
-                    <?php
-                    while($row = mysqli_fetch_array($result))
-                    {
-                        $id = $row['id'];
-                        $osca_id = $row['osca_id'];
-                        $first_name = $row['first_name'];
-                        $middle_name = $row['middle_name'];
-                        $last_name = $row['last_name'];
-                        $city = $row['city'];
-                        $province = $row['province'];
-                        
-                        ?>
-                        <tr class="member-row" id="memNum_<?php echo $id?>">
-                            <td class="member-avatar">
-                            <img src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'"'; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?> class="avatar view-member">
-                            </td>
-                            <td><?php echo $osca_id ?></td>
-                            <td><?php echo $first_name ?></td>
-                            <td><?php echo $middle_name ?></td>
-                            <td><?php echo $last_name ?></td>
-                            <td><?php echo $city ?></td>
-                            <td><?php echo $province ?></td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    
-                </table>
-            </div>
-            <?php
+            while($row = mysqli_fetch_array($result))
+            {
+                $id = $row['id'];
+                $osca_id = $row['osca_id'];
+                $first_name = $row['first_name'];
+                $middle_name = $row['middle_name'];
+                $last_name = $row['last_name'];
+                $city = $row['city'];
+                $province = $row['province'];
+                
+                ?>
+                <tr class="member-row" id="memNum_<?php echo $id?>">
+                    <td class="member-avatar">
+                    <img src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'"'; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?> class="avatar view-member">
+                    </td>
+                    <td><?php echo $osca_id ?></td>
+                    <td><?php echo $first_name ?></td>
+                    <td><?php echo $middle_name ?></td>
+                    <td><?php echo $last_name ?></td>
+                    <td><?php echo $city ?></td>
+                    <td><?php echo $province ?></td>
+                </tr>
+                <?php
+            }
             mysqli_close($mysqli);
         }
-        ?>
-
-        <div><?php echo "Record ". ($offset+1)." to ".($row_count+$offset)." of $row_count_all <br>";?></div>
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <?php
-                    for ($i = 1; $i <= $page_count; $i++) {
-                        if ($i === $page) { // this is current page
-                            ?>
-                            <li class="page-item disabled"><a class="page-link"><?php echo $i?></a></li>
-                            <?php
-                        } else { // show link to other page   
-                            ?>
-                            <li class="page-item" id ="<?php echo $i?>"><a class="page-link"><?php echo $i?></a></li>
-                            <?php
-                        }
-                    }
-                    ?>
-                </ul>
-            </nav>
-        </div>
-        <?php
-    } else //invalid inputs
-    {?>
-        <div class="table-responsive" id="query-rows">
-        <table class="table table-hover users">
-            <th>Picture</th>
-            <th>OSCA ID</th>
-            <th>Firstname</th>
-            <th>Middlename</th>
-            <th>Lastname</th>
-            <th>City</th>
-            <th>Province</th>
-            <?php
-    }
+    } else {}//invalid inputs
     
+?>
+    </table>
+</div>
+
+<?php
+if($search_true){ ?>
+    <div><?php echo "Record ". ($offset+1)." to ".($row_count+$offset)." of $row_count_all <br>";?></div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <?php
+                for ($i = 1; $i <= $page_count; $i++) {
+                    if ($i === $page) { // this is current page
+                        ?>
+                        <li class="page-item disabled"><a class="page-link"><?php echo $i?></a></li>
+                        <?php
+                    } else { // show link to other page   
+                        ?>
+                        <li class="page-item" id ="<?php echo $i?>"><a class="page-link"><?php echo $i?></a></li>
+                        <?php
+                    }
+                }
+                ?>
+            </ul>
+        </nav>
+    </div>
+    <?php
+}
 ?>
 
 <form method="post" id="fwd_lookup_form">
     <?php    
-        echo $get_next_page;
+        if(isset($get_next_page)){
+            echo $get_next_page;
+        }
     ?>
 </form>
 

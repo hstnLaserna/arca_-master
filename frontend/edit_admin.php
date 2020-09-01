@@ -1,11 +1,11 @@
 <?php
 include('header.php');
 include('../backend/php_functions.php');
-if(isset($_GET['admin_id']) && $logged_position == "admin")
+if(isset($_GET['user']) && $logged_position == "admin")
 {
     $full_edit = true;
-    $admin_id = $_GET['admin_id'];
-    $query_basis = "`id` = $admin_id";
+    $user = $_GET['user'];
+    $query_basis = "`user_name` = '$user'";
 } else {
     $full_edit = false;
     $user_name=$_SESSION['login_user'];
@@ -164,6 +164,7 @@ if(isset($_GET['admin_id']) && $logged_position == "admin")
                         </td>
                     </tr-->
                 </table>
+                <input type="hidden" id="user_<?php echo $user_name;?>" name="user">
                 <input type="hidden" name="selected_id" id ="selected_id" value="<?php echo $admin_id;?>">
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
                 <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
@@ -194,8 +195,8 @@ include('foot.php');
     $("#submit").click(function(){
         $.post("../backend/update_admin.php", $("#edit_admin").serialize(), function(d){
             if(d == "true") {
-                var admin_id = $("#selected_id").val();
-                location.replace("../frontend/user_profile.php?admin_id=" + admin_id);
+                var user = $('input[name="user"]').attr("id").replace("user_", "")
+                location.replace("../frontend/user_profile.php?user=" + user);
             } else {
                 alert(d);
             }

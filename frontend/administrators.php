@@ -36,16 +36,17 @@
   $('title').replaceWith('<title>OSCA - Administrators</title>');
   $(document).ready(function(){
 
-    $( ".inactive" ).parent().css({"background-color": "#d3d3d3", "font-style": "italic"});
+    $(".inactive").parent().addClass("inactive");
 
-    $('.active').click(function () {
+    $('td.active').click(function () {
       var admin_id = $(this).parent().attr("id").replace("adminNum_", "");
+      var isEnabled = $(this).parent().attr("id").replace("adminNum_", "");
       $("#admin").load("../backend/deactivate_admin.php" + " #admin",{ admin_id: admin_id }, function(d){
         location.reload();
       });
     });
 
-    $('.inactive').click(function () {
+    $('td.inactive').click(function () {
       var admin_id= $(this).parent().attr("id").replace("adminNum_", "");
       $("#admin").load("../backend/activate_admin.php" + " #admin",{ admin_id: admin_id }, function(d){
         location.reload();
@@ -53,8 +54,8 @@
     });
 
     $('.view-admin').click(function () {
-      var admin_id= $(this).closest("tr").attr("id").replace("adminNum_", "");
-      $('#modal_displayAdmin').load("../frontend/admin_profile_card.php", { admin_id: admin_id },function(){
+      var user= $(this).closest("tr").attr("id").replace("admin_", "");
+      $('#modal_displayAdmin').load("../frontend/admin_profile_card.php", { user: user },function(){
         $('#modal_displayAdmin').modal();
       });
     });

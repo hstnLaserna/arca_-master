@@ -18,13 +18,14 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
                     {
                         $selected_g_id = $_POST['gid'];
                         $query_1 = "SELECT * FROM `view_members_with_guardian`
-                                    WHERE `osca_id` = '$selected_osca_id' AND `g_id` = '$selected_g_id'";
+                                    WHERE `osca_id` = '$selected_osca_id' AND `g_id` = '$selected_g_id' GROUP BY `g_id`";
                         $msg = "<p class='lead'>No guardian on record</p>";
                     }
                     else if ($_GET['action'] == "add")
                     {
-                        $query_1 = "SELECT * FROM `view_members_with_guardian`
-                                    WHERE `osca_id` = '$selected_osca_id';";
+                        
+                        $query_1 = "SELECT * FROM `member` m
+                                    WHERE m.`osca_id` = '$selected_osca_id';";
                         $msg = "<p class='lead'>Member does not exist</p>";
                     }
 
@@ -37,6 +38,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
                         {
                             $is_active = "";
                             $delete_button = "";
+                            $g_sex2 = "";
                             if ($_GET['action'] == "edit")
                             {
                                 $g_first_name = $row['g_first_name'];
@@ -82,6 +84,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
                             ?>
                                 <div>
                                     <h3> GUARDIAN </H3>
+                                    <?php echo $delete_button?>
                                 </div>
                                 <div class="form-contents">
                                     <div class ="row">
@@ -131,8 +134,8 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
                 }
                 ?>
             </div>
-            <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
-            <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
+                <button type="button" class="btn btn-primary btn-lg col-md-4" id="submit">Submit</button>
+                <button type="reset" class="btn btn-secondary btn-lg col-md-4">Reset Values</button>
             <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
         </form>
     </div>
@@ -142,6 +145,9 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
     echo 'Invalid data'; 
 }
 ?>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -165,6 +171,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
             }
         });
     });
+
     $("#delete").click(function(){
         $.post("<?php  echo $post_destination ?>?action=delete", $("#guardian_form").serialize(), function(d){
             if(d == "true") {

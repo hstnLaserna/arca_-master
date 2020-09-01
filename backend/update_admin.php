@@ -1,15 +1,10 @@
 <?php
   include('../backend/conn.php');
-  $db = mysqli_connect($host,$user,$pass,$schema);
   $query = "";
+  
   $selected_id = $_POST['selected_id'];
     if(isset($_POST['selected_id'])) {
-        // Check connection
-        if($db === false){
-            die("ERROR: Could not connect. " . mysqli_connect_error());
-            echo "Error: Could not connect to db ". mysqli_connect_error();
-        }
-        else { }
+        
         $query = "SELECT `id` FROM `admin` WHERE `id` = '$selected_id'";
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);
@@ -17,13 +12,11 @@
 
             {
                 $user_type = "osca";
-                $with_address = false;
-                $with_guardian = false;
+                $personal_details = true;
                 include('../backend/import_post_variables.php');
-                include('../backend/validate_user_inputs.php');
             }
 
-            if($array_length == 0) {
+            if($array_length == 0 && isset($validated) && $validated) {
                 $query1 = "SELECT `id`, `user_name`, `first_name`, `last_name` FROM `admin` WHERE `user_name` = '$username' AND `id` != '$selected_id';";
                 $result1 = $mysqli->query($query1);
                 $rows1 = mysqli_num_rows($result1);
@@ -35,10 +28,10 @@
                     {
                         $query = "CALL `edit_admin_no_pw`('$username', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2',  '$contact_number', '$email', '$position', '$answer1', '$answer2', $selected_id)";
                     }
-                    if(mysqli_query($db, $query)){
+                    if($mysqli->query($query)){
                         echo "true";
                     } else {
-                        echo "ERROR: Could not execute. ". mysqli_error($db);
+                        echo "ERROR: Could not execute. ". mysqli_error($mysqli);
                     }
                 } else {
                     echo "Username exists";
@@ -56,7 +49,7 @@
                 $errors= array();
             }
                 
-            mysqli_close($db);
+            mysqli_close($mysqli);
         }
     } else {
         echo "Invalid id ".$selected_id;

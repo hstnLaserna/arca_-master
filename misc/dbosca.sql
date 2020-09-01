@@ -1,4 +1,4 @@
--- LAST UPDATE: 2020-08-22 05:20 AM
+-- LAST UPDATE: 2020-08-23 11:57 AM
 
 -- Adminer 4.6.3 MySQL dump
 
@@ -27,8 +27,8 @@ INSERT INTO `address` (`id`, `address1`, `address2`, `city`, `province`, `is_act
 (1,	'2129 Culdesac Rd Edison St',	'Brgy. Sun Valley',	'Paranaque City',	'Metro Manila',	1,	'2020-08-21 09:20:25'),
 (2,	'L23 Villa Antonina Subd',	'Brgy. San Nicolas 2',	'Bacoor 1',	'Cavite',	1,	'2020-08-21 09:20:25'),
 (3,	'Blk25 lot41 Milkwort St Ph3 Villa de Primarosa',	'Brgy. Mambog 3',	'Bacoor',	'Cavite',	1,	'2020-08-21 09:20:30'),
-(4,	'3009, Ipil st.',	'Brgy Banaba',	'Silang',	'Cavite',	1,	'2020-08-21 10:44:05'),
-(5,	'0235 Rafael St., Villa Modena',	'Villagio Ignatius Subd., Brgy. Buenavista III',	'General Trias',	'Cavite',	1,	'2020-08-21 09:29:06'),
+(4,	'3009, Ipil st.',	'Brgy Banaba',	'Silang',	'Cavite',	1,	'2020-08-22 20:37:57'),
+(5,	'0235 Rafael St., Villa Modena',	'Villagio Ignatius Subd., Brgy. Buenavista III',	'General Trias',	'Cavite',	0,	'2020-08-22 20:37:57'),
 (6,	'2099 Culdesac Rd Edison St',	'Brgy. Sun Valley',	'Paranaque City',	'Metro Manila',	1,	'2020-03-30 01:53:27'),
 (7,	'5636 Rafael St.',	'Brgy. Manggahan',	'Gen. Tri',	'Cavite',	1,	'2020-08-21 21:14:18'),
 (8,	'1001 Sant St.',	'Brgy Maybuhay',	'Manila',	'NCR',	1,	'2020-04-01 00:18:55'),
@@ -57,7 +57,7 @@ CREATE TABLE `address_jt` (
   CONSTRAINT `fk_address_jt_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_address_jt_guardian` FOREIGN KEY (`guardian_id`) REFERENCES `guardian` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_address_jt_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `address_jt` (`id`, `address_id`, `member_id`, `company_id`, `guardian_id`) VALUES
 (1,	1,	1,	NULL,	NULL),
@@ -75,7 +75,7 @@ INSERT INTO `address_jt` (`id`, `address_id`, `member_id`, `company_id`, `guardi
 (13,	13,	9,	NULL,	NULL),
 (14,	14,	11,	NULL,	NULL),
 (15,	15,	13,	NULL,	NULL),
-(17,	16,	12,	NULL,	NULL);
+(16,	16,	12,	NULL,	NULL);
 
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
@@ -100,13 +100,13 @@ CREATE TABLE `admin` (
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `contact_number`, `email`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`) VALUES
-(1,	'ralf',	'09152217ad9582364c8d594fedc18ccc',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'user',	NULL,	'ralph.ortiz@ymeal.com',	1,	0,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
-(2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	NULL,	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'hstn',	'xnar04g9uo.png'),
-(3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	NULL,	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
-(4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	NULL,	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
-(5,	'cyrel',	'6230471bd10839658f414438bc33c88a',	'Cyrel',	'Odette',	'Lalikan',	'1990-01-03',	'2',	'user',	NULL,	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'k1ylycon4h.png'),
-(6,	'shang',	'8379c86250c50c0537999a6576e18aa7',	'Jess',	'',	'Monty',	'1990-01-24',	'1',	'user2',	NULL,	'jess.monty@ymeal.com',	1,	2,	'shang',	'shang',	'4347da',	'py1c2qjcpq.png'),
-(7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'admin1',	NULL,	'synth.synth@ymeal.com',	0,	0,	'synth',	'synth',	'synthsynth',	'null');
+(1,	'ralf',	'3cca634013591eb51173fb6207572e37',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'admin',	'2135123',	'ralph.ortiz@ymeal.com',	1,	1,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
+(2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'12341234',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'hstn',	'xnar04g9uo.png'),
+(3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'51234',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
+(4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'12341234',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
+(5,	'cyrel',	'6230471bd10839658f414438bc33c88a',	'Cyrel',	'Odette',	'Lalikan',	'1990-01-03',	'2',	'user',	'41234',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'k1ylycon4h.png'),
+(6,	'shang',	'8379c86250c50c0537999a6576e18aa7',	'Jess',	'',	'Monty',	'1990-01-24',	'1',	'user2',	'412341',	'jess.monty@ymeal.com',	1,	2,	'shang',	'shang',	'4347da',	'py1c2qjcpq.png'),
+(7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'admin1',	'12323452345',	'synth.synth@ymeal.com',	0,	0,	'synth',	'synth',	'synthsynth',	'null');
 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
@@ -226,14 +226,14 @@ CREATE TABLE `guardian` (
 
 INSERT INTO `guardian` (`id`, `first_name`, `middle_name`, `last_name`, `sex`, `relationship`, `contact_number`, `email`, `member_id`) VALUES
 (1,	'Gary',	'Jenelle',	'Winton',	'1',	'Grandfather',	'0256890796',	'garywinton9@gmeal.com',	1),
-(2,	'Nonie',	'Marlene',	'Irene',	'2',	'Grandmother',	'0289965829',	'nonieirene20@gmeal.com',	2),
+(2,	'Nonie',	'aaa',	'Irene',	'2',	'Grandmother',	'0289965829',	'nonieirene20@gmeal.com',	2),
 (3,	'Kelsey',	'Eulalia',	'Diamond',	'1',	'Grandfather',	'0238471073',	'kelseydiamond9@gmeal.com',	3),
 (4,	'Galen',	'Avah',	'Kirby',	'2',	'Grandmother',	'0211549317',	'galenkirby7@gmeal.com',	4),
 (5,	'Kristine',	'Marcy',	'Charissa',	'1',	'Grandfather',	'0228048410',	'kristinecharissa17@gmeal.com',	5),
 (6,	'Cheyanne',	'Paulette',	'Jaylee',	'1',	'Grandfather',	'0266301227',	'cheyannejaylee9@gmeal.com',	6),
 (7,	'Avalon',	'Brynlee',	'Aspen',	'1',	'Grandfather',	'0249211504',	'avalonaspen19@gmeal.com',	7),
 (8,	'Vianne',	'Kassidy',	'Ursula',	'2',	'Grandmother',	'0214578421',	'vianneursula9@gmeal.com',	8),
-(9,	'Ray',	'Kent',	'Carran',	'2',	'Grandmother',	'0274763308',	'raycarran7@gmeal.com',	9),
+(9,	'Rayzer',	'Kentt',	'Carran',	'2',	'Grandmother',	'0274763308',	'raycarran7@gmeal.com',	9),
 (10,	'Pamella',	'Russel',	'Corey',	'2',	'Grandmother',	'0288296230',	'pamellacorey1@gmeal.com',	10),
 (11,	'Lacy',	'Bekki',	'Marcy',	'1',	'Grandfather',	'0277137953',	'lacymarcy18@gmeal.com',	11),
 (12,	'Love',	'Demelza',	'Paulette',	'1',	'Grandfather',	'0288759308',	'lovepaulette0@gmeal.com',	12),
@@ -253,9 +253,9 @@ CREATE TABLE `lost_report` (
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
-  `osca_id` varchar(20) COLLATE utf8mb4_bin NOT NULL,
-  `nfc_serial` varchar(45) COLLATE utf8mb4_bin NOT NULL,
-  `password` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `osca_id` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+  `nfc_serial` varchar(45) COLLATE utf8mb4_bin DEFAULT NULL,
+  `password` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
   `first_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
   `middle_name` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
   `last_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
@@ -263,8 +263,8 @@ CREATE TABLE `member` (
   `sex` varchar(10) COLLATE utf8mb4_bin NOT NULL,
   `contact_number` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
   `email` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
-  `membership_date` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `picture` varchar(250) COLLATE utf8mb4_bin NOT NULL,
+  `membership_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `picture` varchar(250) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `osca_id_UNIQUE` (`osca_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -374,4 +374,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (5,	17,	'3',	100.00,	20.00,	80.00),
 (6,	18,	'1',	100.00,	20.00,	80.00);
 
--- 2020-08-21 21:17:15
+-- 2020-08-23 03:57:16

@@ -3,7 +3,9 @@
     <div class="modal-content">
         <div class="modal-body">
 <?php
-if(isset($_POST['member_id']) && isset($_GET['action']))
+if(isset($_POST['id']) &&
+    isset($_GET['action']) &&
+    isset($_POST['type']))
 {
     ?>
     <div>
@@ -12,30 +14,49 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                 <?php 
                 include("../backend/conn.php");
                 {
-                    $selected_member_id = $_POST['member_id'];
+                    $selected_id = $_POST['id'];
+                    $type = $_POST['type'];
                     $mysqli1 = new mysqli($host,$user,$pass,$schema) or die($mysqli1->error);
 
                     if(isset($_POST['address_id']))
                     {
                         $selected_address_id = $_POST['address_id'];
+                        $error_msg = "<p class='lead'>No address on record</p>";
+
+                        if($type == "member") {
+                            
                         $query_1 = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active` 
                                     FROM member m
                                     INNER JOIN `address_jt` `ajt` ON `ajt`.`member_id` = m.`id`
                                     INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
-                                    WHERE m.`id` = '$selected_member_id' AND `a`.`id` = '$selected_address_id';";
-                        $msg = "<p class='lead'>No address on record</p>";
+                                    WHERE m.`id` = '$selected_id' AND `a`.`id` = '$selected_address_id';";
+                        }
+                        else if($type == "company") {
+                        $query_1 = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active` 
+                                    FROM company c
+                                    INNER JOIN `address_jt` `ajt` ON `ajt`.`company_id` = c.`id`
+                                    INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                    WHERE c.`id` = '$selected_id' AND `a`.`id` = '$selected_address_id';";
+                        }
+                        else if($type == "guardian") {
+                        $query_1 = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active` 
+                                    FROM guardian g
+                                    INNER JOIN `address_jt` `ajt` ON `ajt`.`guardian_id` = g.`id`
+                                    INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                    WHERE g.`id` = '$selected_id' AND `a`.`id` = '$selected_address_id';";
+                        }
+                        else { return false; }
                     }
                     else if ($_GET['action'] == "add")
                     {
-                        $query_1 = "SELECT * FROM `member` `m` WHERE m.`id` = '$selected_member_id';";
-                        $msg = "<p class='lead'>Member does not exist</p>";
+                        $query_1 = "SELECT * FROM `member` `m` WHERE m.`id` = '$selected_id';";
+                        $error_msg = "<p class='lead'>Member does not exist</p>";
                     }
 
                     
                     $result = $mysqli1->query($query_1);
                     $row_count = mysqli_num_rows($result);
-                    if($row_count == 0) { echo $query_1;} else
-                    {
+                    if($row_count == 1) {
                         while($row = mysqli_fetch_array($result))
                         {
                             $is_active = "";
@@ -55,7 +76,8 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                                 $placeholder_and_value_province = "placeholder='$province' value='$province'";
                                 
                                 ?>
-                                    <input type="hidden" name="selected_member_id" value="<?php echo $selected_member_id;?>">
+                                    <input type="hidden" name="type" value="<?php echo $type;?>">
+                                    <input type="hidden" name="selected_id" value="<?php echo $selected_id;?>">
                                     <input type="hidden" name="selected_address_id" value="<?php echo $selected_address_id;?>">
                                 <?php 
 
@@ -68,7 +90,8 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                                 $placeholder_and_value_city = "placeholder='City'";
                                 $placeholder_and_value_province = "placeholder='Province'";
                                 ?>
-                                    <input type="hidden" name="selected_member_id" value="<?php echo $selected_member_id;?>">
+                                    <input type="hidden" name="type" value="<?php echo $type;?>">
+                                    <input type="hidden" name="selected_id" value="<?php echo $selected_id;?>">
                                 <?php 
 
                                 //for script
@@ -80,7 +103,7 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                                 <td rowspan="5">
                                     Address:
                                     
-                                    <?php echo $delete_button . " <br> " . $is_active ?>
+                                    <?php echo $delete_button . " <br> " . $is_active . "<BR>Type: " . $type?>
                                 </td>
                                 <td>
                                     <label for="address_1">Line 1 <small> <em> (Unit no., Street, Zone) </em> </small></label>
@@ -113,6 +136,8 @@ if(isset($_POST['member_id']) && isset($_GET['action']))
                             </tr>
                             <?php
                         }
+                    } else {
+                        echo $error_msg;
                     }
                     
                     mysqli_close($mysqli1);

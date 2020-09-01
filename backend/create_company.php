@@ -1,31 +1,28 @@
 <?php
   include('../backend/conn.php');
-  
-  if(!isset($errrors)){$errors = array();}
-
   $query = "";
-
-  $user_type = "osca";
-  $personal_details = true;
+  $company_details = true;
+  $with_address = true;
   include('../backend/import_post_variables.php');
-
+  
   if($array_length == 0 && isset($validated) && $validated)
   {
-    $query1 = "SELECT `user_name` FROM `admin` WHERE `user_name` = '$username';";
+    $query1 = "SELECT `company_name` FROM `company` WHERE `company_name` = '$company_name' AND  `branch` = '$branch' AND  `company_tin` = '$company_tin';";
     $result1 = $mysqli->query($query1);
     $rows1 = mysqli_num_rows($result1);
 
-    if ($rows1 == 0) { // username doesn't exist
-      $query = "CALL `add_admin`('$username', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$contact_number', '$email', '$position', '1', '$answer1', '$answer2', @`msg`)";
+    if ($rows1 == 0) { // Company Details is unique
+      $query = "CALL `add_company`('$company_tin', '$company_name', '$branch', '$business_type',
+                  '$address_line1', '$address_line2', '$address_city', '$address_province')";
       if($mysqli->query($query)){
-        echo "Records inserted successfully.";
+        echo "true";
       }
       else {
-        echo "ERROR: Could not execute. \r\n" . mysqli_error($mysqli);
+        echo "ERROR: Unable to execute. \r\n $query" . mysqli_error($mysqli);
       }
     }
     else {
-        echo "Username exists";
+      if($rows1 > 0){echo "Business Details exists \r\n";} else {}
     }
   }
   else {
@@ -40,8 +37,6 @@
 
     $errors= array();
   }
-      //echo "Query: " . $query;
-      
   mysqli_close($mysqli);
 
 ?>

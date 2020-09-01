@@ -1,29 +1,28 @@
 <?php
   include('../backend/conn.php');
-  $db = mysqli_connect($host,$user,$pass,$schema);
   $query = "";
     if(isset($_POST['selected_id'])) {
-        // Check connection
-        if($db === false){
-            die("ERROR: Could not connect. " . mysqli_connect_error());
-            echo "Error: Could not connect to database ". mysqli_connect_error();
-        }
-        else { }
 
         $selected_id = $_POST['selected_id'];
-        $query = "SELECT `id` FROM `member` WHERE `id` = '$selected_id'";
+        $query = "SELECT `id` FROM `member` WHERE `osca_id` = '$selected_id'";
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);
-        if($row_count == 0) { echo "ID Does not exist $query";} else {
+        if($row_count == 0) { echo "ID Does not exist Member's ID : $selected_id";} else {
 
+            $row = mysqli_fetch_array($result);
+            $selected_id = $row['id'];
             {
                 $user_type = "senior citizen";
-                $with_address = false;
+                $personal_details = true;
                 include('../backend/import_post_variables.php');
-                include('../backend/validate_user_inputs.php');
+
+                if(strlen(preg_replace('/[^0-9]/', '', $membership_date)) == 8)
+                {
+                    $membership_date .= " 00:00:00";
+                }
             }
 
-            if($array_length == 0) {
+            if($array_length == 0 && isset($validated) && $validated) {
                 $query1 = "SELECT `osca_id` FROM `member` WHERE `osca_id` = '$osca_id' AND `id` != '$selected_id';";
                 $result1 = $mysqli->query($query1);
                 $rows1 = mysqli_num_rows($result1);
@@ -33,16 +32,18 @@
                 
                 if ($rows1 == 0 && $rows2 == 0) { // OSCA ID && NFC serial doesn't match other member's
                     if(strlen($password) != 0){
-                        $query = "CALL `edit_member_with_pw`('$osca_id', '$nfc_serial', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$contact_number', '$email',  '$sex2', '$membership_date', $selected_id)";
+                        $query = "CALL `edit_member_with_pw`('$osca_id', '$nfc_serial', '$password', 
+                        '$firstname', '$middlename', '$lastname', '$birthdate', '$contact_number', 
+                        '$email',  '$sex2', '$membership_date', $selected_id)";
                     } else
                     {
-                        $query = "CALL `edit_member_no_pw`('$osca_id', '$nfc_serial', '$firstname', '$middlename', '$lastname', '$birthdate', '$contact_number', '$email', '$sex2', '$membership_date', $selected_id)";
+                        $query = "CALL `edit_member_no_pw`('$osca_id', '$nfc_serial', '$firstname', '$middlename', '$lastname', 
+                        '$birthdate', '$contact_number', '$email', '$sex2', '$membership_date', $selected_id)";
                     }
-                    if(mysqli_query($db, $query)){
-                        if(strtolower($sex2) == "f") {$salutation = "Ms.";} else  {$salutation = "Mr.";}
+                    if($mysqli->query($query)){
                         echo "true";
                     } else {
-                        echo "ERROR: Could not execute. \r\n" . mysqli_error($db);
+                        echo "ERROR: Could not execute. \r\n" . mysqli_error($mysqli);
                     }
                 } else {
                     if($rows1 >= 1){ echo "OSCA ID is already registered to other records.";}
@@ -62,7 +63,7 @@
                 $errors= array();
             }
                 
-            mysqli_close($db);
+            mysqli_close($mysqli);
         }
     } else {
         echo "Invalid id ".$selected_id;

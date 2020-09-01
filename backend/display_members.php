@@ -13,12 +13,7 @@
 
     $items_per_page = 10;
 
-    
-    
-    $query = "SELECT * FROM `member` m
-                INNER JOIN `address_jt` ajt ON ajt.`member_id` = m.`id`
-                INNER JOIN `address` a ON ajt.`address_id` = a.`id`
-                WHERE `a`.`is_active` = 1 GROUP BY m.`osca_id`; ";
+    $query = "SELECT * FROM `member` m;";
     $result = $mysqli->query($query);
     $row_count_all = mysqli_num_rows($result);
 
@@ -32,14 +27,19 @@
     }
     $offset = ($page - 1) * $items_per_page;
 
-    $query = "SELECT 	`m`.`id`,	`m`.`osca_id`,	`m`.`first_name`,	`m`.`middle_name`,
-                `m`.`last_name`,	`m`.`picture`,	`a`.`city`, `a`.`province`
-                FROM `member` m
-                INNER JOIN `address_jt` ajt ON ajt.`member_id` = m.`id`
-                INNER JOIN `address` a ON ajt.`address_id` = a.`id`
-                WHERE `a`.`is_active` = 1
-                GROUP BY m.`osca_id`
-                ORDER BY `m`.`last_name` ASC, `m`.`first_name` ASC 
+    $query = "SELECT * FROM
+                (SELECT `m`.`id`,	`m`.`osca_id`,	`m`.`first_name`,	`m`.`middle_name`, `m`.`last_name`,	
+                        `m`.`picture`,	`a`.`city`, `a`.`province`, `a`.`is_active`
+                        FROM `member` m
+                        INNER JOIN `address_jt` ajt ON ajt.`member_id` = m.`id`
+                        INNER JOIN `address` a ON ajt.`address_id` = a.`id`
+                        GROUP BY m.`osca_id`
+                        ORDER BY `m`.`last_name` ASC, `m`.`first_name` ASC  ) as `t1`
+                UNION SELECT * FROM
+                (SELECT `m`.`id`,	`m`.`osca_id`,	`m`.`first_name`,	`m`.`middle_name`, `m`.`last_name`, /* display members not having address */
+                    '-' `picture`, '-' `city`, '-' `province`, '-' `is_active`
+                    FROM member m WHERE m.id NOT IN (SELECT member_id FROM address_jt ajt)
+                    ORDER BY `m`.`last_name` ASC, `m`.`first_name` ASC  ) as `t2`
                 LIMIT $offset,$items_per_page";
 
     
@@ -69,7 +69,7 @@
                     $province = $row['province'];
                     
                     ?>
-                    <tr class="member-row view-member" id="memNum_<?php echo $id?>">
+                    <tr class="member-row view-member<?php if($row['is_active'] == "0"){ echo " inactive";} ?>" id="memNum_<?php echo $id?>">
                         <td><?php echo $osca_id ?></td>
                         <td><?php echo $first_name ?></td>
                         <td><?php echo $middle_name ?></td>

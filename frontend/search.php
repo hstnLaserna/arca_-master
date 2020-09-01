@@ -49,8 +49,8 @@
 ?>
 
 <script>
-$("#search").addClass('active').siblings().removeClass('active');
-$('title').replaceWith('<title>Scan OSCA Member tag</title>');
+$("#members_management").addClass('active').siblings().removeClass('active');
+$('title').replaceWith('<title>Search OSCA Member</title>');
 
 $(document).ready(function(){
     $("#search_").click(function() {
