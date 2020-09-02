@@ -1,7 +1,7 @@
 DROP VIEW IF EXISTS view_pharma_transactions;
 CREATE VIEW view_pharma_transactions AS 
 (
-SELECT  m.id `member_id`, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.company_name, c.branch, c.business_type,
+SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 	 -- query pharmacy
 	 d.generic_name, d.brand, d.dose, d.unit, p.quantity,  p.unit_price, p.vat_exempt_price, p.discount_price, p.payable_price	
 FROM transaction t
@@ -15,7 +15,7 @@ WHERE p.transaction_id = t.id
 DROP VIEW IF EXISTS view_food_transactions;
 CREATE VIEW view_food_transactions AS 
 (
-SELECT  m.id `member_id`, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.company_name, c.branch, c.business_type,
+SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 	 -- query food
 	 f.`desc`, f.vat_exempt_price, f.discount_price, f.payable_price
 FROM transaction t
@@ -28,7 +28,7 @@ WHERE f.transaction_id = t.id
 DROP VIEW IF EXISTS view_transportation_transactions;
 CREATE VIEW view_transportation_transactions AS 
 (
-SELECT  m.id `member_id`, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.company_name, c.branch, c.business_type,
+SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 	 -- query pharmacy
 	 t1.`desc`,t1.vat_exempt_price, t1.discount_price, t1.payable_price
 FROM transaction t
@@ -42,7 +42,7 @@ DROP VIEW IF EXISTS view_all_transactions;
 CREATE VIEW view_all_transactions AS 
 
 SELECT * FROM
-	(SELECT  m.id `member_id`, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.company_name, c.branch, c.business_type,
+	(SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 		 -- query pharmacy
 		 
 		 concat("[", UCASE(LEFT(generic_name, 1)), LCASE(SUBSTRING(generic_name, 2)), "], ", UCASE(LEFT(brand, 1)), LCASE(SUBSTRING(brand, 2)),  ", ", dose, unit,  ", ", quantity,  "pcs, P ",  unit_price, "/pc") AS `desc`, p.vat_exempt_price, p.discount_price, p.payable_price	
@@ -54,7 +54,7 @@ SELECT * FROM
 	WHERE p.transaction_id = t.id) AS T1
 UNION
 SELECT * FROM
-	(SELECT  m.id `member_id`, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.company_name, c.branch, c.business_type,
+	(SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 		 -- query transpo
 		 t1.`desc`,t1.vat_exempt_price, t1.discount_price, t1.payable_price
 	FROM transaction t
@@ -64,7 +64,7 @@ SELECT * FROM
 	WHERE t1.transaction_id = t.id) AS T2
 UNION 
 SELECT * FROM
-	(SELECT  m.id `member_id`, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.company_name, c.branch, c.business_type,
+	(SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 		 -- query food
 		 f.`desc`,f.vat_exempt_price, f.discount_price, f.payable_price
 	FROM transaction t
@@ -90,6 +90,18 @@ INNER JOIN guardian g ON g.`member_id` = m.id
 INNER JOIN address_jt ajt on ajt.`member_id` = m.id
 INNER JOIN address a on ajt.`address_id` = a.id
 );
+
+
+DROP VIEW IF EXISTS view_complaints;
+CREATE VIEW view_complaints AS 
+
+SELECT `desc`,	`report_date`,	`company_id`,	`member_id`,
+	c.company_tin, c.company_name, c.branch, c.business_type,
+	m.osca_id, m.first_name, m.last_name
+    
+	FROM `complaint_report` cr
+	LEFT JOIN member m ON cr.member_id = m.id
+	LEFT JOIN company c ON cr.company_id = c.id;
 
 
 

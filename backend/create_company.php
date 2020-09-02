@@ -7,7 +7,8 @@
   
   if($array_length == 0 && isset($validated) && $validated)
   {
-    $query1 = "SELECT `company_name` FROM `company` WHERE `company_name` = '$company_name' AND  `branch` = '$branch' AND  `company_tin` = '$company_tin';";
+    $query1 = "SELECT `company_name` FROM `company` 
+                WHERE `company_name` = '$company_name' AND  `branch` = '$branch' AND  `company_tin` = '$company_tin';";
     $result1 = $mysqli->query($query1);
     $rows1 = mysqli_num_rows($result1);
 

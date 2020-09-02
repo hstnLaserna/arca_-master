@@ -14,7 +14,8 @@
     {
         $company_tin = $_GET['company_tin'];
 
-        $query = "SELECT c.`id` id, c.`company_name` `company_name`, c.`branch` `branch`, c.`company_tin` `company_tin`, c.`business_type` `business_type`
+        $query = "SELECT c.`id` id, c.`company_name` `company_name`, c.`branch` `branch`, 
+                        c.`company_tin` `company_tin`, c.`business_type` `business_type`, c.`logo` `logo`
                     FROM `company` c
                     WHERE `company_tin` = '$company_tin';";
                     
@@ -29,6 +30,15 @@
             $branch = $row['branch'];
             $company_tin = $row['company_tin'];
             $business_type = $row['business_type'];
+            
+            $logo =  "../resources/logo/".$row["logo"]; 
+
+            if (file_exists($logo) && $row["logo"] != null) {
+                $logo =  "../resources/logo/".$row["logo"]; 
+            } else {
+                $logo = "../resources/images/unknown_m_f.png";
+            }
+            
 
 
             $member_buttons = '
@@ -40,14 +50,14 @@
 ?>
             <div class="card digital-card-contents">
                 <div class="card-right">
-                    <img class="company_logo" src="<?php echo "null"; ?>" alt="<?php echo $company_name?>'s Logo">
+                    <img class="company_logo" src="<?php echo $logo; ?>" alt="<?php echo $company_name?>'s Logo">
                 </div>
                 <div class="card-bottom-right">
                 <?php echo $member_buttons;?>
                 </div>
                 <div class="card-left">
                     <div class="card">
-                        <p>Name: <?php echo $company_name; ?>,</p>
+                        <p>Name: <?php echo $company_name; ?></p>
                         <p>Branch: <?php echo $branch; ?> </p>
                         <p>Company TIN: <?php echo $company_tin; ?></p>
                         <p>Business type: <?php echo $business_type; ?></p>
@@ -67,7 +77,7 @@
             </div>
 
             <div class="col col-md-9 p-3 border border-dark rounded overflow-auto" class="transactions">
-                <div class="table-responsive" id="transactions_list">
+                <div class="table-responsive" id="complaints_list">
                     <table class="table table-hover" id="complaints">
                     </table>
                 </div>
@@ -91,7 +101,10 @@ $(document).ready(function(){
     
     // display_transactions_company
     // display_complaints_company
-    $("#transactions_list").load("../backend/display_transactions.php", {member_id : "2", business_type: "pharmacy" });
+    $("#transactions_list").load("../backend/display_transactions_company.php", {company_tin : "<?php echo $company_tin;?>", business_type: "<?php echo $business_type; ?>" });
+    
+    $("#complaints_list").load("../backend/display_complaints_company.php", {company_tin : "<?php echo $company_tin;?>" });
+    
     $('.edit_address').click(function () {
         var address_id= $(this).parent().attr("id").replace("addNum_", "");
         var company_id= "<?php echo $company_id;?>";
@@ -99,6 +112,17 @@ $(document).ready(function(){
         $('#_kf939s').load("../frontend/edit_address.php?action=edit", {id:company_id, address_id:address_id, type: "company"},function(){
             $('#_kf939s').modal();
         });
+    });
+
+    
+    $('#edit_basic').click(function () {
+        var url = 'edit_company.php';
+        var form = $(   '<form action="' + url + '" method="get">' +
+                            '<input type="hidden" name="company_tin" value="' + <?php echo $company_tin?> + '" />' +
+                        '</form>');
+        $('div.container').append(form);
+        form.submit();
+        
     });
     
 });

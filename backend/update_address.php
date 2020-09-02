@@ -59,12 +59,12 @@
                         $query2 = "SELECT @`msg` msg";
                         $result2 = $mysqli->query($query2);
                         $row2 = mysqli_fetch_assoc($result2);
-                        $msgxx = $row2['msg'];
-                        if($msgxx == "0") {
+                        $msg = $row2['msg'];
+                        if($msg == "0") {
                             echo "User does not exist";
-                        } else if ($msgxx == "1") {
-                            echo "\r\nUser's address does not exist $msgxx \r\n $query";
-                        } else if ($msgxx == "2") {
+                        } else if ($msg == "1") {
+                            echo "\r\nUser's address does not exist \r\n $query";
+                        } else if ($msg == "2") {
                             echo "true";
                         } else {echo "Query executed";
                         }

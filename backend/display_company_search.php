@@ -17,7 +17,7 @@
         }
     }
 
-    $items_per_page = 5;
+    $items_per_page = 10;
 
     $offset = ($page - 1) * $items_per_page;
 

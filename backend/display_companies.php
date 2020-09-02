@@ -38,14 +38,13 @@
                 (SELECT c.id, c.company_name, c.branch, c.company_tin, c.business_type, a.city, a.province
                     FROM `company` c
                     INNER JOIN `address_jt` ajt ON ajt.`company_id` = c.`id`
-                    INNER JOIN `address` a ON ajt.`address_id` = a.`id`
-                    GROUP BY c.`company_tin`) as `t1`
+                    INNER JOIN `address` a ON ajt.`address_id` = a.`id` ) as `t1`
                 UNION SELECT * FROM
                 (SELECT c.id, c.company_name, c.branch, c.company_tin, c.business_type, '-' city, '-' province
                     FROM `company` c 
                     WHERE c.`id` NOT IN (SELECT `company_id` FROM `address_jt` ajt  WHERE `company_id` IS NOT NULL) ) as `t2`
-                ORDER BY `business_type` ASC, `company_name` ASC, `branch` ASC
-                LIMIT $offset,$items_per_page";
+            ORDER BY `business_type` ASC, `company_name` ASC, `branch` ASC
+            LIMIT $offset,$items_per_page";
 
 
     

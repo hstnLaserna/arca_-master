@@ -140,22 +140,22 @@ $(document).ready(function(){
     var type = "";
 
 
-    $("#transactions_list").load("../backend/display_transactions.php", {member_id : member_id, business_type: "pharma" });
+    $("#transactions_list").load("../backend/display_transactions.php", {member_id : member_id, business_type: "all" });
     
     $("#all").click(function() {
-        var type = "all";
+        var business_type = "all";
         $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
     });    
     $("#ph").click(function() {
-        var type = "pharmacy";
+        var business_type = "pharmacy";
         $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
     });    
     $("#res").click(function() {
-        var type = "restaurant";
+        var business_type = "restaurant";
         $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
     });    
     $("#transpo").click(function() {
-        var type = "transportation";
+        var business_type = "transportation";
         $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
     });    
 

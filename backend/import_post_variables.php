@@ -103,8 +103,11 @@
 
             switch ($business_type) {
                 case 'pharmacy':
-                case 'restaurant':
+                    break;
                 case 'transportation':
+                    break;
+                case 'restaurant':
+                    $business_type = "food";
                     break;
                 default:
                     array_push($errors, "Business type is not valid.");
