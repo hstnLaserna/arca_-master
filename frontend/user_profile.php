@@ -5,19 +5,20 @@
 
     // declare variable
     
-    $admin_id = "null";
-    $user_name = "null";
-    $first_name = "null";
-    $middle_name = "null";
-    $last_name = "null";
-    $birthdate = "null";
-    $sex2 = "null";
-    $contact_number = "null";
-    $email = "null";
-    $position = "null";
-    $answer1 = "null";
-    $answer2 = "null";
-    $avatar = "null";
+    $admin_id = "";
+    $user_name = "";
+    $first_name = "";
+    $middle_name = "";
+    $last_name = "";
+    $birthdate = "";
+    $sex2 = "";
+    $contact_number = "";
+    $email = "";
+    $position = "";
+    $answer1 = "";
+    $answer2 = "";
+    $avatar = "";
+    $member_buttons = "";
     $personal_profile = false;
 
     if(isset($_GET['user']) && $logged_position == "admin")
@@ -35,35 +36,38 @@
     $result = $mysqli->query($query);
     $row_count = mysqli_num_rows($result);
     $row = mysqli_fetch_assoc($result);
-    if($row_count == 0) { echo 'No record found  ' . $query;} else
+    if($row_count == 1)
     {
-        if($row_count > 1) { echo 'Admin returns more than 1 record';} else{}
-        {
-            $admin_id = $row['id'];
-            $user_name = $row['user_name'];
-            $first_name = $row['first_name'];
-            $middle_name = $row['middle_name'];
-            $last_name = strtoupper($row['last_name']);
-            $birthdate = $row['birth_date'];
-            $sex2 = $row['sex'];
-            $contact_number = $row['contact_number'];
-            $email = $row['email'];
-            $position = strtolower($row['position']);
-            $answer1 = $row['answer1'];
-            $answer2 = $row['answer2'];
+        $admin_id = $row['id'];
+        $user_name = $row['user_name'];
+        $first_name = $row['first_name'];
+        $middle_name = $row['middle_name'];
+        $last_name = strtoupper($row['last_name']);
+        $birthdate = $row['birth_date'];
+        $sex2 = $row['sex'];
+        $contact_number = $row['contact_number'];
+        $email = $row['email'];
+        $position = strtolower($row['position']);
+        $answer1 = $row['answer1'];
+        $answer2 = $row['answer2'];
+        
+        $member_buttons = '
+        <button type="button" id="edit" class="btn btn-secondary btn-lg btn-block">Edit</button>';
 
-            $avatar = '../resources/avatars/'.$row["avatar"]; 
-            if (file_exists($avatar) && $row["avatar"] != null) { 
-            } else { 
-                $avatar = '../resources/images/unknown_m_f.png'; 
-            }
-
-            if($user_name == $_SESSION['user_name']){
-                $personal_profile = true;
-            }  else {
-                $personal_profile = false;
-            }
+        $avatar = '../resources/avatars/'.$row["avatar"]; 
+        if (file_exists($avatar) && $row["avatar"] != null) { 
+        } else { 
+            $avatar = '../resources/images/unknown_m_f.png'; 
         }
+
+        if($user_name == $_SESSION['user_name']){
+            $personal_profile = true;
+        }  else {
+            $personal_profile = false;
+        }
+    } else {
+        if($row_count == 0) { echo 'No record found';}
+        if($row_count > 1) { echo 'Admin returns more than 1 record';}
     }
     mysqli_close($mysqli);
 ?>
@@ -87,7 +91,7 @@
         <p>
         </p>
     </div>
-    <button type="button" id="edit" class="btn btn-secondary btn-lg btn-block">Edit</button>
+    <?php echo $member_buttons;?>
     <input type="hidden" id="user_<?php echo $user_name;?>" name="user_name">
 </div>
 

@@ -5,7 +5,7 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
 {
     $osca_id = $_GET['member_id'];
     $query = "SELECT 	`id`,	`osca_id`,	`nfc_serial`,	`password`,	`first_name`,	`middle_name`,	`last_name`,	`birth_date`,
-                        `sex`,	`contact_number`, `email`, `membership_date`,	`picture` FROM `member` WHERE `osca_id` = $osca_id";
+                        `sex`,	`contact_number`, `email`, `membership_date`,	`picture` FROM `member` WHERE `osca_id` = '$osca_id'";
     $result = $mysqli->query($query);
     $row_count = mysqli_num_rows($result);
 
@@ -101,12 +101,11 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
         <?php
         mysqli_close($mysqli);
     } else{
-        echo "ID and Lastname does not match";
+        include('../backend/fail_data.php');
     }
 } else
 {
-    echo "ID and Lastname could not be read";
-    return false;
+    include('../backend/fail_data.php');
 }
 include('foot.php');
 ?>

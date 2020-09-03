@@ -142,7 +142,12 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
     <?php
 } else
 {
-    echo 'Invalid data'; 
+    ?>
+    <script>
+        alert("Invalid Data. Redirecting.");
+        window.location.replace("dashboard.php");
+    </script>
+    <?php
 }
 ?>
         </div>

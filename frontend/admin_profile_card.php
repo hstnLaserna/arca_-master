@@ -12,27 +12,24 @@
                     $result = $mysqli->query($query);
                     $row_count = mysqli_num_rows($result);
                     $row = mysqli_fetch_assoc($result);
-                    if($row_count == 0) { echo 'No record found';} else
+                    if($row_count == 1)
                     {
-                        if($row_count > 1) { echo 'Admin returns more than 1 record';} else{}
-                        {
-                            $user_name = $row['user_name'];
-                            $first_name = $row['first_name'];
-                            $middle_name = $row['middle_name'];
-                            $last_name = $row['last_name'];
-                            $birthdate = $row['birth_date'];
-                            $sex2 = $row['sex'];
-                            $contact_number = $row['contact_number'];
-                            $email = $row['email'];
-                            $position = strtolower($row['position']);
-                            $answer1 = $row['answer1'];
-                            $answer2 = $row['answer2'];
-                            $avatar = '../resources/avatars/'.$row["avatar"];
-                            if (file_exists($avatar) && $row["avatar"] != null) { 
-                                // something
-                            } else {
-                                $avatar = "../resources/images/unknown_m_f.png"; 
-                            }
+                        $user_name = $row['user_name'];
+                        $first_name = $row['first_name'];
+                        $middle_name = $row['middle_name'];
+                        $last_name = $row['last_name'];
+                        $birthdate = $row['birth_date'];
+                        $sex2 = $row['sex'];
+                        $contact_number = $row['contact_number'];
+                        $email = $row['email'];
+                        $position = strtolower($row['position']);
+                        $answer1 = $row['answer1'];
+                        $answer2 = $row['answer2'];
+                        $avatar = '../resources/avatars/'.$row["avatar"];
+                        if (file_exists($avatar) && $row["avatar"] != null) { 
+                            // something
+                        } else {
+                            $avatar = "../resources/images/unknown_m_f.png"; 
                         }
                         ?>
 
@@ -62,10 +59,12 @@
                         
                         <?php
 
+                    } else {
+                        include('../backend/fail_data.php');
                     }
                     mysqli_close($mysqli);
                 } else {
-                    echo 'Invalid admin'; 
+                    include('../backend/fail_data.php');
                 }
             ?>
         </div>

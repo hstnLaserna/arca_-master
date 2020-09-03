@@ -5,23 +5,23 @@
 
     // declare variables 
 
-    $osca_id = "null";
-    $member_id = "null";
-    $first_name = "null";
-    $middle_name =  "null";
-    $last_name =  "null";
-    $sex2 =  "null";
-    $contact_number =  "null";
-    $email =  "null";
-    $bdate =  "null";
-    $age =  "null";
-    $memship_date =  "null";
+    $osca_id = "";
+    $member_id = "";
+    $first_name = "";
+    $middle_name =  "";
+    $last_name =  "";
+    $sex2 =  "";
+    $contact_number =  "";
+    $email =  "";
+    $bdate =  "";
+    $age =  "";
+    $memship_date =  "";
     $picture = "../resources/images/unknown_m_f.png";
     $member_buttons = '';
 
     if(isset($_GET['member_id']))
     {
-        $osca_id = $_GET['member_id'];
+        $selected_osca_id = $_GET['member_id'];
 
         $query = "SELECT m.`id` member_id, m.`osca_id`, m.`nfc_serial`, m.`password`, m.`first_name`, m.`middle_name`, m.`last_name`, m.`sex`, 
                     concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`)) `bdate`, 
@@ -29,7 +29,7 @@
                     concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`)) `memship_date`, 
                     m.`contact_number`, m.`email`, m.`picture` `picture`
                     FROM `member` m
-                    WHERE `osca_id` = '$osca_id';";
+                    WHERE `osca_id` = '$selected_osca_id';";
                     
         $result = $mysqli->query($query);
         $row_count_member = mysqli_num_rows($result);
@@ -54,7 +54,6 @@
             if (file_exists($picture) && $row_member["picture"] != null) {
                 $picture =  "../resources/members/".$row_member["picture"]; 
             } else {
-                echo $picture;
                 $picture = "../resources/images/unknown_m_f.png";
             }
 
@@ -67,8 +66,7 @@
         
         mysqli_close($mysqli);
 
-    } else {
-    }
+    } else {}
 ?>
             <div class="card digital-card-contents">
                 <div class="card-right">
@@ -79,7 +77,7 @@
                 </div>
                 <div class="card-left">
                     <div class="card">
-                        <p>Lastname: <?php echo $last_name; ?>,</p>
+                        <p>Lastname: <?php echo $last_name; ?></p>
                         <p>Firstname: <?php echo $first_name; ?> </p>
                         <p>Middlename: <?php echo $middle_name; ?></p>
                         <p>Sex:  <?php echo determine_sex($sex2, "display_long"); ?> </p>
@@ -104,21 +102,25 @@
                 </div>
             </div>
             
-            <div class="row">
-                <div class="col col-md-3 p-3 border border-dark rounded">
-                    <button class="btn btn-block btn-secondary" id="all">All Transactions</button>
-                    <button class="btn btn-block btn-secondary" id="ph">Pharmacy</button>
-                    <button class="btn btn-block btn-secondary" id="res">Restaurant</button>
-                    <button class="btn btn-block btn-secondary" id="transpo">Transportation</button>
-                </div>
-
-                <div class="col col-md-9 p-3 border border-dark rounded overflow-auto" class="transactions">
-                    <div class="table-responsive" id="transactions_list">
-                        <table class="table table-hover users" id="trans">
-                        </table>
+            <div class="p-3 border border-dark rounded overflow-auto transactions">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all-transactions" aria-selected="true">All</a>
+                        <a class="nav-item nav-link" id="nav-ph-tab" data-toggle="tab" href="#nav-ph" role="tab" aria-controls="nav-pharmacy-transactions" aria-selected="false">Pharmacy</a>
+                        <a class="nav-item nav-link" id="nav-rs-tab" data-toggle="tab" href="#nav-rs" role="tab" aria-controls="nav-restaurant-transactions" aria-selected="false">Restaurant</a>
+                        <a class="nav-item nav-link" id="nav-tr-tab" data-toggle="tab" href="#nav-tr" role="tab" aria-controls="nav-transportation-transactions" aria-selected="false">Transportation</a>
+                        <a class="nav-item nav-link ml-auto" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
                     </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-transactions-tab"> </div>
+                    <div class="tab-pane fade" id="nav-ph" role="tabpanel" aria-labelledby="nav-pharmacy-transactions-tab"> </div>
+                    <div class="tab-pane fade" id="nav-rs" role="tabpanel" aria-labelledby="nav-restaurant-transactions-tab"> </div>
+                    <div class="tab-pane fade" id="nav-tr" role="tabpanel" aria-labelledby="nav-transportation-transactions-tab"> </div>
+                    <div class="tab-pane fade" id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>
                 </div>
             </div>
+
 
 
 <div class="container">
@@ -136,29 +138,16 @@ include('../frontend/foot.php');
 $('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
 $(document).ready(function(){
     var member_id = <?php echo $member_id; ?>;
+    var osca_id = <?php echo $osca_id; ?>;
     var counter = 1;
+    var ctr2 = 1;
     var type = "";
 
-
-    $("#transactions_list").load("../backend/display_transactions.php", {member_id : member_id, business_type: "all" });
-    
-    $("#all").click(function() {
-        var business_type = "all";
-        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
-    });    
-    $("#ph").click(function() {
-        var business_type = "pharmacy";
-        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
-    });    
-    $("#res").click(function() {
-        var business_type = "restaurant";
-        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
-    });    
-    $("#transpo").click(function() {
-        var business_type = "transportation";
-        $("#trans__").load("../backend/display_transactions.php #trans__", {member_id : member_id, business_type: business_type });
-    });    
-
+    $("#nav-all").load("../backend/display_transactions_all.php", {member_id : member_id});
+    $("#nav-ph").load("../backend/display_transactions_pharmacy.php", {member_id : member_id});
+    $("#nav-rs").load("../backend/display_transactions_restaurant.php", {member_id : member_id});
+    $("#nav-tr").load("../backend/display_transactions_transportation.php", {member_id : member_id});
+    $("#nav-complaints").load("../backend/display_complaints_member.php", {osca_id : osca_id});
 
 
 

@@ -2,17 +2,17 @@
     include('../backend/php_functions.php');
 
     // declare variables 
-    $osca_id = "null";
-    $member_id = "null";
-    $first_name = "null";
-    $middle_name =  "null";
-    $last_name =  "null";
-    $sex2 =  "null";
-    $contact_number =  "null";
-    $email =  "null";
-    $bdate =  "null";
-    $age =  "null";
-    $memship_date =  "null";
+    $osca_id = "";
+    $member_id = "";
+    $first_name = "";
+    $middle_name =  "";
+    $last_name =  "";
+    $sex2 =  "";
+    $contact_number =  "";
+    $email =  "";
+    $bdate =  "";
+    $age =  "";
+    $memship_date =  "";
     $picture = "../resources/images/unknown_m_f.png";
     $member_buttons = '';
     
@@ -94,12 +94,11 @@
                                 } else { ?>
                         </div>  <?php }
                     } else {
-                        if($row_count == 0) { echo "Record is invalid.";}
-                        if($row_count > 1) { echo 'More than 1 guardian found in the record.';}
+                        include('../backend/fail_data.php');
                     }
                     mysqli_close($mysqli);// Closing Connection
                 } else {
-                    echo 'Invalid member'; 
+                    include('../backend/fail_data.php');
                 }
             ?>
 

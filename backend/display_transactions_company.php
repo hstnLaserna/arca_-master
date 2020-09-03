@@ -1,4 +1,5 @@
-<div id="trans__">
+<div id="trans">
+    <h3 class="text-center"> TRANSACTIONS </H3>
     <?php
     include("../backend/conn.php");
     //declare
@@ -144,7 +145,7 @@ $(document).ready(function(){
     $("#expand").click(function() {
         counter++;
         var type = "<?php echo $type; ?>";
-        $("#trans__").load("../backend/display_transactions_company.php #trans__", {company_tin : "<?php echo $company_tin;?>", counter: counter, business_type: "<?php echo $type; ?>" });
+        $("#trans").load("../backend/display_transactions_company.php #trans", {company_tin : "<?php echo $company_tin;?>", counter: counter, business_type: "<?php echo $type; ?>" });
     });
 
     

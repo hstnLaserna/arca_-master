@@ -1,5 +1,6 @@
 <?php
   include('../frontend/header.php');
+  include('../backend/position_check.php');
 ?>
 
 <div id="management">

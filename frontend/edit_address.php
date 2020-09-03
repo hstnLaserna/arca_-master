@@ -137,7 +137,7 @@ if(isset($_POST['id']) &&
                             <?php
                         }
                     } else {
-                        echo $error_msg;
+                        include('../backend/fail_data.php');
                     }
                     
                     mysqli_close($mysqli1);
@@ -152,7 +152,7 @@ if(isset($_POST['id']) &&
     <?php
 } else
 {
-    echo 'Invalid data'; 
+    include('../backend/fail_data.php');
 }
 ?>
 

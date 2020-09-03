@@ -1,5 +1,6 @@
 <?php
 include('header.php');
+include('../backend/position_check.php');
 include('../backend/php_functions.php');
 if(isset($_GET['user']) && $logged_position == "admin")
 {
@@ -173,7 +174,7 @@ if(isset($_GET['user']) && $logged_position == "admin")
         <?php
         mysqli_close($mysqli);
     } else{
-        echo "ID and Username does not match";
+        include('../backend/fail_data.php');
     }
 }
 include('foot.php');

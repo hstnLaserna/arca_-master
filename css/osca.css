@@ -215,7 +215,16 @@ button.edit_guardian {
 {
   max-width: 800px !important;
 }
-
+.transactions {
+  min-height: 500px;
+  max-height: 500px;
+}
+.complaints {
+  min-height: 500px;
+  max-height: 500px;
+}
+/*
 .nav {
   display: block !important;
 }
+*/

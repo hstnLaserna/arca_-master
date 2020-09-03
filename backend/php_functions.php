@@ -68,19 +68,19 @@
                                 FROM `member` m
                                 INNER JOIN `address_jt` `ajt` ON `ajt`.`member_id` = m.`id`
                                 INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
-                                WHERE m.`id` = $selected_id";
+                                WHERE m.`id` = '$selected_id'";
             } else if($type == "company") {
                 $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
                                 FROM `company` c
                                 INNER JOIN `address_jt` `ajt` ON `ajt`.`company_id` = c.`id`
                                 INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
-                                WHERE c.`company_tin` = $selected_id";
+                                WHERE c.`company_tin` = '$selected_id'";
             } else if($type == "guardian") {
                 $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
                                 FROM `guardian` g
                                 INNER JOIN `address_jt` `ajt` ON `ajt`.`guardian_id` = g.`id`
                                 INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
-                                WHERE g.`id` = $selected_id";
+                                WHERE g.`id` = '$selected_id'";
             }
             else {}
 

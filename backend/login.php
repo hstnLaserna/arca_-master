@@ -35,6 +35,7 @@ include('backend/conn.php');
             $_SESSION['middle_name'] = $row['middle_name'];
             $_SESSION['last_name'] = $row['last_name'];
             $_SESSION['sex'] = $row['sex'];
+            $_SESSION['position'] = $row['position'];
             header("location: ../frontend/dashboard.php");
           }
           else {

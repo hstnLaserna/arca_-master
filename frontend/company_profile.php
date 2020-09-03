@@ -5,19 +5,21 @@
 
     // declare variables 
 
-    $company_name = "null";
-    $branch = "null";
-    $company_tin = "null";
-    $business_type = "null";
+    $company_name = "";
+    $branch = "";
+    $company_tin = "";
+    $business_type = "";
+    $logo = "../resources/images/unknown_m_f.png";
+    $buttons = "";
 
     if(isset($_GET['company_tin']))
     {
-        $company_tin = $_GET['company_tin'];
+        $selected_company_tin = $_GET['company_tin'];
 
         $query = "SELECT c.`id` id, c.`company_name` `company_name`, c.`branch` `branch`, 
                         c.`company_tin` `company_tin`, c.`business_type` `business_type`, c.`logo` `logo`
                     FROM `company` c
-                    WHERE `company_tin` = '$company_tin';";
+                    WHERE `company_tin` = '$selected_company_tin';";
                     
         $result = $mysqli->query($query);
         $row_count_member = mysqli_num_rows($result);
@@ -41,7 +43,7 @@
             
 
 
-            $member_buttons = '
+            $buttons = '
             <button type="button" id="edit_basic" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>';
         } else {}
         mysqli_close($mysqli);
@@ -50,10 +52,10 @@
 ?>
             <div class="card digital-card-contents">
                 <div class="card-right">
-                    <img class="company_logo" src="<?php echo $logo; ?>" alt="<?php echo $company_name?>'s Logo">
+                    <img class="company_logo" src="<?php echo $logo; ?>" alt="logo">
                 </div>
                 <div class="card-bottom-right">
-                <?php echo $member_buttons;?>
+                <?php echo $buttons;?>
                 </div>
                 <div class="card-left">
                     <div class="card">
@@ -68,18 +70,17 @@
                 </div>
             </div>
             
-
-            <div class="col col-md-9 p-3 border border-dark rounded overflow-auto" class="transactions">
-                <div class="table-responsive" id="transactions_list">
-                    <table class="table table-hover users" id="trans">
-                    </table>
-                </div>
-            </div>
-
-            <div class="col col-md-9 p-3 border border-dark rounded overflow-auto" class="transactions">
-                <div class="table-responsive" id="complaints_list">
-                    <table class="table table-hover" id="complaints">
-                    </table>
+            
+            <div class="p-3 border border-dark rounded overflow-auto transactions">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-trans-tab" data-toggle="tab" href="#nav-trans" role="tab" aria-controls="nav-transactions" aria-selected="true">Transactions</a>
+                        <a class="nav-item nav-link" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active"  id="nav-trans" role="tabpanel" aria-labelledby="nav-transactions-tab"> </div>
+                    <div class="tab-pane fade"              id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>
                 </div>
             </div>
 
@@ -101,9 +102,9 @@ $(document).ready(function(){
     
     // display_transactions_company
     // display_complaints_company
-    $("#transactions_list").load("../backend/display_transactions_company.php", {company_tin : "<?php echo $company_tin;?>", business_type: "<?php echo $business_type; ?>" });
+    $("#nav-trans").load("../backend/display_transactions_company.php", {company_tin : "<?php echo $company_tin;?>", business_type: "<?php echo $business_type; ?>" });
     
-    $("#complaints_list").load("../backend/display_complaints_company.php", {company_tin : "<?php echo $company_tin;?>" });
+    $("#nav-complaints").load("../backend/display_complaints_company.php", {company_tin : "<?php echo $company_tin;?>" });
     
     $('.edit_address').click(function () {
         var address_id= $(this).parent().attr("id").replace("addNum_", "");

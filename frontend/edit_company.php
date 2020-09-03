@@ -101,12 +101,11 @@ if(isset($_GET['company_tin'])/* && isset($_GET['last_name'])*/)
         <?php
         mysqli_close($mysqli);
     } else{
-        echo "Company TIN does not match";
+        include('../backend/fail_data.php');
     }
 } else
 {
-    echo "Company TIN could not be read";
-    return false;
+    include('../backend/fail_data.php');
 }
 include('foot.php');
 ?>

@@ -36,8 +36,7 @@
                     <li class="nav-item" id="scan">
                         <a class="nav-link" href="../frontend/dashboard.php?page=scan">Scan</a>
                     </li>
-                        <?php if($logged_position == "admin")
-                            {?>
+                    
                     <li class="nav-item dropdown" id="members_management">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Members
@@ -48,6 +47,8 @@
                             <a class="dropdown-item" href="../frontend/search.php">Search</a>
                         </div>
                     </li>
+                        <?php if($logged_position == "admin")
+                            {?>
                     <li class="nav-item dropdown" id="administrator_management">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Administrators
@@ -57,6 +58,10 @@
                             <a class="dropdown-item" href="../frontend/administrators.php">Administrator List</a>
                         </div>
                     </li>
+                        <?php
+                        } else {}
+                        ?>
+                    
                     <li class="nav-item dropdown" id="company_management">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Company
@@ -67,21 +72,6 @@
                             <a class="dropdown-item" href="../frontend/company_search.php">Company Search</a>
                         </div>
                     </li>
-                        <?php
-                        } else {
-                            ?>
-                    <li class="nav-item dropdown" id="members_management">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Members
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="../frontend/member_registration.php">Member Registration</a>
-                            <a class="dropdown-item" href="../frontend/members.php">Members List</a>
-                        </div>
-                    </li>
-                            <?php
-                        }
-                        ?>
                 </ul>
                 
                 <div class="">

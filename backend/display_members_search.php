@@ -62,7 +62,8 @@
             FROM `member` m
             INNER JOIN `address_jt` ajt ON ajt.`member_id` = m.`id`
             INNER JOIN `address` a ON ajt.`address_id` = a.`id`
-            WHERE $where_query";
+            WHERE $where_query
+            GROUP BY `osca_id`";
         
         $result = $mysqli->query($query);
         $row_count_all = mysqli_num_rows($result);
@@ -84,6 +85,7 @@
                     INNER JOIN `address_jt` ajt ON ajt.`member_id` = m.`id`
                     INNER JOIN `address` a ON ajt.`address_id` = a.`id`
                     WHERE $where_query
+                    GROUP BY `osca_id`
                     ORDER BY `m`.`last_name` ASC, `m`.`first_name` ASC 
                     LIMIT $offset,$items_per_page";
         
