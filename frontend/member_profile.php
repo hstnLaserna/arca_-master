@@ -173,7 +173,6 @@ $(document).ready(function(){
     $('.edit_address').click(function () {
         var address_id= $(this).parent().attr("id").replace("addNum_", "");
         var member_id= <?php echo $member_id;?>;
-        alert(address_id + " , " + member_id);
         $('#_kf939s').load("../frontend/edit_address.php?action=edit", {id:member_id, address_id:address_id, type:"member"},function(){
             $('#_kf939s').modal();
         });

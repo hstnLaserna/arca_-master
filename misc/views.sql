@@ -1,11 +1,20 @@
 USE `db_osca`;
 
+DROP VIEW IF EXISTS `view_companies`;
+CREATE VIEW `view_companies` AS
+(
+SELECT c.id c_id, company_tin, company_name, branch, business_type, logo,
+		ca.id ca_id, user_name, password, is_enabled, log_attempts
+FROM company c
+INNER JOIN company_accounts ca ON ca.company_id = c.id
+);
+
 DROP VIEW IF EXISTS view_pharma_transactions;
 CREATE VIEW view_pharma_transactions AS 
 (
 SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 	 -- query pharmacy
-	 d.generic_name, d.brand, d.dose, d.unit, d.max_monthly, d.max_weekly, p.quantity,  p.unit_price, p.vat_exempt_price, p.discount_price, p.payable_price	
+	 d.generic_name, d.brand, d.dose, d.unit, d.is_otc,  d.max_monthly, d.max_weekly, p.quantity,  p.unit_price, p.vat_exempt_price, p.discount_price, p.payable_price	
 FROM transaction t
 LEFT JOIN pharmacy p ON p.transaction_id = t.id
 LEFT JOIN member m ON t.member_id = m.id
