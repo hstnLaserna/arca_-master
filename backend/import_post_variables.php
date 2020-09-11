@@ -14,14 +14,14 @@
         isset($_POST['contact_number']) && 
         isset($_POST['email']))
         {
-            $firstname = $mysqli->escape_string($_POST['first_name']);
-            $middlename = $mysqli->escape_string($_POST['middle_name']);
-            $lastname = $mysqli->escape_string($_POST['last_name']);
-            $birthdate = $mysqli->escape_string($_POST['birthdate']);
-            $sex = strtolower($mysqli->escape_string($_POST['gender']));
+            $firstname = $mysqli->real_escape_string($_POST['first_name']);
+            $middlename = $mysqli->real_escape_string($_POST['middle_name']);
+            $lastname = $mysqli->real_escape_string($_POST['last_name']);
+            $birthdate = $mysqli->real_escape_string($_POST['birthdate']);
+            $sex = strtolower($mysqli->real_escape_string($_POST['gender']));
             $sex2 = determine_sex($sex, "post");
-            $contact_number = $mysqli->escape_string($_POST['contact_number']);
-            $email = $mysqli->escape_string($_POST['email']);
+            $contact_number = $mysqli->real_escape_string($_POST['contact_number']);
+            $email = $mysqli->real_escape_string($_POST['email']);
             // --------------
             // VALIDATION
             // --------------
@@ -80,10 +80,10 @@
         isset($_POST['company_branch']) && 
         isset($_POST['business_type']))
         {
-            $company_name = $mysqli->escape_string($_POST['company_name']);
-            $company_tin = $mysqli->escape_string($_POST['company_tin']);
-            $branch = $mysqli->escape_string($_POST['company_branch']);
-            $business_type = strtolower($mysqli->escape_string($_POST['business_type']));
+            $company_name = $mysqli->real_escape_string($_POST['company_name']);
+            $company_tin = $mysqli->real_escape_string($_POST['company_tin']);
+            $branch = $mysqli->real_escape_string($_POST['company_branch']);
+            $business_type = strtolower($mysqli->real_escape_string($_POST['business_type']));
 
             // --------------
             // VALIDATION
@@ -134,10 +134,10 @@
         isset($_POST['address_city']) && 
         isset($_POST['address_province']))
         {
-            $address_line1 = $mysqli->escape_string($_POST['address_line1']);
-            $address_line2 = $mysqli->escape_string($_POST['address_line2']);
-            $address_city = $mysqli->escape_string($_POST['address_city']);
-            $address_province = $mysqli->escape_string($_POST['address_province']);
+            $address_line1 = $mysqli->real_escape_string($_POST['address_line1']);
+            $address_line2 = $mysqli->real_escape_string($_POST['address_line2']);
+            $address_city = $mysqli->real_escape_string($_POST['address_city']);
+            $address_province = $mysqli->real_escape_string($_POST['address_province']);
 
             // --------------
             // VALIDATION
@@ -190,14 +190,14 @@
         isset($_POST['g_contact_number']) && 
         isset($_POST['g_email']))
         {
-            $g_firstname = $mysqli->escape_string($_POST['g_first_name']);
-            $g_middlename = $mysqli->escape_string($_POST['g_middle_name']);
-            $g_lastname = $mysqli->escape_string($_POST['g_last_name']);
-            $g_sex = strtolower($mysqli->escape_string($_POST['g_gender']));
+            $g_firstname = $mysqli->real_escape_string($_POST['g_first_name']);
+            $g_middlename = $mysqli->real_escape_string($_POST['g_middle_name']);
+            $g_lastname = $mysqli->real_escape_string($_POST['g_last_name']);
+            $g_sex = strtolower($mysqli->real_escape_string($_POST['g_gender']));
             $g_sex2 = determine_sex($g_sex, "post");
-            $g_relationship = $mysqli->escape_string($_POST['g_relationship']);
-            $g_contact_number = $mysqli->escape_string($_POST['g_contact_number']);
-            $g_email = $mysqli->escape_string($_POST['g_email']);
+            $g_relationship = $mysqli->real_escape_string($_POST['g_relationship']);
+            $g_contact_number = $mysqli->real_escape_string($_POST['g_contact_number']);
+            $g_email = $mysqli->real_escape_string($_POST['g_email']);
 
             // --------------
             // VALIDATION
@@ -261,12 +261,12 @@
             isset($_POST['security_answer_1']) &&
             isset($_POST['security_answer_2']))
             {
-                $username = $mysqli->escape_string($_POST['user_name']);
-                $password = $mysqli->escape_string($_POST['password']);
-                $birthdate = $mysqli->escape_string($_POST['birthdate']);
-                $position = strtolower($mysqli->escape_string($_POST['position']));
-                $answer1 = $mysqli->escape_string($_POST['security_answer_1']);
-                $answer2 = $mysqli->escape_string($_POST['security_answer_2']);
+                $username = $mysqli->real_escape_string($_POST['user_name']);
+                $password = $mysqli->real_escape_string($_POST['password']);
+                $birthdate = $mysqli->real_escape_string($_POST['birthdate']);
+                $position = strtolower($mysqli->real_escape_string($_POST['position']));
+                $answer1 = $mysqli->real_escape_string($_POST['security_answer_1']);
+                $answer2 = $mysqli->real_escape_string($_POST['security_answer_2']);
 
                 // --------------
                 // VALIDATION
@@ -318,11 +318,11 @@
             isset($_POST['osca_id']) && 
             isset($_POST['nfc_serial']))
             {
-                $password = $mysqli->escape_string($_POST['password']);
-                $membership_date = $mysqli->escape_string($_POST['membership_date']);
-                $birthdate = $mysqli->escape_string($_POST['birthdate']);
-                $osca_id = $mysqli->escape_string($_POST['osca_id']);
-                $nfc_serial = $mysqli->escape_string($_POST['nfc_serial']);
+                $password = $mysqli->real_escape_string($_POST['password']);
+                $membership_date = $mysqli->real_escape_string($_POST['membership_date']);
+                $birthdate = $mysqli->real_escape_string($_POST['birthdate']);
+                $osca_id = $mysqli->real_escape_string($_POST['osca_id']);
+                $nfc_serial = $mysqli->real_escape_string($_POST['nfc_serial']);
 
                 // --------------
                 // VALIDATION

@@ -14,9 +14,7 @@
 
     if(isset($_POST['member_id']))
     {
-
-        $member_id = $_POST['member_id'];
-        
+        $member_id = $mysqli->real_escape_string($_POST['member_id']);
         $query  = "SELECT * FROM `member`
                 WHERE `id` = '$member_id'";
 
@@ -27,14 +25,11 @@
             $ctr1 = 1;
             $items_per_page = 2;
 
-            $WHERE_CLAUSE = " WHERE member_id = '$member_id' AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10)) ";
 
             if(isset($_POST['ctr1'])){ // Meaning user prompted to view more transaction data. Disable the "transactions for the last month" condition.
                 $ctr1 = filter_input(INPUT_POST, 'ctr1', FILTER_VALIDATE_INT);
-                $WHERE_CLAUSE = " WHERE member_id = '$member_id' ";
                 if(!$ctr1) {
                     $ctr1 = 1;
-                    $WHERE_CLAUSE = " WHERE member_id = '$member_id' AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10)) ";
                 }
             }
 
@@ -50,9 +45,9 @@
 
             $transaction_query = "SELECT * FROM (
                                     SELECT `member_id`, `trans_date`, `vat_exempt_price`, `discount_price` , `payable_price`, `desc`, 
-                                            company_name `company`, `branch`, `business_type`
+                                            company_name `company`, `branch`, `business_type`, `company_tin`
                                     FROM view_all_transactions
-                                    $WHERE_CLAUSE
+                                    WHERE member_id = '$member_id'
                                     ORDER BY trans_date ASC) ttt ORDER BY `trans_date` DESC  
                                     LIMIT $displayed_items;";
 
@@ -74,20 +69,23 @@
                         $member_id = $row['member_id'];
                         $business_type = $row['business_type'];
                         $transaction_date = $row['trans_date'];
-                        $vat_exempt_price = $row['vat_exempt_price'];
-                        $discount_price = $row['discount_price'];
-                        $payable_price = $row['payable_price'];
                         $description = $row['desc'];
                         $company = $row['company'];
+                        $company_tin = $row['company_tin'];
                         $branch = $row['branch'];
+                        $formatter = new NumberFormatter("fil-PH", \NumberFormatter::CURRENCY);
+                        $vat_exempt_price = $formatter->format($row['vat_exempt_price']);
+                        $discount_price = $formatter->format($row['discount_price']);
+                        $payable_price = $formatter->format($row['payable_price']);
                         
                         ?>
                         <tr>
                             <td><?php echo $business_type ?></td>
                             <td><?php echo $transaction_date ?></td>
                             <td>
-                                <?php echo $company ?> 
-                                <p><i><?php echo $branch ?></i></p>
+                                <a href="../frontend/company_profile.php?company_tin=<?php echo $company_tin;?>" class="view_">
+                                    <?php echo "$company <br> <i> $branch</i>" ?>
+                                </a>
                             </td>
                             <td><?php echo $description ?></td>
                             <td><?php echo $vat_exempt_price ?></td>

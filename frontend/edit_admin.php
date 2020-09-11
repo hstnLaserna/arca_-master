@@ -33,11 +33,16 @@ if(isset($_GET['user']) && $logged_position == "admin")
             $position = strtolower($row['position']);
             $answer1 = $row['answer1'];
             $answer2 = $row['answer2'];
-            $avatar = $row['avatar'];
+            
+            $avatar = '../resources/avatars/'.$row["avatar"]; 
+            if (file_exists($avatar) && $row["avatar"] == null) { $avatar = '../resources/images/unknown_m_f.png'; }
         }
         ?>
         <div>
-            <form method="post" enctype="multipart/form-data" autocomplete="off" id="edit_admin">
+                <div class="profile-picture-container">
+                    <img class="profile-picture" src="<?php echo $avatar; ?>" id="output">
+                </div>
+            <form action="../backend/photo_upload.php" method="post" enctype="multipart/form-data" autocomplete="off" id="edit_admin">
                 <table class="table modal-form">
                     <tr>
                         <td>
@@ -154,18 +159,7 @@ if(isset($_GET['user']) && $logged_position == "admin")
                         <input type="text" class="form-control" name="security_answer_2"  placeholder="<?php echo $answer2?>" value="<?php echo $answer2?>">
                         </td>
                     </tr>
-                    <!-- tr>
-                        <td>
-                        Picture
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        <input type="file" name="photo" id="fileSelect" >
-                        </td>
-                    </tr-->
                 </table>
-                <input type="hidden" id="user_<?php echo $user_name;?>" name="user">
                 <input type="hidden" name="selected_id" id ="selected_id" value="<?php echo $admin_id;?>">
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
                 <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
@@ -182,6 +176,35 @@ include('foot.php');
 
 
 <script>
+    
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src) // free memory
+    }
+  };
+  /*
+
+    var inputs = document.querySelectorAll('.inputfile');
+
+    Array.prototype.forEach.call(inputs, function(input)
+    {
+        var label	 = input.nextElementSibling,
+            labelVal = label.innerHTML;
+
+        input.addEventListener('change', function(e)
+        {
+            var fileName = '';
+
+            if(fileName)
+                label.querySelector('span').innerHTML = fileName;
+            else
+                label.innerHTML = labelVal;
+        });
+    });
+    */
+
   $(document).ready(function(){
 
     $('input[name!="middle_name"]').blur(function(){
@@ -196,8 +219,8 @@ include('foot.php');
     $("#submit").click(function(){
         $.post("../backend/update_admin.php", $("#edit_admin").serialize(), function(d){
             if(d == "true") {
-                var user = $('input[name="user"]').attr("id").replace("user_", "")
-                location.replace("../frontend/user_profile.php?user=" + user);
+                var new_user = $('input[name="user_name"]').val();
+                location.replace("../frontend/user_profile.php?user=" + new_user);
             } else {
                 alert(d);
             }

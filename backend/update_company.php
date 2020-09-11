@@ -3,7 +3,7 @@
   $query = "";
     if(isset($_POST['company_tin_old'])) {
 
-        $selected_tin = $_POST['company_tin_old'];
+        $selected_tin = $mysqli->real_escape_string($_POST['company_tin_old']);
         $query = "SELECT `id` FROM `company` WHERE `company_tin` = '$selected_tin'";
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);

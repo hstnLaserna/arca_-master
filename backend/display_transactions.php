@@ -20,7 +20,7 @@
     if(isset($_POST['member_id']))
     {
 
-        $member_id = $_POST['member_id'];
+        $member_id = $mysqli->real_escape_string($_POST['member_id']);
         
         $query  = "SELECT * FROM `member`
                 WHERE `id` = '$member_id'";

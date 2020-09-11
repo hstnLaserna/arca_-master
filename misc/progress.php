@@ -1,5 +1,5 @@
 <?php echo hello;
-
+?>
 [X} Lookup of senior in database through textboxes:
 [X}     OSCA ID
 [X}     Firstname
@@ -123,20 +123,21 @@ tables:
                 [x] delete
 [] reports
 	[] lost
-    [] complaints
-        [] display on member profile
-        [] display all latest complaints
-        [] dispaly all complaints from a company
+    [x] complaints
+        [x] display on member profile
+        [x] display all latest complaints
+        [x] dispaly all complaints from a company
 
-[] administration
+[x] administration
     [x] user profile
-    [] access of user and admin levels
+    [x] access of user and admin levels
     [x] registration of new admin
-[] company
-    [] registration of new company
-    [] display list of companies
-    [] edit of company details
-    [] edit of company address
+[x] company
+    [x] registration of new company
+    [x] display list of companies
+    [x] edit of company details
+    [x] edit of company address
+    [x] search company
 
 [x] Validate inputs alphanumeric, valid symbols only
 
@@ -148,9 +149,9 @@ tables:
 
 [x] phone number and email validation in javascript and php
 
-[] Picture upload
+[x] Picture upload
 
-[] terminal
+[x] terminal
 
 
 

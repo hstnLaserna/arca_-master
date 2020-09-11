@@ -48,7 +48,6 @@
                 } else {
                     if($rows1 >= 1){ echo "OSCA ID is already registered to other records.";}
                     if($rows2 >= 1){ echo "NFC Serial is already registered to other records.";}
-                    else{echo " Errors have been found. Could not execute update of profile";}
                 }
             } else {
                 echo "Errors have been found. Could not execute update of profile.";

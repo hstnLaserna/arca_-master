@@ -52,7 +52,18 @@
 ?>
             <div class="card digital-card-contents">
                 <div class="card-right">
-                    <img class="company_logo" src="<?php echo $logo; ?>" alt="logo">
+                    <div class="profile-picture-container">
+                        <form action="../backend/upload.php" id="form_photo" method="post" enctype="multipart/form-data" >
+                            <img class="profile-picture" src="<?php echo $logo; ?>" alt="logo" id="output">
+                            <div class="middle">
+                                <input type="file" name="photo" accept="image/x-png,image/jpeg" onchange="loadFile(event)" id="file" class="inputfile">
+                                <input type="hidden" name="entity_key" value="<?php echo $company_tin;?>">
+                                <input type="hidden" name="entity_type" value="company">
+                                <label for="file" class="text">Change</label>
+                                <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
                 <div class="card-bottom-right">
                 <?php echo $buttons;?>
@@ -98,6 +109,40 @@ include('../frontend/foot.php');
 
 <script>
 $('title').replaceWith('<title>Member profile - <?php echo ""; ?></title>');
+
+
+var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+    URL.revokeObjectURL(output.src) // free memory
+    }
+    
+    if( document.getElementById("file").files.length == 0 ){
+        document.getElementById("submit").classList.add("hidden");
+        console.log("no files selected");
+    } else {
+        document.getElementById("submit").classList.remove("hidden");
+        console.log("File is selected");
+    }
+};
+var inputs = document.querySelectorAll('.inputfile');
+
+Array.prototype.forEach.call(inputs, function(input)
+{
+    var label	 = input.nextElementSibling,
+        labelVal = label.innerHTML;
+
+    input.addEventListener('change', function(e)
+    {
+        var fileName = '';
+
+        if(fileName)
+            label.querySelector('span').innerHTML = fileName;
+        else
+            label.innerHTML = labelVal;
+    });
+});
 $(document).ready(function(){
     
     // display_transactions_company
@@ -125,6 +170,15 @@ $(document).ready(function(){
         form.submit();
         
     });
+
+    
+    if( document.getElementById("file").files.length == 0 ){
+            document.getElementById("submit").classList.add("hidden");
+            console.log("no files selected");
+        } else {
+            document.getElementById("submit").classList.remove("hidden");
+            console.log("File is selected");
+        }
     
 });
 </script>

@@ -22,7 +22,7 @@
   $query = "";
     if(isset($_POST['selected_osca_id'])) {
 
-        $selected_osca_id = $_POST['selected_osca_id'];
+        $selected_osca_id = $mysqli->real_escape_string($_POST['selected_osca_id']);
         //$query = "SELECT `id` FROM `member` WHERE `id` = '$selected_id'";
         $query = "  SELECT * FROM `member` `m` 
                             WHERE `m`.`osca_id` = '$selected_osca_id';";

@@ -13,8 +13,7 @@
 
     if(isset($_POST['company_tin']))
     {
-
-        $company_tin = $_POST['company_tin'];
+        $company_tin = $mysqli->real_escape_string($_POST['company_tin']);
         
         $query = "SELECT * FROM `company` WHERE company_tin = '$company_tin'";
 

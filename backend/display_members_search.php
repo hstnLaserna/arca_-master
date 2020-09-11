@@ -31,27 +31,27 @@
         $where_appended = false;
         $get_next_page ="";
         if(isset($_POST['fname']) && $_POST['fname']!= ""){
-            $get_first_name = $_POST['fname'];
+            $get_first_name = $mysqli->real_escape_string($_POST['fname']);
             $where_query .= " lower(`first_name`) LIKE lower('%$get_first_name%') ";
             $where_appended = true;
             $get_next_page .= '<input type="hidden" name="fname" value="' . $get_first_name.'">'; 
         }else {$get_next_page .= '<input type="hidden" name="fname" value="">';  }
         if(isset($_POST['mname']) && $_POST['mname']!= ""){
-            $get_middle_name = $_POST['mname'];
+            $get_middle_name = $mysqli->real_escape_string($_POST['mname']);
             if($where_appended){$where_query .= " AND ";}
             $where_query .= " lower(`middle_name`) LIKE lower('%$get_middle_name%') ";
             $where_appended = true;
             $get_next_page .= '<input type="hidden" name="mname" value="' . $get_middle_name.'">'; 
         }else {$get_next_page .= '<input type="hidden" name="mname" value="">';  }
         if(isset($_POST['lname']) && $_POST['lname']!= ""){
-            $get_last_name = $_POST['lname'];
+            $get_last_name = $mysqli->real_escape_string($_POST['lname']);
             if($where_appended){$where_query .= " AND ";}
             $where_query .= " lower(`last_name`) LIKE lower('%$get_last_name%') ";
             $where_appended = true;
             $get_next_page .= '<input type="hidden" name="lname" value="' . $get_last_name.'">'; 
         }else {$get_next_page .= '<input type="hidden" name="lname" value="">';  }
         if(isset($_POST['oid']) && $_POST['oid']!= ""){
-            $get_osca_id = $_POST['oid'];
+            $get_osca_id = $mysqli->real_escape_string($_POST['oid']);
             if($where_appended){$where_query .= " AND ";}
             $where_query .= " `osca_id` LIKE '%$get_osca_id%' ";
             $get_next_page .= '<input type="hidden" name="oid" value="' . $get_osca_id.'">'; 

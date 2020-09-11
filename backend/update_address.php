@@ -7,9 +7,9 @@
         isset($_POST['selected_address_id']) &&
         isset($_POST['type'])) {
 
-        $type = $_POST['type'];
-        $selected_id = $_POST['selected_id'];
-        $selected_address_id = $_POST['selected_address_id'];
+        $type = $mysqli->real_escape_string($_POST['type']);
+        $selected_id = $mysqli->real_escape_string($_POST['selected_id']);
+        $selected_address_id = $mysqli->real_escape_string($_POST['selected_address_id']);
         
         if($type == "member") {
             $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active` 

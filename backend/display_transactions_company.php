@@ -21,7 +21,7 @@
     if(isset($_POST['company_tin']))
     {
 
-        $company_tin = $_POST['company_tin'];
+        $company_tin = $mysqli->real_escape_string($_POST['company_tin']);
         $counter = 1;
         $items_per_page = 2;
 
@@ -89,7 +89,7 @@
         if($row_count_display != 0)
         {?>
             <input type="hidden" id="<?php echo $type; ?>">
-            <table class="table table-hover users">
+            <table class="table table-hover">
                 <th>Customer</th>
                 <th>Transaction date</th>
                 <th>VAT Exempt</th>
@@ -107,7 +107,7 @@
                     
                     ?>
                     <tr>
-                        <td><a href="#" id="_<?php echo $osca_id;?>" class="view_"><?php echo $customer ?></td>
+                        <td><a href="../frontend/member_profile.php?member_id=<?php echo $osca_id;?>" class="view_"><?php echo $customer ?></td>
                         <td><?php echo $transaction_date ?></td>
                         <td><?php echo $vat_exempt_price ?></td>
                         <td><?php echo $discount_price ?></td>
@@ -148,16 +148,5 @@ $(document).ready(function(){
         $("#trans").load("../backend/display_transactions_company.php #trans", {company_tin : "<?php echo $company_tin;?>", counter: counter, business_type: "<?php echo $type; ?>" });
     });
 
-    
-    $('.view_').click(function () {
-      var osca_id= $(this).attr("id").replace("_", "");
-        
-      var url = '../frontend/member_profile.php';
-      var form = $(   '<form action="' + url + '" method="get">' +
-                          '<input type="hidden" name="member_id" value="' + osca_id + '" />' +
-                      '</form>');
-      $('._dfg987').append(form);
-      form.submit();
-    });
 });
 </script>

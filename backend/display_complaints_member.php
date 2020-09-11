@@ -11,8 +11,7 @@
 
     if(isset($_POST['osca_id']))
     {
-
-        $osca_id = $_POST['osca_id'];
+        $osca_id = $mysqli->real_escape_string($_POST['osca_id']);
         $counter = 1;
         $items_per_page = 2;
 
@@ -60,7 +59,11 @@
                     $desc = $row['desc'];
                     ?>
                     <tr>
-                        <td><a href="../frontend/company_profile.php?company_tin=<?php echo $company_tin;?>" class="view_"><?php echo "$company_name - <i> $branch</i>" ?></a></td>
+                        <td>
+                            <a href="../frontend/company_profile.php?company_tin=<?php echo $company_tin;?>" class="view_">
+                                <?php echo "$company_name <br> <i> $branch</i>" ?>
+                            </a>
+                        </td>
                         <td><?php echo $report_date ?></td>
                         <td><?php echo $desc ?></td>
                     </tr>

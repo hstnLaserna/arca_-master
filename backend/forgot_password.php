@@ -4,9 +4,9 @@
   
   if(isset($_POST['submit'])){
     if(isset($_POST['username']) && isset($_POST['answer1']) && isset($_POST['answer2'])) {
-      $username = $_POST['username'];
-      $answer1 = $_POST['answer1'];
-      $answer2 = $_POST['answer2'];
+      $username = $mysqli->real_escape_string($_POST['username']);
+      $answer1 = $mysqli->real_escape_string($_POST['answer1']);
+      $answer2 = $mysqli->real_escape_string($_POST['answer2']);
       $result = $mysqli->query("CALL `forgot_pw_admin`('$username', '$answer1', '$answer2', @`tempopw`, @`msg`)");
       
       $query_status = $mysqli->query("SELECT @`tempopw` `tempo_pw`, @`msg` output_msg;");

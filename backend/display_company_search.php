@@ -29,27 +29,27 @@
         $where_appended = false;
         $get_next_page ="";
         if(isset($_POST['company_name']) && $_POST['company_name']!= ""){
-            $get_company_name = $_POST['company_name'];
+            $get_company_name = $mysqli->real_escape_string($_POST['company_name']);
             $where_query .= " lower(`company_name`) LIKE lower('%$get_company_name%') ";
             $where_appended = true;
             $get_next_page .= '<input type="hidden" name="company_name" value="' . $get_company_name . '">'; 
         }else {$get_next_page .= '<input type="hidden" name="company_name" value="">';  }
         if(isset($_POST['branch']) && $_POST['branch']!= ""){
-            $get_branch = $_POST['branch'];
+            $get_branch = $mysqli->real_escape_string($_POST['branch']);
             if($where_appended){$where_query .= " AND ";}
             $where_query .= " lower(`branch`) LIKE lower('%$get_branch%') ";
             $where_appended = true;
             $get_next_page .= '<input type="hidden" name="branch" value="' . $get_branch.'">'; 
         }else {$get_next_page .= '<input type="hidden" name="branch" value="">';  }
         if(isset($_POST['company_tin']) && $_POST['company_tin']!= ""){
-            $get_company_tin = $_POST['company_tin'];
+            $get_company_tin = $mysqli->real_escape_string($_POST['company_tin']);
             if($where_appended){$where_query .= " AND ";}
             $where_query .= " `company_tin` LIKE '%$get_company_tin%' ";
             $where_appended = true;
             $get_next_page .= '<input type="hidden" name="company_tin" value="' . $get_company_tin.'">'; 
         }else {$get_next_page .= '<input type="hidden" name="company_tin" value="">';  }
         if(isset($_POST['business_type']) && $_POST['business_type']!= ""){
-            $get_business_type = $_POST['business_type'];
+            $get_business_type = $mysqli->real_escape_string($_POST['business_type']);
             if($where_appended){$where_query .= " AND ";}
             $where_query .= " `business_type` LIKE '%$get_business_type%' ";
             $get_next_page .= '<input type="hidden" name="business_type" value="' . $get_business_type.'">'; 

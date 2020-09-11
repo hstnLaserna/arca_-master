@@ -2,7 +2,6 @@
     <?php
     include("../backend/conn.php");
     //declare
-    $business_type = "";
     $transaction_date = "";
     $vat_exempt_price = "";
     $discount_price = "";
@@ -15,7 +14,7 @@
     if(isset($_POST['member_id']))
     {
 
-        $member_id = $_POST['member_id'];
+        $member_id = $mysqli->real_escape_string($_POST['member_id']);
         
         $query  = "SELECT * FROM `member`
                 WHERE `id` = '$member_id'";
@@ -27,14 +26,11 @@
             $ctr2 = 1;
             $items_per_page = 2;
 
-            $WHERE_CLAUSE = " WHERE member_id = '$member_id' AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10)) ";
 
             if(isset($_POST['ctr2'])){ // Meaning user prompted to view more transaction data. Disable the "transactions for the last month" condition.
                 $ctr2 = filter_input(INPUT_POST, 'ctr2', FILTER_VALIDATE_INT);
-                $WHERE_CLAUSE = " WHERE `member_id` = '$member_id' ";
                 if(!$ctr2) {
                     $ctr2 = 1;
-                    $WHERE_CLAUSE = " WHERE `member_id` = '$member_id' AND date(trans_date) >= (LEFT(NOW() - INTERVAL 1 MONTH,10)) ";
                 }
             }
 
@@ -52,17 +48,31 @@
                                         concat(UCASE(LEFT(generic_name, 1)), LCASE(SUBSTRING(generic_name, 2))) as `generic_name`, 
                                         concat(UCASE(LEFT(brand, 1)), LCASE(SUBSTRING(brand, 2))) as `brand`, `dose`, `unit`, 
                                         concat(quantity,  'pcs, ') as `qty`, `unit_price`,
-                                        company_name `company`, `branch`
+                                        company_name `company`, `branch`, `company_tin`
                                     FROM `view_pharma_transactions`
-                                    $WHERE_CLAUSE
+                                    WHERE `member_id` = '$member_id'
                                     ORDER BY `trans_date` DESC  
                                     LIMIT $displayed_items;";
-
             $result = $mysqli->query($transaction_query);
             $row_count_display = mysqli_num_rows($result);
+
+            /*
+            if($row_count_display == 0 && $row_count_orig > 0) {
+                // remove the condition of the last 3 months
+                $transaction_query = "SELECT `member_id`, `trans_date`, `vat_exempt_price`, `discount_price`, `payable_price`,
+                                            concat(UCASE(LEFT(generic_name, 1)), LCASE(SUBSTRING(generic_name, 2))) as `generic_name`, 
+                                            concat(UCASE(LEFT(brand, 1)), LCASE(SUBSTRING(brand, 2))) as `brand`, `dose`, `unit`, 
+                                            concat(quantity,  'pcs, ') as `qty`, `unit_price`,
+                                            company_name `company`, `branch`, `company_tin`
+                                        FROM `view_pharma_transactions`
+                                        WHERE `member_id` = '$member_id'
+                                        ORDER BY `trans_date` DESC  
+                                        LIMIT $displayed_items;";
+            }*/
+
             if($row_count_display != 0)
             {?>
-                <table class="table table-hover users">
+                <table class="table table-hover">
                     <th>Transaction date</th>
                     <th>Company</th>
                     <th>Description</th>
@@ -74,10 +84,8 @@
                     {
 
                         $transaction_date = $row['trans_date'];
-                        $vat_exempt_price = $row['vat_exempt_price'];
-                        $discount_price = $row['discount_price'];
-                        $payable_price = $row['payable_price'];
                         $company = $row['company'];
+                        $company_tin = $row['company_tin'];
                         $branch = $row['branch'];
                         
                         $brand = $row['brand'];
@@ -85,23 +93,25 @@
                         $dose = $row['dose'];
                         $unit = $row['unit'];
                         $qty = $row['qty'];
-                        $unit_price = $row['unit_price'];
+        
+                        $formatter = new NumberFormatter("fil-PH", \NumberFormatter::CURRENCY);
+                        $vat_exempt_price = $formatter->format($row['vat_exempt_price']);
+                        $discount_price = $formatter->format($row['discount_price']);
+                        $payable_price = $formatter->format($row['payable_price']);
+                        $unit_price = $formatter->format($row['unit_price']);
                         
                         ?>
                         <tr>
                             <td><?php echo $transaction_date ?></td>
                             <td>
-                                <?php echo $company ?> 
-                                <p><i><?php echo $branch ?></i></p>
+                                <a href="../frontend/company_profile.php?company_tin=<?php echo $company_tin;?>" class="view_">
+                                    <?php echo "$company <br> <i> $branch</i>" ?>
+                                </a>
                             </td>
-                            <td>
-                                <?php echo $brand ?> <?php echo $dose ?><?php echo $unit?>
-                                <p>
-                                    [<?php echo $generic_name?>]
-                                </p>
-                                <p>
-                                    <?php echo $qty ?>pcs (<?php echo $unit_price?>/pc)
-                                </p>
+                            <td class="med-desc">
+                                <p><?php echo $brand ?> <?php echo $dose ?><?php echo $unit?>
+                                <p>[<?php echo $generic_name?>]</p>
+                                <p><?php echo $qty ?> (<?php echo $unit_price?>/pc)</p>
                             </td>
                             <td><?php echo $vat_exempt_price ?></td>
                             <td><?php echo $discount_price ?></td>

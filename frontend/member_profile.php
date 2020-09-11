@@ -70,7 +70,18 @@
 ?>
             <div class="card digital-card-contents">
                 <div class="card-right">
-                    <img class="profile-picture" src="<?php echo $picture; ?>">
+                    <div class="profile-picture-container">
+                        <form action="../backend/upload.php" id="form_photo" method="post" enctype="multipart/form-data" >
+                            <img class="profile-picture" src="<?php echo $picture; ?>" id="output">
+                            <div class="middle">
+                                <input type="file" name="photo" accept="image/x-png,image/jpeg" onchange="loadFile(event)" id="file" class="inputfile">
+                                <input type="hidden" name="entity_key" value="<?php echo $osca_id;?>">
+                                <input type="hidden" name="entity_type" value="member">
+                                <label for="file" class="text">Change</label>
+                                <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
                 <div class="card-bottom-right">
                 <?php echo $member_buttons;?>
@@ -136,6 +147,42 @@ include('../frontend/foot.php');
 
 <script>
 $('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
+var loadFile = function(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+        URL.revokeObjectURL(output.src) // free memory
+        }
+        
+        if( document.getElementById("file").files.length == 0 ){
+            document.getElementById("submit").classList.add("hidden");
+            console.log("no files selected");
+        } else {
+            document.getElementById("submit").classList.remove("hidden");
+            console.log("File is selected");
+        }
+    };
+    var inputs = document.querySelectorAll('.inputfile');
+
+    Array.prototype.forEach.call(inputs, function(input)
+    {
+        var label	 = input.nextElementSibling,
+            labelVal = label.innerHTML;
+
+        input.addEventListener('change', function(e)
+        {
+            var fileName = '';
+
+            if(fileName)
+                label.querySelector('span').innerHTML = fileName;
+            else
+                label.innerHTML = labelVal;
+        });
+    });
+    //input.addEventListener('focus', function(){ input.classList.add('has-focus'); });
+    //input.addEventListener('blur', function(){ input.classList.remove('has-focus'); });
+
+
 $(document).ready(function(){
     var member_id = <?php echo $member_id; ?>;
     var osca_id = <?php echo $osca_id; ?>;
@@ -148,9 +195,6 @@ $(document).ready(function(){
     $("#nav-rs").load("../backend/display_transactions_restaurant.php", {member_id : member_id});
     $("#nav-tr").load("../backend/display_transactions_transportation.php", {member_id : member_id});
     $("#nav-complaints").load("../backend/display_complaints_member.php", {osca_id : osca_id});
-
-
-
     
 
     $('#edit_basic').click(function () {
@@ -192,6 +236,14 @@ $(document).ready(function(){
             $('#_kf939s').modal();
         });
     });
+    
+    if(document.getElementById("file").files.length == 0 ){
+        document.getElementById("submit").classList.add("hidden");
+        console.log("no files selected");
+    } else {
+        document.getElementById("submit").classList.remove("hidden");
+        console.log("File is selected");
+    }
     
 });
 </script>

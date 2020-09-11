@@ -40,16 +40,15 @@
     $(".inactive").parent().addClass("inactive");
 
     $('td.active').click(function () {
-      var admin_id = $(this).parent().attr("id").replace("adminNum_", "");
-      var isEnabled = $(this).parent().attr("id").replace("adminNum_", "");
-      $("#admin").load("../backend/deactivate_admin.php" + " #admin",{ admin_id: admin_id }, function(d){
+      var user_name = $(this).parent().attr("id").replace("admin_", "");
+      $.post("../backend/deactivate_admin.php",{ user_name: user_name }, function(){
         location.reload();
       });
     });
 
     $('td.inactive').click(function () {
-      var admin_id= $(this).parent().attr("id").replace("adminNum_", "");
-      $("#admin").load("../backend/activate_admin.php" + " #admin",{ admin_id: admin_id }, function(d){
+      var user_name= $(this).parent().attr("id").replace("admin_", "");
+      $.post("../backend/activate_admin.php",{ user_name: user_name }, function(){
         location.reload();
       });
     });

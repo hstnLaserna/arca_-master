@@ -4,8 +4,8 @@
     $query = "";
     if(isset($_POST['selected_g_id'])) {
 
-        $selected_osca_id = $_POST['selected_osca_id'];
-        $selected_g_id = $_POST['selected_g_id'];
+        $selected_osca_id = $mysqli->real_escape_string($_POST['selected_osca_id']);
+        $selected_g_id = $mysqli->real_escape_string($_POST['selected_g_id']);
         
         $query = "  SELECT * FROM `member` m
                     INNER JOIN `guardian` g ON g.member_id = m.id

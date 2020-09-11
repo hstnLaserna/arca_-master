@@ -1,9 +1,10 @@
 <?php
-  include('../backend/conn.php');
-  $query = "";
+    include('../backend/conn.php');
+    $query = "";
   
-  $selected_id = $_POST['selected_id'];
     if(isset($_POST['selected_id'])) {
+        
+        $selected_id = $mysqli->real_escape_string($_POST['selected_id']);
         
         $query = "SELECT `id` FROM `admin` WHERE `id` = '$selected_id'";
         $result = $mysqli->query($query);
@@ -29,6 +30,8 @@
                         $query = "CALL `edit_admin_no_pw`('$username', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2',  '$contact_number', '$email', '$position', '$answer1', '$answer2', $selected_id)";
                     }
                     if($mysqli->query($query)){
+                        //include('../backend/photo_upload.php');
+                        //$result = $mysqli->query("CALL `edit_admin_avatar`('$user_name', '$photo_upload', @msg)");
                         echo "true";
                     } else {
                         echo "ERROR: Could not execute. ". mysqli_error($mysqli);

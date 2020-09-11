@@ -55,10 +55,7 @@
         <button type="button" id="edit" class="btn btn-secondary btn-lg btn-block">Edit</button>';
 
         $avatar = '../resources/avatars/'.$row["avatar"]; 
-        if (file_exists($avatar) && $row["avatar"] != null) { 
-        } else { 
-            $avatar = '../resources/images/unknown_m_f.png'; 
-        }
+        if (file_exists($avatar) && $row["avatar"] == null) { $avatar = '../resources/images/unknown_m_f.png'; }
 
         if($user_name == $_SESSION['user_name']){
             $personal_profile = true;
@@ -71,11 +68,21 @@
     }
     mysqli_close($mysqli);
 ?>
-
     
 <div class="card digital-card-contents">
     <div class="card-right">
-        <img class="profile-picture" src="<?php echo $avatar; ?>">
+        <div class="profile-picture-container">
+            <form action="../backend/upload.php" id="form_photo" method="post" enctype="multipart/form-data" >
+                <img class="profile-picture" src="<?php echo $avatar; ?>" id="output">
+                <div class="middle">
+                    <input type="file" name="photo" accept="image/x-png,image/jpeg" onchange="loadFile(event)" id="file" class="inputfile">
+                    <input type="hidden" name="entity_key" value="<?php echo $user_name;?>">
+                    <input type="hidden" name="entity_type" value="admin">
+                    <label for="file" class="text">Change</label>
+                    <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
+                </div>
+            </form>
+        </div>
     </div>
     
     <div class="card-left">
@@ -110,17 +117,100 @@
   }
 ?>
 <script>
-$('title').replaceWith('<title>User profile - <?php echo $user_name; ?></title>');
-$(document).ready(function(){
-    $('#edit').click(function () {
-        var user = $('input[name="user_name"]').attr("id").replace("user_", "")
-        var url = 'edit_admin.php';
-        var form = $(   '<form action="' + url + '" method="<?php echo $user_edit_method?>">' +
-                            '<input type="hidden" name="user" value="' + user + '" />' +
-                        '</form>');
-        $('div.container').append(form);
-        form.submit();
+    $('title').replaceWith('<title>User profile - <?php echo $user_name; ?></title>');
+
+
+    var loadFile = function(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+        URL.revokeObjectURL(output.src) // free memory
+        }
         
+        if( document.getElementById("file").files.length == 0 ){
+            document.getElementById("submit").classList.add("hidden");
+            console.log("no files selected");
+        } else {
+            document.getElementById("submit").classList.remove("hidden");
+            console.log("File is selected");
+        }
+    };
+    var inputs = document.querySelectorAll('.inputfile');
+
+    Array.prototype.forEach.call(inputs, function(input)
+    {
+        var label	 = input.nextElementSibling,
+            labelVal = label.innerHTML;
+
+        input.addEventListener('change', function(e)
+        {
+            var fileName = '';
+
+            if(fileName)
+                label.querySelector('span').innerHTML = fileName;
+            else
+                label.innerHTML = labelVal;
+        });
     });
-});
+    //input.addEventListener('focus', function(){ input.classList.add('has-focus'); });
+    //input.addEventListener('blur', function(){ input.classList.remove('has-focus'); });
+
+
+    $(document).ready(function(){
+        if( document.getElementById("file").files.length == 0 ){
+            document.getElementById("submit").classList.add("hidden");
+            console.log("no files selected");
+        } else {
+            document.getElementById("submit").classList.remove("hidden");
+            console.log("File is selected");
+        }
+        /*
+        $('#a').click(function () {
+            var entity_type = $('input[name="entity_type"]').val();
+            var entity_key = $('input[name="entity_key"]').val();
+            alert(entity_type + " " + entity_key);
+            $.post("../backend/upload.php?entity_type="+entity_type+"&entity_key="+entity_key,$('form#form_photo'), function(d){
+                alert(d);
+                location.reload();
+            });
+        });
+
+        $("form#form_photo").submit(function() {
+            var formData = new FormData(this);
+            $.post($(this).attr("action"), formData, function(d) {
+                alert(d);
+                location.reload();
+            });
+            return false;
+        });
+
+        
+
+        $("#submit").click(function(){
+            $("#form_photo").submit(function(){
+                var formData = new FormData(this);
+                $.post("../backend/upload.php?entity_key=&entity_type=admin", formData, function(d){
+                    if(d == "true") {
+                        location.replace("../frontend/user_profile.php?user=);
+                    } else {
+                        alert(d);
+                    }
+                });
+            });
+        });
+        */
+
+        
+
+        $('#edit').click(function () {
+            var user = $('input[name="user_name"]').attr("id").replace("user_", "")
+            var url = 'edit_admin.php';
+            var form = $(   '<form action="' + url + '" method="<?php echo $user_edit_method?>">' +
+                                '<input type="hidden" name="user" value="' + user + '" />' +
+                            '</form>');
+            $('div.container').append(form);
+            form.submit();
+            
+        });
+    });
 </script>

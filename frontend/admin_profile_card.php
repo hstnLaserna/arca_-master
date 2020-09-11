@@ -25,12 +25,9 @@
                         $position = strtolower($row['position']);
                         $answer1 = $row['answer1'];
                         $answer2 = $row['answer2'];
-                        $avatar = '../resources/avatars/'.$row["avatar"];
-                        if (file_exists($avatar) && $row["avatar"] != null) { 
-                            // something
-                        } else {
-                            $avatar = "../resources/images/unknown_m_f.png"; 
-                        }
+                        
+                        $avatar = '../resources/avatars/'.$row["avatar"]; 
+                        if (file_exists($avatar) && $row["avatar"] == null) { $avatar = '../resources/images/unknown_m_f.png'; }
                         ?>
 
                         
