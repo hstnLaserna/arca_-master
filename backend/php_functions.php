@@ -1,5 +1,6 @@
 <?php 
-    function determine_sex($sex_, $mode) {
+    function determine_sex($sex_, $mode)
+    {
         $sex_ = strtolower($sex_);
         if($mode == "display_long") {
             switch ($sex_){
@@ -56,10 +57,13 @@
                     break;
             }
         }
-        else {return false;}
+        else {
+            return false;
+        }
     }
 
-    function read_address($selected_id, $edit=false, $type="member"){
+    function read_address($selected_id, $edit=false, $type="member")
+    {
         if(isset($selected_id))
         {
             include('../backend/conn.php');
@@ -82,8 +86,6 @@
                                 INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
                                 WHERE g.`id` = '$selected_id'";
             }
-            else {}
-
             if($edit) {
                 $result = $mysqli->query($address_query);
                 $row_count = mysqli_num_rows($result);
@@ -97,9 +99,15 @@
                         $address2 = $row['address2'];
                         $city = $row['city'];
                         $province = $row['province'];
-                        if($row['is_active'] == '1'){$is_active = true;}else{$is_active=false;}
+                        if($row['is_active'] == '1'){
+                            $is_active = true;
+                        } else {
+                            $is_active=false;
+                        }
                         echo "<p class='disp_address' id='addNum_$address_id'>Address $address_counter: $address1, $address2, $city, $province ";
-                        if($is_active){echo "<small class='text-muted'>(Primary)</small> ";}else{}
+                        if($is_active){
+                            echo "<small class='text-muted'>(Primary)</small> ";
+                        }
                         echo '<button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button></p>';
                         $address_counter++;
                     }
@@ -119,16 +127,23 @@
                         $province = $row['province'];
                         if($row['is_active'] == '1'){$is_active = true;}else{$is_active=false;}
                         echo "<p>Address $address_counter: $address1, $address2, $city, $province ";
-                        if($is_active){echo "<small class='text-muted'>(Primary)</small></p>";}else{echo "</p>";}
+                        if($is_active){
+                            echo "<small class='text-muted'>(Primary)</small></p>";
+                        } else {
+                            echo "</p>";
+                        }
                         $address_counter++;
                     }
                 }
             }
             mysqli_close($mysqli);
-        } else {echo "ID does not exist";}
+        } else {
+            echo "ID does not exist";
+        }
     }
 
-    function read_guardian($osca_id, $edit=true){
+    function read_guardian($osca_id, $edit=true)
+    {
         if(isset($osca_id))
         {
             include('../backend/conn.php');
@@ -149,10 +164,11 @@
 
                     $result = $mysqli->query($query);
                     $row_count = mysqli_num_rows($result);
-                    if($row_count == 0) { echo "<p class='disp_guardian'>No guardian on record
-                        <button class='btn btn-link edit add_guardian'><i class='fa fa-edit'></i></button>
-                        </p> ";} else
-                    {
+                    if($row_count == 0) {
+                        echo    "<p class='disp_guardian'>No guardian on record
+                                    <button class='btn btn-link edit add_guardian'><i class='fa fa-edit'></i></button>
+                                </p>";
+                    } else {
                         while($row = mysqli_fetch_array($result))
                         {
                             $g_id = $row['g_id'];
@@ -180,10 +196,13 @@
             }
 
             mysqli_close($mysqli);
-        } else {echo "Member does not exist";}
+        } else {
+            echo "Member does not exist";
+        }
     }
 
-    function validate_date($date_to_validate = "", $year_offset = 0){
+    function validate_date($date_to_validate = "", $year_offset = 0)
+    {
         if($date_to_validate != "" && (preg_match("/^((18|19|20)[0-9]{2}[\-.](0[13578]|1[02])[\-.](0[1-9]|[12][0-9]|3[01]))|(18|19|20)[0-9]{2}[\-.](0[469]|11)[\-.](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[\-.](02)[\-.](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[\-.](02)[\-.]29$/",$date_to_validate)))
         {
             // Year offset is the valid date from the CURRENT DATE.
@@ -193,11 +212,6 @@
             $test_arr  = explode('-', $date_to_validate);
             $timestamp = mktime(0, 0, 0, $test_arr[1], $test_arr[2], $test_arr[0]);
 
-
-
-            //if($is_birthdate){
-            //    $valid_date = strtotime(date("Y-m-d").' -18 year');
-            //} else
             if($year_offset != 0){
                 $valid_date = strtotime(date("Y-m-d").' '. $year_offset .' year');
             } else {
@@ -213,14 +227,11 @@
             } else {
                 return false;
             }
-        //} else {
-        //    array_push($errors, "Invalid date");
         }
     }
 
-    
-
-    function validate_date_month($date_to_validate = "", $month = 0){
+    function validate_date_month($date_to_validate = "", $month = 0)
+    {
         if($date_to_validate != "" && (preg_match("/^((18|19|20)[0-9]{2}[\-.](0[13578]|1[02])[\-.](0[1-9]|[12][0-9]|3[01]))|(18|19|20)[0-9]{2}[\-.](0[469]|11)[\-.](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[\-.](02)[\-.](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[\-.](02)[\-.]29$/",$date_to_validate)))
         {
             // Year offset is the valid date from the CURRENT DATE.
@@ -255,4 +266,19 @@
         }
     }
 
+    function populate_province()
+    {
+        include("../backend/conn_address.php");
+        $qry = "SELECT p.`provDesc` `province` FROM province p ORDER BY `province` ASC;";
+        $result_province = $mysqli->query($qry);
+        
+        echo "<option></option>";
+        while($provinces = mysqli_fetch_assoc($result_province)) {
+            $province = strtolower($provinces['province']);
+            $province = ucwords($province);
+            echo "<option value='$province'>$province</option>";
+        }
+    }
+
 ?>
+

@@ -1,4 +1,4 @@
--- LAST UPDATE: 2020-08-23 11:57 AM
+-- LAST UPDATE: 2020-09-12 06:45
 
 -- Adminer 4.6.3 MySQL dump
 
@@ -12,11 +12,19 @@ USE `db_osca`;
 DELIMITER ;;
 
 DROP PROCEDURE IF EXISTS `activate_admin_account`;;
-CREATE PROCEDURE `activate_admin_account`(IN `uid` int(20))
-UPDATE `admin` SET
-is_enabled = 1,
-log_attempts = 0
-WHERE id = uid;;
+CREATE PROCEDURE `activate_admin_account`(IN `user_name_` varchar(60), OUT `msg` int(10))
+BEGIN
+	IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
+    THEN
+		UPDATE `admin` SET
+		is_enabled = 1,
+		log_attempts = 0
+		WHERE `user_name` = `user_name_`;
+		SET `msg` = "1";
+	ELSE 
+		SET `msg` = "0";
+	END IF;
+END;;
 
 DROP PROCEDURE IF EXISTS `add_address`;;
 CREATE PROCEDURE `add_address`(IN `add1_` varchar(120), IN `add2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120), IN `is_active_` varchar(11), IN `member_id_` varchar(20), OUT `msg` varchar(1))
@@ -256,11 +264,19 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `deactivate_admin_account`;;
-CREATE PROCEDURE `deactivate_admin_account`(IN `uid` int(20))
-UPDATE `admin` SET
-is_enabled = 0,
-log_attempts = 0
-WHERE id = uid;;
+CREATE PROCEDURE `deactivate_admin_account`(IN `user_name_` varchar(60), OUT `msg` int(10))
+BEGIN
+	IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
+    THEN
+		UPDATE `admin` SET
+		is_enabled = 0,
+		log_attempts = 0
+		WHERE `user_name` = `user_name_`;
+		SET `msg` = "0";
+	ELSE 
+		SET `msg` = "0";
+	END IF;
+END;;
 
 DROP PROCEDURE IF EXISTS `delete_company_address`;;
 CREATE PROCEDURE `delete_company_address`(IN `company_id_` int(20), IN `company_name_` varchar(250), IN `branch_` varchar(120), OUT `msg` varchar(20))
@@ -383,6 +399,20 @@ answer1 = ans1,
 answer2 = ans2
 WHERE id = uid;;
 
+DROP PROCEDURE IF EXISTS `edit_admin_picture`;;
+CREATE PROCEDURE `edit_admin_picture`(IN `user_name_` varchar(60), IN `avatar_` varchar(60), OUT `msg` int(10))
+BEGIN
+	IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
+    THEN
+		UPDATE `admin` SET
+		`avatar` = `avatar_`
+		WHERE `user_name` = `user_name_`;
+		SET `msg` = "1";
+	ELSE 
+		SET `msg` = "0";
+	END IF;
+END;;
+
 DROP PROCEDURE IF EXISTS `edit_admin_with_pw`;;
 CREATE PROCEDURE `edit_admin_with_pw`(IN `uname` varchar(120), IN `pword` varchar(120), IN `fname` varchar(120), IN `mname` varchar(120), IN `lname` varchar(120), IN `bday` date, IN `sex_` varchar(10), IN `contact_number_` varchar(20), IN `email_` varchar(120), IN `pos` varchar(120), IN `ans1` varchar(100), IN `ans2` varchar(100), IN `tempopw` varchar(120), IN `uid` varchar(120))
 UPDATE `admin` SET 
@@ -445,6 +475,20 @@ BEGIN
 		END IF;
 	ELSE 
 		SET msg = "0"; -- company doesnt exist
+	END IF;
+END;;
+
+DROP PROCEDURE IF EXISTS `edit_company_logo`;;
+CREATE PROCEDURE `edit_company_logo`(IN `company_tin_` varchar(60), IN `logo_` varchar(60), OUT `msg` int(10))
+BEGIN
+	IF( (SELECT count(*) FROM `company` WHERE `company_tin` = `company_tin_`) = 1) 
+    THEN
+		UPDATE `company` SET
+		`logo` = `logo_`
+		WHERE `company_tin` = `company_tin_`;
+		SET `msg` = "1";
+	ELSE 
+		SET `msg` = "0";
 	END IF;
 END;;
 
@@ -527,6 +571,20 @@ email = email_,
 membership_date = mdate
 WHERE id = uid;;
 
+DROP PROCEDURE IF EXISTS `edit_member_picture`;;
+CREATE PROCEDURE `edit_member_picture`(IN `osca_id_` varchar(60), IN `picture_` varchar(60), OUT `msg` int(10))
+BEGIN
+	IF( (SELECT count(*) FROM `member` WHERE `osca_id` = `osca_id_`) = 1) 
+    THEN
+		UPDATE `member` SET
+		`picture` = `picture_`
+		WHERE `osca_id` = `osca_id_`;
+		SET `msg` = "1";
+	ELSE 
+		SET `msg` = "0";
+	END IF;
+END;;
+
 DROP PROCEDURE IF EXISTS `edit_member_with_pw`;;
 CREATE PROCEDURE `edit_member_with_pw`(IN `oid` varchar(20), IN `nserial` varchar(45), IN `pword` varchar(60), IN `fname` varchar(120), IN `mname` varchar(120), IN `lname` varchar(120), IN `bday` date, IN `cnumber` varchar(20), IN `email_` varchar(120), IN `sex_` varchar(10), IN `mdate` timestamp, IN `uid` varchar(120))
 UPDATE `member` SET 
@@ -590,7 +648,7 @@ CREATE TABLE `address` (
   `is_active` int(11) NOT NULL,
   `last_update` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `address` (`id`, `address1`, `address2`, `city`, `province`, `is_active`, `last_update`) VALUES
 (1,	'2129 Culdesac Rd Edison St',	'Brgy. Sun Valley',	'Paranaque City',	'Metro Manila',	1,	'2020-08-21 09:20:25'),
@@ -599,23 +657,24 @@ INSERT INTO `address` (`id`, `address1`, `address2`, `city`, `province`, `is_act
 (4,	'3009, Ipil st.',	'Brgy Banaba',	'Silang',	'Cavite',	0,	'2020-09-01 21:01:08'),
 (5,	'0235 Rafael St., Villa Modena',	'Villagio Ignatius Subd., Brgy. Buenavista III',	'General Trias',	'Cavite',	0,	'2020-08-22 20:37:57'),
 (6,	'2099 Culdesac Rd Edison St',	'Brgy. Sun Valley',	'Paranaque City',	'Metro Manila',	1,	'2020-03-30 01:53:27'),
-(7,	'5636 Rafael St.',	'Brgy. Manggahan',	'Gen. Tri',	'Cavite',	1,	'2020-08-29 09:44:50'),
+(7,	'5636 Rafael St.',	'Brgy. Manggahan',	'General Trias',	'Cavite',	1,	'2020-09-11 22:21:34'),
 (8,	'1001 Sant St.',	'Brgy Maybuhay',	'Manila',	'NCR',	1,	'2020-04-01 00:18:55'),
 (9,	'0925 Remedios St.',	'Malate',	'Manila City',	'NCR',	1,	'2020-04-01 00:40:00'),
-(10,	'1235 Phase 5 Pili St.',	'Brgy. Anahaw',	'Silang',	'Cavite',	1,	'2020-09-01 21:09:12'),
-(11,	'Land of',	'Dawn',	'Abyss',	'Valhalla',	1,	'2020-08-13 01:26:28'),
+(10,	'1235 Phase 5 Pili St.',	'Brgy. Anahaw',	'Silang',	'Cavite',	1,	'2020-09-11 22:23:51'),
+(11,	'Land of',	'Dawn',	'Nasugbu',	'Batangas',	1,	'2020-09-11 22:39:33'),
 (12,	'9287 Riverdale St.',	'Riverdale Subdivision, Brgy. Kasulukan',	'Paniqui',	'Tarlac',	1,	'2020-09-01 20:47:30'),
-(13,	'0003 Grove St',	'Brgy. Los Santos',	'Batanggas',	'Batanggas',	0,	'2020-08-21 09:19:44'),
+(13,	'0003 Grove St',	'Brgy. Los Santos',	'Batangas',	'Batangas',	0,	'2020-09-11 22:42:45'),
 (14,	'Glass Manor',	'Brgy. Ibabaw Del Sur',	'Paete',	'Laguna',	1,	'2020-09-01 20:33:04'),
 (15,	'2548, Nakpil St.',	'Brgy. Reezal, Tamagochi Village',	'Marilao',	'Bulacan',	1,	'2020-09-03 15:53:52'),
 (16,	'3180 Zobel St.',	'San Andres Bukid',	'Manila',	'Metro Manila',	1,	'2020-08-24 13:56:38'),
 (17,	'0028 Merger St.',	'Louiseville',	'Batangas',	'Batangas',	1,	'2020-08-24 11:32:03'),
 (19,	'asdgasdf',	'sadgasdg',	'sadfsda',	'dgasdgasdf',	0,	'2020-08-28 07:47:25'),
 (20,	'Walter Mart',	'Mc Arthur Highway ',	'Guiguinto',	'Bulacan',	1,	'2020-09-04 09:32:20'),
-(23,	'ascfasfas',	'asdafasfasfa',	'sfasfasdasdasd',	'sgfasgasfdas',	1,	'2020-09-02 11:07:21'),
+(23,	'4F Right Wing',	'Farmers Plaza Cubao',	'Quezon City',	'Ncr, Second District',	1,	'2020-09-11 22:03:35'),
 (24,	'dsasdg',	'asdgasdg',	'asdgsadg',	'asdgasdgasdg',	1,	'2020-09-02 11:07:11'),
 (25,	'Brgy aosdklj',	'Brgy aosdklj',	'Brgy aosdklj',	'Brgy aosdklj',	0,	'2020-09-02 11:08:48'),
-(26,	'Portal Mall GF',	'Brgy. San Gabriel II',	'General Mariano Alvarez',	'Cavite',	0,	'2020-09-02 18:31:38');
+(26,	'Portal Mall GF',	'Brgy. San Gabriel II',	'General Mariano Alvarez',	'Cavite',	0,	'2020-09-02 18:31:38'),
+(27,	'Taft Ave. cor. Quirino St',	'Brgy 6969',	'Malate',	'Ncr, City Of Manila, First District',	0,	'2020-09-11 21:42:18');
 
 DROP TABLE IF EXISTS `address_jt`;
 CREATE TABLE `address_jt` (
@@ -633,7 +692,7 @@ CREATE TABLE `address_jt` (
   CONSTRAINT `fk_address_jt_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_address_jt_guardian` FOREIGN KEY (`guardian_id`) REFERENCES `guardian` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_address_jt_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `address_jt` (`id`, `address_id`, `member_id`, `company_id`, `guardian_id`) VALUES
 (1,	1,	1,	NULL,	NULL),
@@ -658,7 +717,8 @@ INSERT INTO `address_jt` (`id`, `address_id`, `member_id`, `company_id`, `guardi
 (21,	23,	NULL,	5,	NULL),
 (22,	24,	NULL,	9,	NULL),
 (23,	25,	NULL,	1,	NULL),
-(24,	26,	NULL,	14,	NULL);
+(24,	26,	NULL,	14,	NULL),
+(25,	27,	NULL,	2,	NULL);
 
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
@@ -684,13 +744,13 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `contact_number`, `email`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`) VALUES
 (1,	'ralf',	'3cca634013591eb51173fb6207572e37',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'admin',	'07283754',	'ralph.ortiz@ymeal.com',	1,	1,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
-(2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'hstn',	'xnar04g9uo.png'),
+(2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'hstn',	'c4ef6d230c396efc.png'),
 (3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'32101107',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
 (4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'09123456789',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
-(5,	'cyrel',	'6230471bd10839658f414438bc33c88a',	'Cyrel',	'Odette',	'Lalikan',	'1990-01-03',	'2',	'user',	'4362346',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'k1ylycon4h.png'),
+(5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'88d0f2663ebfacb8.jpg'),
 (6,	'shang',	'8379c86250c50c0537999a6576e18aa7',	'Jess',	'',	'Monty',	'1990-01-24',	'1',	'user',	'76567752',	'jess.monty@ymeal.com',	1,	2,	'shang',	'shang',	'4347da',	'py1c2qjcpq.png'),
-(7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'user',	'96493119',	'synth.synth@ymeal.com',	0,	0,	'synth',	'synth',	'synthsynth',	'null'),
-(8,	'dsfadgasdg',	'd15fd399edbb0b84811b7d18378692a3',	'asdgasdgasdg',	'asdgasdg',	'asdgasdgasdg',	'2019-08-26',	'2',	'admin',	'09123987456',	'6541234@asd.zxc',	1,	0,	'sdfgsdfgsdf',	'sdfgsdfg',	'dsfadgasdg',	'null');
+(7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'user',	'96493119',	'synth.synth@ymeal.com',	0,	0,	'synth',	'synth',	'synthsynth',	'8ea533f799ce6fc3.jpg'),
+(8,	'dsfadgasdg',	'd15fd399edbb0b84811b7d18378692a3',	'asdgasdgasdg',	'asdgasdg',	'asdgasdgasdg',	'2019-08-26',	'2',	'admin',	'09123987456',	'6541234@asd.zxc',	1,	0,	'sdfgsdfgsdf',	'sdfgsdfg',	'dsfadgasdg',	'45a3f40a62f2cfef.png');
 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
@@ -706,7 +766,7 @@ CREATE TABLE `company` (
 
 INSERT INTO `company` (`id`, `company_tin`, `company_name`, `branch`, `business_type`, `logo`) VALUES
 (1,	'654132150',	'Jollibee',	'Gen. Luna, Ermita',	'food',	'jollibee.png'),
-(2,	'5519557197318',	'Diligence Cafe',	'Malate, Manila',	'food',	'diligence.jpg'),
+(2,	'123654789',	'Diligence Cafe',	'Malate, Manila',	'food',	'diligence.jpg'),
 (3,	'5514917468044',	'Jollibee',	'Tandang Sora, Commonwealth',	'food',	'jollibee.png'),
 (4,	'7752487534265',	'Dunkin Donuts',	'Sangandaan, Quezon City',	'food',	'dunkin.png'),
 (5,	'1239874563',	'Greenwich',	'Farmer\'s Plaza',	'food',	'greenwich.png'),
@@ -714,7 +774,7 @@ INSERT INTO `company` (`id`, `company_tin`, `company_name`, `branch`, `business_
 (7,	'6070323661079',	'Kenny Rogers Roasters',	'T3 - NAIA',	'food',	'kennyrogers.png'),
 (8,	'5200487589140',	'Chowking',	'Hi-Top Supermarket, Aurora Blvd.',	'food',	'chowking.png'),
 (9,	'123498742',	'KFC',	'Mall of Asia',	'food',	'kfc.png'),
-(10,	'3411927270293',	'Aristocrat',	'Malate, Manila',	'food',	'aristocrat.png'),
+(10,	'3411927270293',	'Aristocrat',	'Malate, Manila',	'food',	'e45f6b534062ca3e.png'),
 (11,	'6171762815599',	'Mercury Drug',	'GMA, Cavite',	'pharmacy',	'mercury.png'),
 (12,	'9777439585523',	'Mercury Drug',	'Hidalgo St., Quiapo',	'pharmacy',	'mercury.png'),
 (13,	'3591867572189',	'Mercury Drug',	'BGC Market Market',	'pharmacy',	'mercury.png'),
@@ -909,11 +969,11 @@ CREATE TABLE `member` (
 INSERT INTO `member` (`id`, `osca_id`, `nfc_serial`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `membership_date`, `picture`) VALUES
 (1,	'20200000',	'WBVQRVY4DU5JALZI',	'621b0c9bbd565b7e39b9e7397cbec287',	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
 (2,	'20200001',	'441C5D9C99080123',	'17e3fe30f46ca4df7c67db07b174475d',	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'046-538-5233',	'ruby.glass@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
-(3,	'20200002',	'3U9K4TIVRUK7XO6G',	'62ea98c79d3e69f8cce7850cd0a3d4f0',	'Cordell',	'Castro',	'Broxton',	'1998-06-15',	'1',	'046-201-2011',	'cordell.broxton@ymeal.com',	'2020-08-21 19:56:46',	'j6bo6kqm07.png'),
+(3,	'20200009',	'3U9K4TIVRUK7XO6G',	'62ea98c79d3e69f8cce7850cd0a3d4f0',	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-08-21 16:00:00',	'j6bo6kqm07.png'),
 (4,	'20200003',	'DAF5093412880400',	'ba241200ba9c49dcde1b7be816522125',	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
 (5,	'20200006',	'FBAD739105CBAE1D',	'e2b4ea1bfc499f085c0537209992ea84',	'Olimpia',	'',	'Ollis',	'1998-01-01',	'9',	NULL,	'olimpia.ollis@ymeal.com',	'2020-08-21 19:56:46',	'j6bo6kqm07.png'),
 (6,	'20201010',	'9JIFHJVAHKE0G9AI',	'a48ada5f1fed03ae84a537eebb16f29b',	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
-(7,	'19386729',	'H0B277JSE6SM0PY0',	'4ab183d6e338ded13b64a690d6ae7bde',	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'2',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-08-21 16:00:00',	'j6bo6kqm07.png'),
+(7,	'19386329',	'H0B277JSE6SM0PY0',	'4ab183d6e338ded13b64a690d6ae7bde',	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'2',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-11 13:11:24',	'a488ceea8a1f5aed.jpg'),
 (8,	'12341234',	'1234123443214321',	'9ad4504474c4563c50a4c8bda304d3f7',	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-08-21 19:56:47',	'j6bo6kqm07.png'),
 (9,	'43214321',	'1234123412341234',	'ed2b1f468c5f915f3f1cf75d7068baae',	'Khaleed',	'',	'Dawson',	'1900-01-01',	'2',	'12341234',	'khaleed.dawson@ymeal.com',	'2020-08-21 19:56:47',	'ci1g9s0y35.png'),
 (10,	'56785678',	'5678567856785678',	'c18b3eff03996f3a203f63733be03d15',	'Ernestine',	'Kyle',	'Ayers',	'1960-08-11',	'2',	'56785678',	'ernestine.ayers@ymeal.com',	'2020-08-21 19:56:47',	'ci1g9s0y35.png'),
@@ -1015,4 +1075,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (5,	17,	'Bound to Cubao',	100.00,	20.00,	80.00),
 (6,	18,	'Bound to EDSA',	100.00,	20.00,	80.00);
 
--- 2020-09-09 09:25:27
+-- 2020-09-11 22:44:40

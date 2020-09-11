@@ -209,7 +209,7 @@ $(document).ready(function(){
     
     $('#add_address').click(function () {
         var member_id= <?php echo $member_id;?>;
-        $('#_kf939s').load("../frontend/edit_address.php?action=add", {member_id:member_id},function(){
+        $('#_kf939s').load("../frontend/edit_address.php?action=add", {id:member_id, type:"member"},function(){
             $('#_kf939s').modal();
         });
     });

@@ -9,7 +9,7 @@ if(isset($_POST['id']) &&
 {
     ?>
     <div>
-        <form method="post" enctype="multipart/form-data" autocomplete="off" id="address_form">
+        <form method="post" enctype="multipart/form-data" autocomplete="off" id="address_form_add">
             <table class="table">
                 <?php 
                 include("../backend/conn.php");
@@ -116,7 +116,7 @@ if(isset($_POST['id']) &&
                             <tr> 
                                 <td>
                                     <label for="provice">Province</label>
-                                    <select class="form-control" name="address_province" id="address_province">
+                                    <select class="form-control" name="address_province" id="address_province_add">
                                         <?php populate_province(); ?>
                                     </select>
                                 </td>
@@ -144,7 +144,7 @@ if(isset($_POST['id']) &&
                 }
                 ?>
             </table>
-            <button type="button" class="btn btn-primary btn-lg btn-block" id="submit_edit">Submit</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block" id="submit_add">Submit</button>
             <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
             <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
         </form>
@@ -158,24 +158,10 @@ if(isset($_POST['id']) &&
 
 <script>
   $(document).ready(function(){
-    $("select option[value='<?php echo $province;?>']").attr("selected","selected");
 
-    $.post('../backend/populate_city.php', { province: '<?php echo $province;?>' }, function(data){
-        $("#address_city").replaceWith('<select class="form-control" name="address_city" id="address_city">'+data+'</select>');
-        $("select option[value='<?php echo $city;?>']").attr("selected","selected");
-    });
 
-    $('#address_province').change(function(){
-        var provinceSelected = $(this).val();
-        alert(provinceSelected);
-        
-        $.post('../backend/populate_city.php', { province: provinceSelected }, function(data){
-            $("#address_city").replaceWith('<select class="form-control" name="address_city" id="address_city">'+data+'</select>');
-        });
-    });
-
-    $("#submit_edit").click(function(){
-        $.post("<?php  echo $post_destination ?>", $("#address_form").serialize(), function(d){
+    $("#submit_add").click(function(){
+        $.post("<?php  echo $post_destination ?>", $("#address_form_add").serialize(), function(d){
             if(d == "true") {
                 location.reload();
             } else {
@@ -184,7 +170,7 @@ if(isset($_POST['id']) &&
         });
     });
     $("#delete").click(function(){
-        $.post("<?php  echo $post_destination ?>?action=delete", $("#address_form").serialize(), function(d){
+        $.post("<?php  echo $post_destination ?>?action=delete", $("#address_form_add").serialize(), function(d){
             if(d == "true") {
                 location.reload();
             } else {

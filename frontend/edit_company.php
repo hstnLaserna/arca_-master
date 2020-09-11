@@ -4,16 +4,16 @@ include('../backend/php_functions.php');
 if(isset($_GET['company_tin'])/* && isset($_GET['last_name'])*/)
 {
     $company_tin = $_GET['company_tin'];
-    $query = "SELECT 	`id`,	`company_tin`,	`company_name`,	`branch`,	`business_type`
-                FROM `company` 
-                WHERE `company_tin` = '$company_tin'";
+    $query = "SELECT c.`id` `company_id`, c.`company_tin`, c.`company_name`, c.`branch`, c.`business_type`
+            FROM `company` c
+            WHERE `company_tin` = '$company_tin'";
     $result = $mysqli->query($query);
     $row_count = mysqli_num_rows($result);
 
     if($row_count == 1) {
         $row = mysqli_fetch_assoc($result);
         {
-            $company_id = $row['id'];
+            $company_id = $row['company_id'];
             $company_tin = $row['company_tin'];
             $company_name = $row['company_name'];
             $branch = $row['branch'];
@@ -42,10 +42,10 @@ if(isset($_GET['company_tin'])/* && isset($_GET['last_name'])*/)
                         <div class ="col col-lg-6 col-12">
                             Business Type
                             <select class="form-control" name="business_type">
-                                <option>-</option>
-                                <option>Pharmacy</option>
-                                <option>Restaurant</option>
-                                <option>Transportation</option>
+                                <option <?php if($business_type != "pharmacy" && $business_type != "food" && $business_type != "transportation"){echo "selected";}; ?>>-</option>
+                                <option <?php if($business_type == "pharmacy"){echo "selected";}; ?>>Pharmacy</option>
+                                <option <?php if($business_type == "food"){echo "selected";}; ?>>Restaurant</option>
+                                <option <?php if($business_type == "transportation"){echo "selected";}; ?>>Transportation</option>
                             </select>
                         </div>
                     </div>
@@ -85,12 +85,15 @@ if(isset($_GET['company_tin'])/* && isset($_GET['last_name'])*/)
                                 <input type="text" class="form-control " name="address_line2" value="<?php echo $address2; ?>" placeholder="<?php echo $address2; ?>">
                             </div>
                             <div class ="col col-lg-6 col-md-12">
-                                <small>City</small>
-                                <input type="text" class="form-control " name="address_city" value="<?php echo $city; ?>" placeholder="<?php echo $city; ?>">
+                                <small>Province</small>
+                                <select class="form-control" name="address_province" id="address_province">
+                                    <?php populate_province(); ?>
+                                </select>
                             </div>
                             <div class ="col col-lg-6 col-md-12">
-                                <small>Province</small>
-                                <input type="text" class="form-control " name="address_province" value="<?php echo $province; ?>" placeholder="<?php echo $province; ?>">
+                                <small>City</small>
+                                <select class="form-control" name="address_city" id="address_city">
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -100,11 +103,11 @@ if(isset($_GET['company_tin'])/* && isset($_GET['last_name'])*/)
         </div>
         <?php
         mysqli_close($mysqli);
-    } else{
-        include('../backend/fail_data.php');
+    } else {
+        echo "aaa";
     }
-} else
-{
+} else{
+    echo "aaa";
     include('../backend/fail_data.php');
 }
 include('foot.php');
@@ -124,5 +127,21 @@ include('foot.php');
             }
         });
     });
+
+    $("select option[value='<?php echo $province;?>']").attr("selected","selected");
+    
+    $.post('../backend/populate_city.php', { province: '<?php echo $province;?>' }, function(data){
+        $("#address_city").replaceWith('<select class="form-control" name="address_city" id="address_city">'+data+'</select>');
+        $("select option[value='<?php echo $city;?>']").attr("selected","selected");
+    });
+
+    $('#address_province').change(function(){
+        var provinceSelected = $(this).val();
+        $.post('../backend/populate_city.php', { province: provinceSelected }, function(data){
+            $("#address_city").replaceWith('<select class="form-control" name="address_city" id="address_city">'+data+'</select>');
+        });
+    });
   });
+  
+  
 </script>

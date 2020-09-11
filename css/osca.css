@@ -64,8 +64,8 @@ img.avatar:hover {
 .textboxhighlight {
     background-color: red;
 }
-.registration-title {  
-  padding: 1rem 5rem;
+.registration-title { 
+  text-transform: uppercase;
 }
 
 .edit{

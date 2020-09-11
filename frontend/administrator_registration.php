@@ -5,11 +5,8 @@
 
 <div id="management">
   <div class="card">
-    <div class="">
-      <h4 class="registration-title">Register Administrator Account</h4>
-    </div>
-
     <div class="registration-form">
+      <h3 class="registration-title">Register Administrator</h3>
       <form method="post" enctype="multipart/form-data" autocomplete="off" id="newAdmin">
         <div class="form-contents">
           <div>
