@@ -1,4 +1,4 @@
--- LAST UPDATE: 2020-09-12 06:45
+-- LAST UPDATE: 2020-09-12 06:56
 
 -- Adminer 4.6.3 MySQL dump
 
@@ -195,7 +195,7 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_food`;;
-CREATE PROCEDURE `add_transaction_food`(IN `trans_type` varchar(120), IN `company_id_` int(20), IN `trans_date_` timestamp, IN `member_id` int(20), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
+CREATE PROCEDURE `add_transaction_food`(IN `trans_type` varchar(120), IN `company_id_` int(20), IN `trans_date_` timestamp, IN `member_id_` int(20), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
 BEGIN
 
 	DECLARE TRANS_ID int(20);
@@ -217,8 +217,8 @@ BEGIN
 	END IF;
 END;;
 
-DROP PROCEDURE IF EXISTS `add_transaction_pharmacy`;;
-CREATE PROCEDURE `add_transaction_pharmacy`(IN `trans_type` varchar(120), IN `drug_id_` int(20), IN `trans_date_` timestamp, IN `member_id_` int(20), IN `clerk_` varchar(120), IN `company_id_` int(20), IN `quantity_` int(20), IN `unit_price_` decimal(13,2), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
+DROP PROCEDURE IF EXISTS `add_transaction_pharmacy_drug`;;
+CREATE PROCEDURE `add_transaction_pharmacy_drug`(IN `trans_type` varchar(120), IN `drug_id_` int(20), IN `trans_date_` timestamp, IN `member_id_` int(20), IN `clerk_` varchar(120), IN `company_id_` int(20), IN `quantity_` int(20), IN `unit_price_` decimal(13,2), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
 BEGIN
 
 	DECLARE TRANS_ID int(20);
@@ -238,6 +238,27 @@ BEGIN
 		SET msg = "0";
 	
 	END IF;
+END;;
+
+DROP PROCEDURE IF EXISTS `add_transaction_pharmacy_nondrug`;;
+CREATE PROCEDURE `add_transaction_pharmacy_nondrug`(IN `trans_type` varchar(120), IN `company_id_` int(20), IN `trans_date_` timestamp, IN `member_id_` int(20), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
+BEGIN
+	START TRANSACTION;
+    
+	INSERT INTO `transaction`	(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
+		(`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+	SET @last_inserted_id = LAST_INSERT_ID();
+
+        
+	IF (`trans_type` = 'pharmacy') THEN
+		INSERT INTO `pharmacy` (`transaction_id`, `desc_nondrug`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+			(@`last_inserted_id`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
+		SET msg = "1";
+	ELSE 
+		SET msg = "0";
+	
+	END IF;
+    COMMIT;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_transportation`;;
@@ -880,7 +901,7 @@ INSERT INTO `drug` (`id`, `generic_name`, `brand`, `dose`, `unit`, `is_otc`, `ma
 (3,	'ibuprofen,paracetamol',	'Alaxan',	500,	'mg',	1,	45000,	14000),
 (4,	'diphenhydramine',	'Benadryl',	500,	'mg',	1,	45000,	21000),
 (5,	'loratidine',	'Claritin ',	500,	'mg',	1,	45000,	21000),
-(6,	'famotidine,calcium carbonate,magnesium hydroxide',	'Kremil-S Advance',	500,	'mg',	0,	45000,	21000);
+(6,	'famotidine, calcium carbonate,magnesium hydroxide',	'Kremil-S Advance',	500,	'mg',	0,	45000,	21000);
 
 DROP TABLE IF EXISTS `food`;
 CREATE TABLE `food` (
@@ -987,9 +1008,10 @@ DROP TABLE IF EXISTS `pharmacy`;
 CREATE TABLE `pharmacy` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `transaction_id` int(20) NOT NULL,
-  `drug_id` int(20) NOT NULL,
-  `quantity` int(20) NOT NULL,
-  `unit_price` decimal(13,2) NOT NULL,
+  `desc_nondrug` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  `drug_id` int(20) DEFAULT NULL,
+  `quantity` int(20) DEFAULT NULL,
+  `unit_price` decimal(13,2) DEFAULT NULL,
   `vat_exempt_price` decimal(13,2) NOT NULL,
   `discount_price` decimal(13,2) NOT NULL,
   `payable_price` decimal(13,2) NOT NULL,
@@ -998,21 +1020,22 @@ CREATE TABLE `pharmacy` (
   KEY `transaction_id` (`transaction_id`),
   CONSTRAINT `pharmacy_ibfk_10` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`),
   CONSTRAINT `pharmacy_ibfk_9` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
-INSERT INTO `pharmacy` (`id`, `transaction_id`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
-(1,	1,	2,	8,	1120.00,	1000.00,	200.00,	800.00),
-(2,	2,	6,	10,	112.00,	100.00,	20.00,	80.00),
-(3,	3,	3,	4,	896.00,	800.00,	160.00,	640.00),
-(4,	4,	4,	3,	448.00,	400.00,	80.00,	320.00),
-(5,	5,	3,	14,	1500.00,	1339.29,	267.86,	1071.43),
-(6,	6,	1,	18,	2000.00,	1785.71,	357.14,	1428.57),
-(7,	19,	3,	10,	5.00,	50.00,	10.00,	40.00),
-(8,	21,	1,	14,	100.00,	1250.00,	250.00,	1000.00),
-(9,	23,	1,	18,	100.00,	1250.00,	250.00,	1000.00),
-(10,	24,	1,	14,	100.00,	1250.00,	250.00,	1000.00),
-(17,	23,	2,	10,	201.60,	1800.00,	360.00,	1440.00),
-(18,	29,	6,	10,	4.00,	35.71,	7.14,	28.56);
+INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+(1,	1,	'',	2,	8,	1120.00,	1000.00,	200.00,	800.00),
+(2,	2,	'',	6,	10,	112.00,	100.00,	20.00,	80.00),
+(3,	3,	'',	3,	4,	896.00,	800.00,	160.00,	640.00),
+(4,	4,	'',	4,	3,	448.00,	400.00,	80.00,	320.00),
+(5,	5,	'',	3,	14,	1500.00,	1339.29,	267.86,	1071.43),
+(6,	6,	'',	1,	18,	2000.00,	1785.71,	357.14,	1428.57),
+(7,	19,	'',	3,	10,	5.00,	50.00,	10.00,	40.00),
+(8,	21,	'',	1,	14,	100.00,	1250.00,	250.00,	1000.00),
+(9,	23,	'',	1,	18,	100.00,	1250.00,	250.00,	1000.00),
+(10,	24,	'',	1,	14,	100.00,	1250.00,	250.00,	1000.00),
+(17,	23,	'',	2,	10,	201.60,	1800.00,	360.00,	1440.00),
+(18,	29,	'',	6,	10,	4.00,	35.71,	7.14,	28.56),
+(19,	33,	'Dairy Milk',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00);
 
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
@@ -1026,7 +1049,7 @@ CREATE TABLE `transaction` (
   KEY `member_id` (`member_id`),
   CONSTRAINT `fk_transaction_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transaction_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `transaction` (`id`, `trans_date`, `company_id`, `member_id`, `clerk`) VALUES
 (1,	'2020-09-06 13:12:45',	14,	4,	'M Reyes'),
@@ -1052,7 +1075,10 @@ INSERT INTO `transaction` (`id`, `trans_date`, `company_id`, `member_id`, `clerk
 (23,	'2020-09-02 06:10:45',	14,	2,	''),
 (24,	'2020-09-02 06:07:17',	14,	4,	''),
 (28,	'2020-09-02 06:07:17',	14,	2,	''),
-(29,	'2020-09-08 16:03:50',	11,	2,	'Cy');
+(29,	'2020-09-08 16:03:50',	11,	2,	'Cy'),
+(30,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa'),
+(31,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa'),
+(33,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa');
 
 DROP TABLE IF EXISTS `transportation`;
 CREATE TABLE `transportation` (
@@ -1074,5 +1100,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (4,	16,	'Bound to Pasay',	100.00,	20.00,	80.00),
 (5,	17,	'Bound to Cubao',	100.00,	20.00,	80.00),
 (6,	18,	'Bound to EDSA',	100.00,	20.00,	80.00);
-
--- 2020-09-11 22:44:40
+-- 2020-09-14 21:32:57

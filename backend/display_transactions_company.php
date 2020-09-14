@@ -7,13 +7,13 @@
     $transaction_date = "null";
     $vat_exempt_price = "null";
     $discount_price = "null";
-    $description = "null";
+    $desc = "null";
     $company = "null";
     $branch = "null";
     $row_count_orig = 0;
     $row_count_display = 0;
     
-    $SELECT_CLAUSE = "  SELECT `member_id`, `osca_id`, `first_name`, `last_name`, trans_date, vat_exempt_price, discount_price , `desc`, 
+    $SELECT_CLAUSE = "  SELECT `member_id`, `osca_id`, `first_name`, `last_name`, trans_date, vat_exempt_price, discount_price ,  `payable_price`, `desc`, 
                         `company_tin`, company_name `company`, branch `branch`, `business_type` ";
     $FROM_CLAUSE =  " FROM view_all_transactions ";
 
@@ -44,10 +44,11 @@
                     break;
                 case 'pharmacy':
                     $type = "pharmacy";
-                    $SELECT_CLAUSE = " SELECT `member_id`,  `osca_id`, `first_name`, `last_name`, trans_date, vat_exempt_price, discount_price, 
+                    $SELECT_CLAUSE = " SELECT `member_id`,  `osca_id`, `first_name`, `last_name`, trans_date, vat_exempt_price, discount_price, `payable_price`,
+                                                `desc_nondrug` `desc1`,
                                                 concat('[', UCASE(LEFT(generic_name, 1)), LCASE(SUBSTRING(generic_name, 2)), '], ', UCASE(LEFT(brand, 1)), LCASE(SUBSTRING(brand, 2)),  ', ', dose, unit,  ', ', quantity,  'pcs, P ',  unit_price, '/pc') AS `desc`,
                                                 company_tin, company_name `company`, branch `branch`, `business_type` ";
-                    $FROM_CLAUSE =  " FROM view_pharma_transactions ";
+                    $FROM_CLAUSE =  " FROM view_pharma_transactions_all ";
                     break;
                 case 'food':
                     $type = "restaurant";
@@ -77,11 +78,10 @@
         $row_count_orig = mysqli_num_rows($result);
 
 
-        $transaction_query = "SELECT * FROM (
-                                $SELECT_CLAUSE
+        $transaction_query = "  $SELECT_CLAUSE
                                 $FROM_CLAUSE
                                 $WHERE_CLAUSE
-                                ORDER BY trans_date ASC) ttt ORDER BY `trans_date` DESC  
+                                ORDER BY `trans_date` DESC  
                                 LIMIT $displayed_items;";
 
         $result = $mysqli->query($transaction_query);
@@ -94,6 +94,7 @@
                 <th>Transaction date</th>
                 <th>VAT Exempt</th>
                 <th>Discount</th>
+                <th>Amount Paid</th>
                 <th>Description</th>
                 <?php
                 while($row = mysqli_fetch_array($result))
@@ -101,17 +102,22 @@
                     $osca_id = $row['osca_id'];
                     $customer = $row['last_name'] . ", " . $row['first_name'];
                     $transaction_date = $row['trans_date'];
+                    $desc = $row['desc'];
+                    if(isset($row['desc1']) && $row['desc1'] != "") {
+                        $desc = $row['desc1'];
+                    }
                     $vat_exempt_price = $row['vat_exempt_price'];
                     $discount_price = $row['discount_price'];
-                    $description = $row['desc'];
+                    $payable_price = $row['payable_price'];
                     
                     ?>
                     <tr>
                         <td><a href="../frontend/member_profile.php?member_id=<?php echo $osca_id;?>" class="view_"><?php echo $customer ?></td>
                         <td><?php echo $transaction_date ?></td>
+                        <td><?php echo $desc ?></td>
                         <td><?php echo $vat_exempt_price ?></td>
                         <td><?php echo $discount_price ?></td>
-                        <td><?php echo $description ?></td>
+                        <td><?php echo $payable_price ?></td>
                     </tr>
                     <?php
                 }

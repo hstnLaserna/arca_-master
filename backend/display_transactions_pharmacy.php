@@ -1,6 +1,7 @@
 <div id="trans-ph">
     <?php
     include("../backend/conn.php");
+    include("../backend/php_functions.php");
     //declare
     $transaction_date = "";
     $vat_exempt_price = "";
@@ -36,7 +37,7 @@
 
             $displayed_items = ($ctr2) * $items_per_page;
             $transaction_query = "SELECT *
-                                    FROM `view_pharma_transactions`
+                                    FROM `view_pharma_transactions_all`
                                     WHERE `member_id` = '$member_id'
                                     ORDER BY `trans_date` ASC";
 
@@ -45,16 +46,16 @@
 
 
             $transaction_query = "SELECT `member_id`, `trans_date`, `vat_exempt_price`, `discount_price`, `payable_price`,
-                                        concat(UCASE(LEFT(generic_name, 1)), LCASE(SUBSTRING(generic_name, 2))) as `generic_name`, 
-                                        concat(UCASE(LEFT(brand, 1)), LCASE(SUBSTRING(brand, 2))) as `brand`, `dose`, `unit`, 
+                                        `desc_nondrug`, `generic_name`, `brand`, `dose`, `unit`, 
                                         concat(quantity,  'pcs, ') as `qty`, `unit_price`,
                                         company_name `company`, `branch`, `company_tin`
-                                    FROM `view_pharma_transactions`
+                                    FROM `view_pharma_transactions_all`
                                     WHERE `member_id` = '$member_id'
                                     ORDER BY `trans_date` DESC  
                                     LIMIT $displayed_items;";
             $result = $mysqli->query($transaction_query);
             $row_count_display = mysqli_num_rows($result);
+            echo $transaction_query;
 
             /*
             if($row_count_display == 0 && $row_count_orig > 0) {
@@ -87,9 +88,13 @@
                         $company = $row['company'];
                         $company_tin = $row['company_tin'];
                         $branch = $row['branch'];
-                        
+
+                        $desc_nondrug = $row['desc_nondrug'];
                         $brand = $row['brand'];
                         $generic_name = $row['generic_name'];
+
+                        $generic_name = arrange_generic_name($row['generic_name']);
+
                         $dose = $row['dose'];
                         $unit = $row['unit'];
                         $qty = $row['qty'];
@@ -109,9 +114,21 @@
                                 </a>
                             </td>
                             <td class="med-desc">
+                            <?php 
+                                if ($desc_nondrug == "") {
+                            ?>
                                 <p><?php echo $brand ?> <?php echo $dose ?><?php echo $unit?>
                                 <p>[<?php echo $generic_name?>]</p>
                                 <p><?php echo $qty ?> (<?php echo $unit_price?>/pc)</p>
+                                
+                            <?php 
+                                } else {
+                                ?>
+                                    <p><?php echo $desc_nondrug ?></p>
+                                    <p><i>(Non medicine)</i></p>
+                                <?php 
+                                }
+                            ?>
                             </td>
                             <td><?php echo $vat_exempt_price ?></td>
                             <td><?php echo $discount_price ?></td>
