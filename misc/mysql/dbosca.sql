@@ -1,4 +1,4 @@
--- LAST UPDATE: 2020-09-12 06:56
+-- LAST UPDATE: 2020-09-17 03:06
 
 -- Adminer 4.6.3 MySQL dump
 
@@ -195,26 +195,31 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_food`;;
-CREATE PROCEDURE `add_transaction_food`(IN `trans_type` varchar(120), IN `company_id_` int(20), IN `trans_date_` timestamp, IN `member_id_` int(20), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
+CREATE PROCEDURE `add_transaction_food`(IN `trans_type` varchar(120), IN `company_tin_` varchar(120), IN `trans_date_` timestamp, IN `osca_id_` varchar(120), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
 BEGIN
+    DECLARE company_id_ INT(20);
+    DECLARE member_id_ VARCHAR(120);
 
-	DECLARE TRANS_ID int(20);
-	INSERT INTO `transaction`	(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
-		(`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+    START TRANSACTION;
+    IF (`trans_type` = 'food' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
+    THEN
+        SET `company_id_` = (SELECT `c_id` FROM `view_companies` WHERE `company_tin` = `company_tin_`);
+        SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_`);
 
-	SET `TRANS_ID` = (SELECT `id` FROM `transaction` WHERE `trans_date` = `trans_date_` 
-		AND `company_id` =  `company_id_` AND `member_id` =  `member_id_`);
+        INSERT INTO `transaction`(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
+            (`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+        SET @last_inserted_id = LAST_INSERT_ID();
+        
+        INSERT INTO `food` (`transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+            (@`last_inserted_id`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
 
-
-	IF (`trans_type` = 'food') THEN
-		INSERT INTO `food` (`transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
-			(`TRANS_ID`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
-
-		SET msg = "1";
-	ELSE 
-		SET msg = "0";
-	
-	END IF;
+        SET msg = "1";
+        COMMIT;
+    ELSE 
+        SET msg = "0";
+    
+    END IF;
+    ROLLBACK;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_pharmacy_drug`;;
@@ -241,24 +246,31 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_pharmacy_nondrug`;;
-CREATE PROCEDURE `add_transaction_pharmacy_nondrug`(IN `trans_type` varchar(120), IN `company_id_` int(20), IN `trans_date_` timestamp, IN `member_id_` int(20), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
+CREATE PROCEDURE `add_transaction_pharmacy_nondrug`(IN `trans_type` varchar(120), IN `company_tin_` varchar(120), IN `trans_date_` timestamp, IN `osca_id_` varchar(120), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
 BEGIN
-	START TRANSACTION;
-    
-	INSERT INTO `transaction`	(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
-		(`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
-	SET @last_inserted_id = LAST_INSERT_ID();
+    DECLARE company_id_ INT(20);
+    DECLARE member_id_ VARCHAR(120);
 
+    START TRANSACTION;
+    IF (`trans_type` = 'pharmacy' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
+    THEN
+        SET `company_id_` = (SELECT `c_id` FROM `view_companies` WHERE `company_tin` = `company_tin_`);
+        SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_`);
+
+        INSERT INTO `transaction`(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
+            (`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+        SET @last_inserted_id = LAST_INSERT_ID();
         
-	IF (`trans_type` = 'pharmacy') THEN
 		INSERT INTO `pharmacy` (`transaction_id`, `desc_nondrug`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
-			(@`last_inserted_id`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
-		SET msg = "1";
-	ELSE 
-		SET msg = "0";
-	
-	END IF;
-    COMMIT;
+            (@`last_inserted_id`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
+
+        SET msg = "1";
+        COMMIT;
+    ELSE 
+        SET msg = "0";
+    
+    END IF;
+    ROLLBACK;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_transportation`;;
@@ -765,7 +777,7 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `contact_number`, `email`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`) VALUES
 (1,	'ralf',	'3cca634013591eb51173fb6207572e37',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'admin',	'07283754',	'ralph.ortiz@ymeal.com',	1,	1,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
-(2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'hstn',	'c4ef6d230c396efc.png'),
+(2,	'hstn',	'ac15b73d5cab6569bb78f5ffbaad169b',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
 (3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'32101107',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
 (4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'09123456789',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
 (5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'88d0f2663ebfacb8.jpg'),
@@ -914,7 +926,7 @@ CREATE TABLE `food` (
   PRIMARY KEY (`id`),
   KEY `transaction_id` (`transaction_id`),
   CONSTRAINT `food_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `food` (`id`, `transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
 (1,	7,	'meals for 2',	100.00,	20.00,	80.00),
@@ -922,7 +934,10 @@ INSERT INTO `food` (`id`, `transaction_id`, `desc`, `vat_exempt_price`, `discoun
 (3,	9,	'meals for 2',	100.00,	20.00,	80.00),
 (4,	10,	'meals',	100.00,	20.00,	80.00),
 (5,	11,	'meals',	100.00,	20.00,	80.00),
-(6,	12,	'meals',	100.00,	20.00,	80.00);
+(6,	12,	'meals',	100.00,	20.00,	80.00),
+(7,	38,	'Deiri melk',	200.00,	40.00,	160.00),
+(8,	39,	'Gardenko',	1000.00,	200.00,	800.00),
+(9,	40,	'Neskopi 12-in-1',	500.00,	100.00,	400.00);
 
 DROP TABLE IF EXISTS `guardian`;
 CREATE TABLE `guardian` (
@@ -1020,7 +1035,7 @@ CREATE TABLE `pharmacy` (
   KEY `transaction_id` (`transaction_id`),
   CONSTRAINT `pharmacy_ibfk_10` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`),
   CONSTRAINT `pharmacy_ibfk_9` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
 (1,	1,	'',	2,	8,	1120.00,	1000.00,	200.00,	800.00),
@@ -1035,7 +1050,12 @@ INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quan
 (10,	24,	'',	1,	14,	100.00,	1250.00,	250.00,	1000.00),
 (17,	23,	'',	2,	10,	201.60,	1800.00,	360.00,	1440.00),
 (18,	29,	'',	6,	10,	4.00,	35.71,	7.14,	28.56),
-(19,	33,	'Dairy Milk',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00);
+(19,	33,	'Dairy Milk',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(20,	41,	'Deiri melk',	NULL,	NULL,	NULL,	200.00,	40.00,	160.00),
+(21,	42,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(22,	43,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(23,	44,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(24,	45,	'Grate Caste White 30s',	NULL,	NULL,	NULL,	150.00,	30.00,	120.00);
 
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
@@ -1049,7 +1069,7 @@ CREATE TABLE `transaction` (
   KEY `member_id` (`member_id`),
   CONSTRAINT `fk_transaction_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transaction_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `transaction` (`id`, `trans_date`, `company_id`, `member_id`, `clerk`) VALUES
 (1,	'2020-09-06 13:12:45',	14,	4,	'M Reyes'),
@@ -1078,7 +1098,15 @@ INSERT INTO `transaction` (`id`, `trans_date`, `company_id`, `member_id`, `clerk
 (29,	'2020-09-08 16:03:50',	11,	2,	'Cy'),
 (30,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa'),
 (31,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa'),
-(33,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa');
+(33,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa'),
+(38,	'2020-09-10 13:12:45',	4,	2,	'AB Garcia'),
+(39,	'2020-09-10 13:36:45',	4,	2,	'AB Garcia'),
+(40,	'2020-09-10 13:36:45',	4,	2,	'AB Garcia'),
+(41,	'2020-09-10 13:12:45',	14,	2,	'AB Garcia'),
+(42,	'2020-09-11 05:10:18',	14,	2,	'CD Efren'),
+(43,	'2020-09-11 05:10:18',	14,	2,	'CD Efren'),
+(44,	'2020-09-11 08:43:49',	14,	2,	'CD Efren'),
+(45,	'2020-09-13 01:25:34',	14,	2,	'CD Efren');
 
 DROP TABLE IF EXISTS `transportation`;
 CREATE TABLE `transportation` (
@@ -1100,4 +1128,5 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (4,	16,	'Bound to Pasay',	100.00,	20.00,	80.00),
 (5,	17,	'Bound to Cubao',	100.00,	20.00,	80.00),
 (6,	18,	'Bound to EDSA',	100.00,	20.00,	80.00);
--- 2020-09-14 21:32:57
+
+-- 2020-09-16 19:05:33

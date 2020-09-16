@@ -53,13 +53,3 @@ CREATE VIEW `view_drugs` AS
 (
 SELECT  * FROM `db_osca`.`view_drugs`
 );
-
-select * from view_pharma_transactions;
-select * from view_food_transactions;
-select * from view_transportation_transactions;
-select * from view_all_transactions;
-select * from view_members_with_guardian;
-select * from view_companies;
-
-select * from view_companies
-where user_name = "lrt_pg" and password = MD5("lrt_pg");
