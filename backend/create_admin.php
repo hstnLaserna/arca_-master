@@ -18,14 +18,14 @@
     if ($rows1 == 0) { // username doesn't exist
       $query = "CALL `add_admin`('$username', '$password', '$firstname', '$middlename', '$lastname', '$birthdate', '$sex2', '$contact_number', '$email', '$position', '1', '$answer1', '$answer2', @`msg`)";
       if($mysqli->query($query)){
-        echo "Records inserted successfully.";
+        echo ucwords($user_type) . "$username created successfully.";
       }
       else {
         echo "ERROR: Could not execute. \r\n" . mysqli_error($mysqli);
       }
     }
     else {
-        echo "Username exists";
+        echo "Username '$username' exists";
     }
   }
   else {

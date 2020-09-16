@@ -18,7 +18,6 @@
     $rows2 = mysqli_num_rows($result2);
 
     if ($rows1 == 0 && $rows2 == 0) { // OSCA ID is unique
-      $mysqli->query("START TRANSACTION;");
       $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', 
                   '$sex2', '$contact_number', '$email', '$membership_date',
                   '$address_line1', '$address_line2', '$address_city', '$address_province', 
@@ -26,9 +25,7 @@
                   '$g_firstname', '$g_middlename', '$g_lastname',
                   '$g_contact_number', '$g_sex2', '$g_relationship', '$g_email')";
       if($mysqli->query($query)){
-        
         echo "$query";
-        $mysqli->query("commit;");
       }
       else {
         echo "ERROR: Unable to execute. \r\n $query" . mysqli_error($mysqli);

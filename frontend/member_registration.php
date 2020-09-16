@@ -184,9 +184,9 @@ $('title').replaceWith('<title>OSCA - Member Registration</title>');
             if(d == "true") {
                 
                 var url = '../frontend/member_profile.php';
-                var form = $(     '<form action="' + url + '" method="get">' +
-                                                        '<input type="hidden" name="member_id" value="' + osca_id + '" />' +
-                                                '</form>');
+                var form = $('<form action="' + url + '" method="get">' +
+                                    '<input type="hidden" name="member_id" value="' + osca_id + '" />' +
+                            '</form>');
                 $('div#_1asg2').append(form);
                 form.submit();
             } else {

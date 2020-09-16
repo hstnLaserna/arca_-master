@@ -9,8 +9,8 @@ FROM company c
 INNER JOIN company_accounts ca ON ca.company_id = c.id
 );
 
-DROP VIEW IF EXISTS view_pharma_transactions;
-CREATE VIEW view_pharma_transactions AS 
+DROP VIEW IF EXISTS `view_pharma_transactions`;
+CREATE VIEW `view_pharma_transactions` AS 
 (
 SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 	 -- query pharmacy
@@ -23,8 +23,8 @@ LEFT JOIN drug d ON p.drug_id = d.id
 WHERE p.transaction_id = t.id and (p.`desc_nondrug` IS NULL OR p.`desc_nondrug` = "")
 );
 
-DROP VIEW IF EXISTS view_pharma_transactions_nondrug;
-CREATE VIEW view_pharma_transactions_nondrug AS 
+DROP VIEW IF EXISTS `view_pharma_transactions_nondrug`;
+CREATE VIEW `view_pharma_transactions_nondrug` AS 
 (
 SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
 	 -- query pharmacy
@@ -35,7 +35,7 @@ LEFT JOIN member m ON t.member_id = m.id
 LEFT JOIN company c ON t.company_id = c.id
 WHERE p.transaction_id = t.id AND p.id NOT IN (SELECT p2.id FROM pharmacy p2 WHERE (p.`desc_nondrug` IS NULL OR p.`desc_nondrug` = ""))
 );
-
+use db_osca;
 DROP VIEW IF EXISTS view_pharma_transactions_all;
 CREATE VIEW view_pharma_transactions_all AS 
 SELECT  m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_number`, t.trans_date, c.id company_id, c.company_tin, c.company_name, c.branch, c.business_type,
@@ -49,9 +49,9 @@ LEFT JOIN drug d ON p.drug_id = d.id
 WHERE p.transaction_id = t.id
 ;
 
-select * FROM view_pharma_transactions;
-select * FROM view_pharma_transactions_nondrug;
-select * FROM view_pharma_transactions_all;
+select * FROM `view_pharma_transactions`;
+select * FROM `view_pharma_transactions_nondrug`;
+select * FROM `view_pharma_transactions_all`;
 
 DROP VIEW IF EXISTS view_food_transactions;
 CREATE VIEW view_food_transactions AS 

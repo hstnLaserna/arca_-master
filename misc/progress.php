@@ -188,3 +188,5 @@ The OSCA can still issue physical IDs for the senior citizens. Pero to avail dis
     as Alternative to Traditional ID and Booklet System
     via Senior Citizen Information Terminal
 
+//  RECOMMENDATION
+    future researchers, make device available offline if necessary

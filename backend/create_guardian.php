@@ -1,23 +1,4 @@
 <?php
-
-
-
-
-            // CREATE STORED PROCEDURE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   include('../backend/conn.php');
   $query = "";
     if(isset($_POST['selected_osca_id'])) {
