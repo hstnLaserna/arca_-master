@@ -1,4 +1,4 @@
--- LAST UPDATE: 2020-09-17 03:06
+-- LAST UPDATE: 2020-09-19 07:24
 
 -- Adminer 4.6.3 MySQL dump
 
@@ -60,15 +60,15 @@ DROP PROCEDURE IF EXISTS `add_admin`;;
 CREATE PROCEDURE `add_admin`(IN `username_` varchar(20), IN `password_` varchar(20), IN `firstname_` varchar(60), IN `middlename_` varchar(60), IN `lastname_` varchar(60), IN `birthdate_` date, IN `sex_` varchar(10), IN `contact_number_` varchar(20), IN `email_` varchar(120), IN `position_` varchar(60), IN `isEnabled_` tinyint, IN `answer1_` varchar(20), IN `answer2_` varchar(20), OUT `msg` varchar(60))
 BEGIN
 
-		IF
-			((SELECT COUNT(*) as user_count FROM admin where user_name = username_) = 0)
-		THEN
-			INSERT INTO `admin` (`user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `position`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`)
-						VALUES	(username_, MD5(password_), firstname_, middlename_, lastname_, birthdate_, sex_, contact_number_, email_, position_, isEnabled_, 0, answer1_, answer2_, password_, 'null');
-			SET msg = "1";
-        ELSE
-			SET msg = "0";
-		END IF;
+    IF
+        ((SELECT COUNT(*) FROM `admin` where `user_name` = `username_`) = 0)
+    THEN
+        INSERT INTO `admin` (`user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `position`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`)
+                    VALUES (`username_`, MD5(`password_`), `firstname_`, `middlename_`, `lastname_`, `birthdate_`, `sex_`, `contact_number_`, `email_`, `position_`, `isEnabled_`, 0, `answer1_`, `answer2_`, `password_`, 'null');
+        SET msg = "1";
+    ELSE
+        SET msg = "0";
+    END IF;
 
 END;;
 
@@ -152,6 +152,13 @@ BEGIN
 		COMMIT;
 	END;;
 
+DROP PROCEDURE IF EXISTS `add_drug`;;
+CREATE PROCEDURE `add_drug`(IN `generic_name_` varchar(120), IN `brand_` varchar(120), IN `dose_` int(20), IN `unit_` varchar(120), IN `is_otc_` int(10), IN `max_monthly_` int(20), IN `max_weekly_` int(20))
+BEGIN
+    INSERT INTO `drug` (`generic_name`, `brand`, `dose`, `unit`, `is_otc`, `max_monthly`, `max_weekly`)
+                VALUES (`generic_name_`, `brand_`, `dose_`, `unit_`, `is_otc_`, `max_monthly_`, `max_weekly_`);
+END;;
+
 DROP PROCEDURE IF EXISTS `add_guardian`;;
 CREATE PROCEDURE `add_guardian`(IN `first_name_` varchar(120), IN `middle_name_` varchar(120), IN `last_name_` varchar(120), IN `sex_` varchar(10), IN `relationship_` varchar(120), IN `contact_number_` varchar(20), IN `email_` varchar(120), IN `member_id_` varchar(20), OUT `msg` int(1))
 BEGIN
@@ -223,26 +230,34 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_pharmacy_drug`;;
-CREATE PROCEDURE `add_transaction_pharmacy_drug`(IN `trans_type` varchar(120), IN `drug_id_` int(20), IN `trans_date_` timestamp, IN `member_id_` int(20), IN `clerk_` varchar(120), IN `company_id_` int(20), IN `quantity_` int(20), IN `unit_price_` decimal(13,2), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
+CREATE PROCEDURE `add_transaction_pharmacy_drug`(IN `trans_type` varchar(120), IN `company_tin_` varchar(120), IN `trans_date_` timestamp, IN `osca_id_` varchar(120), IN `clerk_` varchar(120),
+IN `drug_id_` int(20), IN `quantity_` int(20), IN `unit_price_` decimal(13,2), 
+IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), 
+OUT `msg` varchar(120))
 BEGIN
+    DECLARE company_id_ INT(20);
+    DECLARE member_id_ VARCHAR(120);
 
-	DECLARE TRANS_ID int(20);
-	INSERT INTO `transaction`	(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
-		(`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+    START TRANSACTION;
+    IF (`trans_type` = 'pharmacy' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
+    THEN
+        SET `company_id_` = (SELECT `c_id` FROM `view_companies` WHERE `company_tin` = `company_tin_`);
+        SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_`);
 
-	SET `TRANS_ID` = (SELECT `id` FROM `transaction` WHERE `trans_date` = `trans_date_` 
-		AND `company_id` =  `company_id_` AND `member_id` =  `member_id_`);
+        INSERT INTO `transaction`(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
+            (`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+        SET @last_inserted_id = LAST_INSERT_ID();
+        
+        INSERT INTO `pharmacy` (`transaction_id`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+            (@`last_inserted_id`, `drug_id_`, `quantity_`, `unit_price_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
 
-
-	IF (`trans_type` = 'pharmacy') THEN
-		INSERT INTO `pharmacy` (`transaction_id`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
-			(`TRANS_ID`, `drug_id_`, `quantity_`, `unit_price_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
-
-		SET msg = "1";
-	ELSE 
-		SET msg = "0";
-	
-	END IF;
+        SET msg = "1";
+        COMMIT;
+    ELSE 
+        SET msg = "0";
+    
+    END IF;
+    ROLLBACK;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_pharmacy_nondrug`;;
@@ -274,26 +289,31 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction_transportation`;;
-CREATE PROCEDURE `add_transaction_transportation`(IN `trans_type` varchar(120), IN `trans_date_` timestamp, IN `company_id_` int(20), IN `member_id_` int(20), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
+CREATE PROCEDURE `add_transaction_transportation`(IN `trans_type` varchar(120), IN `company_tin_` varchar(120), IN `trans_date_` timestamp, IN `osca_id_` varchar(120), IN `clerk_` varchar(120), IN `desc_` varchar(120), IN `vat_exempt_price_` decimal(13,2), IN `discount_price_` decimal(13,2), IN `payable_price_` decimal(13,2), OUT `msg` varchar(120))
 BEGIN
+    DECLARE company_id_ INT(20);
+    DECLARE member_id_ VARCHAR(120);
 
-	DECLARE TRANS_ID int(20);
-	INSERT INTO `transaction`	(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
-		(`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+    START TRANSACTION;
+    IF (`trans_type` = 'transportation' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
+    THEN
+        SET `company_id_` = (SELECT `c_id` FROM `view_companies` WHERE `company_tin` = `company_tin_`);
+        SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_`);
 
-	SET `TRANS_ID` = (SELECT `id` FROM `transaction` WHERE `trans_date` = `trans_date_` 
-		AND `company_id` =  `company_id_` AND `member_id` =  `member_id_`);
-
-
-	IF (`trans_type` = 'transportation') THEN
+        INSERT INTO `transaction`(`trans_date`, `company_id`, `member_id`, `clerk`) VALUES
+            (`trans_date_`, `company_id_`, `member_id_`, `clerk_`);
+        SET @last_inserted_id = LAST_INSERT_ID();
+        
 		INSERT INTO `transportation` (`transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
-			(`TRANS_ID`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
+            (@`last_inserted_id`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
 
-		SET msg = "1";
-	ELSE 
-		SET msg = "0";
-	
-	END IF;
+        SET msg = "1";
+        COMMIT;
+    ELSE 
+        SET msg = "0";
+    
+    END IF;
+    ROLLBACK;
 END;;
 
 DROP PROCEDURE IF EXISTS `deactivate_admin_account`;;
@@ -777,7 +797,7 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `contact_number`, `email`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`) VALUES
 (1,	'ralf',	'3cca634013591eb51173fb6207572e37',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'admin',	'07283754',	'ralph.ortiz@ymeal.com',	1,	1,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
-(2,	'hstn',	'ac15b73d5cab6569bb78f5ffbaad169b',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
+(2,	'hstn',	'ac15b73d5cab6569bb78f5ffbaad169b',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	1,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
 (3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'32101107',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
 (4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'09123456789',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
 (5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'88d0f2663ebfacb8.jpg'),
@@ -807,7 +827,7 @@ INSERT INTO `company` (`id`, `company_tin`, `company_name`, `branch`, `business_
 (7,	'6070323661079',	'Kenny Rogers Roasters',	'T3 - NAIA',	'food',	'kennyrogers.png'),
 (8,	'5200487589140',	'Chowking',	'Hi-Top Supermarket, Aurora Blvd.',	'food',	'chowking.png'),
 (9,	'123498742',	'KFC',	'Mall of Asia',	'food',	'kfc.png'),
-(10,	'3411927270293',	'Aristocrat',	'Malate, Manila',	'food',	'e45f6b534062ca3e.png'),
+(10,	'3411927270293',	'Aristocrat',	'Malate, Manila',	'food',	'7f0s8h7d0s0c.png'),
 (11,	'6171762815599',	'Mercury Drug',	'GMA, Cavite',	'pharmacy',	'mercury.png'),
 (12,	'9777439585523',	'Mercury Drug',	'Hidalgo St., Quiapo',	'pharmacy',	'mercury.png'),
 (13,	'3591867572189',	'Mercury Drug',	'BGC Market Market',	'pharmacy',	'mercury.png'),
@@ -896,7 +916,7 @@ INSERT INTO `complaint_report` (`id`, `desc`, `report_date`, `company_id`, `memb
 
 DROP TABLE IF EXISTS `drug`;
 CREATE TABLE `drug` (
-  `id` int(20) NOT NULL,
+  `id` int(20) NOT NULL AUTO_INCREMENT,
   `generic_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
   `brand` varchar(120) COLLATE utf8mb4_bin NOT NULL,
   `dose` int(20) NOT NULL,
@@ -905,15 +925,19 @@ CREATE TABLE `drug` (
   `max_monthly` int(20) DEFAULT NULL,
   `max_weekly` int(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `drug` (`id`, `generic_name`, `brand`, `dose`, `unit`, `is_otc`, `max_monthly`, `max_weekly`) VALUES
-(1,	'paracetamol',	'Biogesic',	500,	'mg',	1,	45000,	14000),
-(2,	'paracetamol',	'Bioflu',	500,	'mg',	1,	45000,	14000),
-(3,	'ibuprofen,paracetamol',	'Alaxan',	500,	'mg',	1,	45000,	14000),
-(4,	'diphenhydramine',	'Benadryl',	500,	'mg',	1,	45000,	21000),
-(5,	'loratidine',	'Claritin ',	500,	'mg',	1,	45000,	21000),
-(6,	'famotidine, calcium carbonate,magnesium hydroxide',	'Kremil-S Advance',	500,	'mg',	0,	45000,	21000);
+(1,	'paracetamol',	'biogesic',	500,	'mg',	1,	45000,	14000),
+(2,	'paracetamol',	'bioflu',	500,	'mg',	1,	45000,	14000),
+(3,	'ibuprofen,paracetamol',	'alaxan',	500,	'mg',	1,	45000,	14000),
+(4,	'diphenhydramine',	'benadryl',	500,	'mg',	1,	45000,	21000),
+(5,	'loratidine',	'claritin ',	500,	'mg',	1,	45000,	21000),
+(6,	'calcium carbonate,famotidine,magnesium hydroxide',	'kremil-s advance',	500,	'mg',	0,	45000,	21000),
+(7,	'cetirizine',	'watsons',	10,	'mg',	1,	70,	300),
+(8,	'cetirizine',	'brand 2',	10,	'mg',	1,	70,	300),
+(9,	'carbocisteine,zinc',	'solmux',	500,	'mg',	1,	7000,	30000),
+(10,	'sodium ascorbate,zinc',	'immunpro',	500,	'mg',	1,	7000,	30000);
 
 DROP TABLE IF EXISTS `food`;
 CREATE TABLE `food` (
@@ -926,7 +950,7 @@ CREATE TABLE `food` (
   PRIMARY KEY (`id`),
   KEY `transaction_id` (`transaction_id`),
   CONSTRAINT `food_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `food` (`id`, `transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
 (1,	7,	'meals for 2',	100.00,	20.00,	80.00),
@@ -937,7 +961,8 @@ INSERT INTO `food` (`id`, `transaction_id`, `desc`, `vat_exempt_price`, `discoun
 (6,	12,	'meals',	100.00,	20.00,	80.00),
 (7,	38,	'Deiri melk',	200.00,	40.00,	160.00),
 (8,	39,	'Gardenko',	1000.00,	200.00,	800.00),
-(9,	40,	'Neskopi 12-in-1',	500.00,	100.00,	400.00);
+(9,	40,	'Neskopi 12-in-1',	500.00,	100.00,	400.00),
+(10,	66,	'Dine in meals for 2',	1227.68,	245.54,	982.14);
 
 DROP TABLE IF EXISTS `guardian`;
 CREATE TABLE `guardian` (
@@ -1034,8 +1059,8 @@ CREATE TABLE `pharmacy` (
   KEY `drug_id` (`drug_id`),
   KEY `transaction_id` (`transaction_id`),
   CONSTRAINT `pharmacy_ibfk_10` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`),
-  CONSTRAINT `pharmacy_ibfk_9` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  CONSTRAINT `pharmacy_ibfk_11` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
 (1,	1,	'',	2,	8,	1120.00,	1000.00,	200.00,	800.00),
@@ -1055,7 +1080,30 @@ INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quan
 (21,	42,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
 (22,	43,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
 (23,	44,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
-(24,	45,	'Grate Caste White 30s',	NULL,	NULL,	NULL,	150.00,	30.00,	120.00);
+(24,	45,	'Grate Caste White 30s',	NULL,	NULL,	NULL,	150.00,	30.00,	120.00),
+(25,	46,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(26,	47,	'Starbox Prop-puchino 330ml',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(27,	48,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(28,	49,	'Starbox Prop-puchino 330ml',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(29,	50,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(30,	51,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(31,	52,	NULL,	3,	10,	5.00,	100.00,	20.00,	80.00),
+(32,	53,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(33,	54,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(34,	55,	NULL,	6,	10,	5.00,	100.00,	20.00,	80.00),
+(35,	56,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(36,	57,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(37,	58,	NULL,	6,	10,	5.00,	100.00,	20.00,	80.00),
+(38,	59,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(39,	60,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(40,	61,	NULL,	6,	10,	5.00,	100.00,	20.00,	80.00),
+(41,	62,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(42,	63,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(43,	67,	NULL,	6,	14,	8.15,	101.88,	20.38,	81.50),
+(44,	68,	NULL,	8,	7,	6.25,	39.06,	7.81,	31.25),
+(45,	69,	NULL,	9,	7,	8.00,	50.00,	10.00,	40.00),
+(46,	70,	NULL,	1,	1,	5.20,	65.00,	13.00,	52.00),
+(47,	71,	NULL,	10,	1,	5.20,	65.00,	13.00,	52.00);
 
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
@@ -1069,7 +1117,7 @@ CREATE TABLE `transaction` (
   KEY `member_id` (`member_id`),
   CONSTRAINT `fk_transaction_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_transaction_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `transaction` (`id`, `trans_date`, `company_id`, `member_id`, `clerk`) VALUES
 (1,	'2020-09-06 13:12:45',	14,	4,	'M Reyes'),
@@ -1106,7 +1154,32 @@ INSERT INTO `transaction` (`id`, `trans_date`, `company_id`, `member_id`, `clerk
 (42,	'2020-09-11 05:10:18',	14,	2,	'CD Efren'),
 (43,	'2020-09-11 05:10:18',	14,	2,	'CD Efren'),
 (44,	'2020-09-11 08:43:49',	14,	2,	'CD Efren'),
-(45,	'2020-09-13 01:25:34',	14,	2,	'CD Efren');
+(45,	'2020-09-13 01:25:34',	14,	2,	'CD Efren'),
+(46,	'2020-09-14 04:18:10',	14,	2,	'CD Efren'),
+(47,	'2020-09-14 04:18:10',	14,	2,	'CD Efren'),
+(48,	'2020-09-14 04:35:48',	14,	2,	'CD Efren'),
+(49,	'2020-09-14 04:35:48',	14,	2,	'CD Efren'),
+(50,	'2020-09-14 07:48:09',	14,	2,	'GH Igol'),
+(51,	'2020-09-14 07:48:09',	14,	2,	'GH Igol'),
+(52,	'2020-09-14 07:48:09',	14,	2,	'GH Igol'),
+(53,	'2020-09-14 07:48:09',	14,	2,	'GH Igol'),
+(54,	'2020-09-14 07:48:09',	14,	2,	'GH Igol'),
+(55,	'2020-09-15 03:14:31',	14,	2,	'GH Igol'),
+(56,	'2020-09-15 03:14:31',	14,	2,	'GH Igol'),
+(57,	'2020-09-15 03:14:31',	14,	2,	'GH Igol'),
+(58,	'2020-09-13 07:48:09',	14,	3,	'GH Igol'),
+(59,	'2020-09-13 07:48:09',	14,	3,	'GH Igol'),
+(60,	'2020-09-13 07:48:09',	14,	3,	'GH Igol'),
+(61,	'2020-09-16 01:56:37',	14,	2,	'JB Meneses'),
+(62,	'2020-09-16 01:56:37',	14,	2,	'JB Meneses'),
+(63,	'2020-09-16 01:56:37',	14,	2,	'JB Meneses'),
+(65,	'2020-09-18 11:30:13',	26,	2,	'jeppie boi'),
+(66,	'2020-09-11 12:38:08',	10,	2,	'AR Magnayo'),
+(67,	'2020-09-14 10:45:37',	19,	3,	'AR Magnayo'),
+(68,	'2020-09-17 10:40:11',	19,	3,	'AL Manalon'),
+(69,	'2020-09-17 10:40:11',	19,	3,	'AL Manalon'),
+(70,	'2020-09-17 10:40:11',	19,	3,	'AL Manalon'),
+(71,	'2020-09-17 10:40:11',	19,	3,	'AL Manalon');
 
 DROP TABLE IF EXISTS `transportation`;
 CREATE TABLE `transportation` (
@@ -1119,7 +1192,7 @@ CREATE TABLE `transportation` (
   PRIMARY KEY (`id`),
   KEY `transaction_id` (`transaction_id`),
   CONSTRAINT `transportation_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
 (1,	13,	'Bound to Pasay',	100.00,	20.00,	80.00),
@@ -1127,6 +1200,7 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (3,	15,	'Bound to DJose',	100.00,	20.00,	80.00),
 (4,	16,	'Bound to Pasay',	100.00,	20.00,	80.00),
 (5,	17,	'Bound to Cubao',	100.00,	20.00,	80.00),
-(6,	18,	'Bound to EDSA',	100.00,	20.00,	80.00);
+(6,	18,	'Bound to EDSA',	100.00,	20.00,	80.00),
+(7,	65,	'Pasay to Guadalupe | Senior - SJT',	26.79,	5.36,	21.43);
 
--- 2020-09-16 19:05:33
+-- 2020-09-18 23:24:11
