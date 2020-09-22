@@ -1,4 +1,5 @@
-use `philippines`;
+CREATE DATABASE IF NOT EXISTS `philippines`;
+USE `philippines`;
 
 -- ----------------------------
 -- Table structure for province

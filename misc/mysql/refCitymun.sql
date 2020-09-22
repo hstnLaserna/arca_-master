@@ -1,12 +1,6 @@
-/*
-SELECT c.`citymunDesc`, p.`provDesc` FROM province p
-INNER JOIN province p on p.provCode = c. provCode
-WHERE p.id=80;
-SELECT c.`citymunDesc` `city` FROM city c;
-SELECT p.`provDesc` `province` FROM province p;
-*/
+CREATE DATABASE IF NOT EXISTS `philippines`;
+USE `philippines`;
 
-use `philippines`
 -- ----------------------------
 -- Table structure for city
 -- ----------------------------
