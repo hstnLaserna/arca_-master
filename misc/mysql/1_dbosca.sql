@@ -1,6 +1,9 @@
 -- LAST UPDATE: 2020-09-19 07:24
 
 -- Adminer 4.6.3 MySQL dump
+DROP DATABASE IF EXISTS `db_osca`;
+CREATE DATABASE `db_osca`;
+USE `db_osca`;
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
@@ -117,38 +120,35 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_complaint_report`;;
-CREATE PROCEDURE `add_complaint_report`(IN `company_name_` varchar(250), IN `branch_` varchar(120), IN `osca_id_` varchar(20), 
-											IN `desc_` varchar(300), IN `report_date_` timestamp, OUT `msg` int(1))
+CREATE PROCEDURE `add_complaint_report`(IN `company_name_` VARCHAR(250), IN `branch_` VARCHAR(120), IN `osca_id_` VARCHAR(20), IN `desc_` VARCHAR(300), IN `report_date_` TIMESTAMP, OUT `msg` INT(1))
 BEGIN
-		START TRANSACTION;
-			IF ((SELECT COUNT(*)
-				FROM company AS c
-				INNER JOIN `member` AS m
-				WHERE c.company_name = `company_name_`
-				AND c.branch = `branch_`
-				AND m.osca_id = `osca_id_`) = 1)
-			THEN
-				INSERT INTO complaint_report (company_id, member_id)
-				SELECT c.id, m.id
-				FROM company AS c
-				INNER JOIN `member` AS m
-				WHERE c.company_name = `company_name_`
-				AND c.branch = `branch_`
-				AND m.osca_id = `osca_id_`;
-			
-				SET @last_inserted_id = LAST_INSERT_ID();
-				
-				UPDATE complaint_report set
-				`desc` = `desc_`,
-				`report_date` = `report_date_`
-				WHERE id = @last_inserted_id;
-				
-				SET `msg` = 1;
-			ELSE 
-				SET `msg` = 0;
-			END IF;
-		COMMIT;
-	END;;
+  IF ((SELECT COUNT(*)
+    FROM company AS c
+    INNER JOIN `member` AS m
+    WHERE c.company_name = company_name_
+    AND c.branch = branch_
+    AND m.osca_id = osca_id_) = 1)
+  THEN
+    INSERT INTO complaint_report (company_id, member_id)
+    SELECT c.id, m.id
+    FROM company AS c
+    INNER JOIN `member` AS m
+    WHERE c.company_name = company_name_
+    AND c.branch = branch_
+    AND m.osca_id = osca_id_;
+  
+    SET @last_inserted_id = LAST_INSERT_ID();
+    
+    UPDATE complaint_report set
+    `desc` = desc_,
+    report_date = report_date_
+    WHERE id = @last_inserted_id;
+    
+    SET msg = 1;
+  ELSE 
+    SET msg = 0;
+  END IF;
+END;;
 
 DROP PROCEDURE IF EXISTS `add_drug`;;
 CREATE PROCEDURE `add_drug`(IN `generic_name_` varchar(120), IN `brand_` varchar(120), IN `dose_` int(20), IN `unit_` varchar(120), IN `is_otc_` int(10), IN `max_monthly_` int(20), IN `max_weekly_` int(20))
@@ -172,6 +172,30 @@ BEGIN
 	ELSE 
 		SET msg= 0; -- member does not exist
 	END IF;
+END;;
+
+DROP PROCEDURE IF EXISTS `add_lost_report`;;
+CREATE PROCEDURE `add_lost_report`(IN `osca_id_` VARCHAR(20), IN `report_date_` TIMESTAMP, OUT `msg` INT(1))
+BEGIN
+  IF ((SELECT COUNT(*)
+    FROM `member` AS m
+    WHERE m.osca_id = osca_id_) = 1)
+  THEN
+    INSERT INTO lost_report (member_id)
+    SELECT m.id
+    FROM `member` AS m
+    WHERE m.osca_id = osca_id_;
+  
+    SET @last_inserted_id = LAST_INSERT_ID();
+    
+    UPDATE lost_report set
+    report_date = report_date_
+    WHERE id = @last_inserted_id;
+    
+    SET msg = 1;
+  ELSE 
+    SET msg = 0;
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_member`;;
@@ -200,13 +224,18 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_qr_request`;;
-CREATE PROCEDURE `add_qr_request`(IN `osca_id_` varchar(120), IN `desc_` varchar(120), OUT `msg` varchar(120))
+CREATE PROCEDURE `add_qr_request`(IN `osca_id_` VARCHAR(120), IN `desc_` VARCHAR(120), IN `token_` VARCHAR(120), OUT `msg` VARCHAR(1))
 BEGIN
   DECLARE member_id_ VARCHAR(120);
-    SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1);
-    INSERT INTO `qr_request`(`member_id`, `desc`) VALUES
-      (`member_id_`, `desc_`);
-    SET msg = LAST_INSERT_ID();
+  IF ((SELECT * FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1) = 1)
+  THEN
+  SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1);
+  INSERT INTO `qr_request`(`member_id`, `desc`, `token`) VALUES
+    (`member_id_`, `desc_`, `token_`);
+  SET msg = 1;
+  ELSE
+  SET msg = 0;
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_transaction`;;
@@ -611,6 +640,76 @@ email = email_,
 membership_date = mdate
 WHERE id = uid;;
 
+DROP PROCEDURE IF EXISTS `fetch_food_transactions`;;
+CREATE PROCEDURE `fetch_food_transactions`(IN `osca_id` INT)
+BEGIN
+  select
+      `f`.trans_date,
+      `f`.company_name,
+      `f`.branch,
+      `f`.business_type,
+      `f`.`desc`,
+      `f`.vat_exempt_price,
+      `f`.discount_price,
+      `f`.payable_price
+    from
+      `view_food_transactions` `f`
+    where
+      `f`.osca_id = osca_id;
+END;;
+
+DROP PROCEDURE IF EXISTS `fetch_password`;;
+CREATE PROCEDURE `fetch_password`(IN `osca_id` INT)
+BEGIN
+  select
+    `mg`.osca_id,
+    `mg`.`password`,
+    `mg`.contact_number
+  from
+    `view_members_with_guardian` `mg`
+  where
+    `mg`.osca_id = osca_id
+    AND `mg`.a_is_active = 1;
+END;;
+
+DROP PROCEDURE IF EXISTS `fetch_pharma_transactions`;;
+CREATE PROCEDURE `fetch_pharma_transactions`(IN `osca_id` INT)
+BEGIN
+  select
+    `p`.trans_date,
+    `p`.company_name,
+    `p`.branch,
+    `p`.business_type,
+    concat(`p`.generic_name, '\n' , `p`.brand, '\n',
+      `p`.dose, '\n', `p`.unit, '\n',
+      `p`.quantity, '\n', `p`.unit_price) AS `desc`,
+    `p`.vat_exempt_price,
+    `p`.discount_price,
+    `p`.payable_price
+  from
+    `view_pharma_transactions` `p`
+  where
+    `p`.osca_id = osca_id;
+END;;
+
+DROP PROCEDURE IF EXISTS `fetch_transportation_transactions`;;
+CREATE PROCEDURE `fetch_transportation_transactions`(IN `osca_id` INT)
+BEGIN
+  select
+    `t`.trans_date,
+    `t`.company_name,
+    `t`.branch,
+    `t`.business_type,
+    `t`.`desc`,
+    `t`.vat_exempt_price,
+    `t`.discount_price,
+    `t`.payable_price
+  from
+    `view_transportation_transactions` `t`
+  where
+    `t`.osca_id = osca_id;
+END;;
+
 DROP PROCEDURE IF EXISTS `forgot_pw_admin`;;
 CREATE DEFINER=`dbosca`@`localhost` PROCEDURE `forgot_pw_admin`(IN `uname` varchar(120), IN `ans1` varchar(100), IN `ans2` varchar(100), OUT `tempopw` varchar(6), OUT `msg` int(10))
 IF ((SELECT EXISTS(SELECT * FROM `admin` WHERE (user_name = uname AND answer1 = ans1) OR (user_name = uname AND answer2=ans2))) = 1)
@@ -631,6 +730,27 @@ BEGIN
   IF (select log_attempts from admin where `user_name`=uname) > 2
   THEN UPDATE admin SET is_enabled = 0 WHERE id = selected_id;
   END IF;
+END;;
+
+DROP PROCEDURE IF EXISTS `login_member`;;
+CREATE PROCEDURE `login_member`(IN `osca_id` INT, `password` VARCHAR(120))
+BEGIN
+  select
+    `mg`.osca_id,
+    `mg`.`password`,
+    `mg`.picture,
+    CONCAT(`mg`.first_name, ' ', `mg`.last_name) AS full_name,
+    `mg`.bdate,
+    `mg`.sex,
+    `mg`.memship_date,
+    `mg`.contact_number,
+    CONCAT(`mg`.address_1, ' ', `mg`.address_2, ' ', `mg`.city, ' ', `mg`.province) AS address
+  from
+    `view_members_with_guardian` `mg`
+  where
+    `mg`.osca_id = osca_id
+    AND `mg`.`password` = password
+    AND `mg`.a_is_active = 1;
 END;;
 
 DROP PROCEDURE IF EXISTS `validate_login`;;
@@ -754,7 +874,7 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `contact_number`, `email`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`) VALUES
 (1,	'ralf',	'3cca634013591eb51173fb6207572e37',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'admin',	'07283754',	'ralph.ortiz@ymeal.com',	1,	1,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
-(2,	'hstn',	'ac15b73d5cab6569bb78f5ffbaad169b',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	1,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
+(2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	1,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
 (3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'32101107',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
 (4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'09123456789',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
 (5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'88d0f2663ebfacb8.jpg'),
@@ -989,21 +1109,21 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `member` (`id`, `osca_id`, `nfc_serial`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `membership_date`, `picture`) VALUES
-(1,	'20200000',	'WBVQRVY4DU5JALZI',	'621b0c9bbd565b7e39b9e7397cbec287',	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
-(2,	'20200001',	'441C5D9C99080123',	'17e3fe30f46ca4df7c67db07b174475d',	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'046-538-5233',	'ruby.glass@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
-(3,	'20200009',	'3U9K4TIVRUK7XO6G',	'62ea98c79d3e69f8cce7850cd0a3d4f0',	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-08-21 16:00:00',	'j6bo6kqm07.png'),
-(4,	'20200003',	'DAF5093412880400',	'ba241200ba9c49dcde1b7be816522125',	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
-(5,	'20200006',	'FBAD739105CBAE1D',	'e2b4ea1bfc499f085c0537209992ea84',	'Olimpia',	'',	'Ollis',	'1998-01-01',	'9',	NULL,	'olimpia.ollis@ymeal.com',	'2020-08-21 19:56:46',	'j6bo6kqm07.png'),
-(6,	'20201010',	'9JIFHJVAHKE0G9AI',	'a48ada5f1fed03ae84a537eebb16f29b',	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-08-21 19:56:46',	'ci1g9s0y35.png'),
-(7,	'19386329',	'H0B277JSE6SM0PY0',	'4ab183d6e338ded13b64a690d6ae7bde',	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'2',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-11 13:11:24',	'a488ceea8a1f5aed.jpg'),
-(8,	'12341234',	'1234123443214321',	'9ad4504474c4563c50a4c8bda304d3f7',	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-08-21 19:56:47',	'j6bo6kqm07.png'),
-(9,	'43214321',	'1234123412341234',	'ed2b1f468c5f915f3f1cf75d7068baae',	'Khaleed',	'',	'Dawson',	'1900-01-01',	'2',	'12341234',	'khaleed.dawson@ymeal.com',	'2020-08-21 19:56:47',	'ci1g9s0y35.png'),
+(1,	'20200000',	'WBVQRVY4DU5JALZI',	'3b33d36e03d1e0510d0bc88a269ad342',	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-09-24 16:58:12',	'ci1g9s0y35.png'),
+(2,	'20200001',	'441C5D9C99080123',	'3e4752ed713a565b662a2db13a7a62ba',	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'046-538-5233',	'ruby.glass@ymeal.com',	'2020-09-24 16:58:12',	'ci1g9s0y35.png'),
+(3,	'20200009',	'3U9K4TIVRUK7XO6G',	'c70368723fb1780003b3c4986223a232',	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-24 16:58:12',	'j6bo6kqm07.png'),
+(4,	'20200003',	'DAF5093412880400',	'47a3a5537a5fdba16042736763c71bca',	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-09-24 16:58:12',	'ci1g9s0y35.png'),
+(5,	'20200006',	'FBAD739105CBAE1D',	'd9334221988275625af60e69ce83d33e',	'Olimpia',	'',	'Ollis',	'1998-01-01',	'9',	NULL,	'olimpia.ollis@ymeal.com',	'2020-09-24 16:58:12',	'j6bo6kqm07.png'),
+(6,	'20201010',	'9JIFHJVAHKE0G9AI',	'e24f1540f4d0491092bc11b929254947',	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-09-24 16:58:12',	'ci1g9s0y35.png'),
+(7,	'19386329',	'H0B277JSE6SM0PY0',	'092010029bb7de6ee43ecbf56a941abe',	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'2',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-24 16:58:12',	'a488ceea8a1f5aed.jpg'),
+(8,	'12341234',	'1234123443214321',	'ed2b1f468c5f915f3f1cf75d7068baae',	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-09-24 16:58:12',	'j6bo6kqm07.png'),
+(9,	'43214321',	'1234123412341234',	'0271bc781a4db4328a5f0af1ca7d2669',	'Khaleed',	'',	'Dawson',	'1900-01-01',	'2',	'12341234',	'khaleed.dawson@ymeal.com',	'2020-09-24 16:58:12',	'ci1g9s0y35.png'),
 (10,	'56785678',	'5678567856785678',	'c18b3eff03996f3a203f63733be03d15',	'Ernestine',	'Kyle',	'Ayers',	'1960-08-11',	'2',	'56785678',	'ernestine.ayers@ymeal.com',	'2020-08-21 19:56:47',	'ci1g9s0y35.png'),
-(11,	'43217890',	'12341234asdfasdf',	'ed2b1f468c5f915f3f1cf75d7068baae',	'Noburu',	'Danya',	'Lea',	'1940-08-29',	'2',	'12341234',	'noburu.lea@ymeal.com',	'2020-08-21 19:56:47',	'ci1g9s0y35.png'),
-(12,	'24192651',	'2A6B9CE2A46B1DE9',	'12acd97a4e9f587fc2f0de2108b158c3',	'Vasanti',	'Elpidio',	'Hippolyte',	'1800-12-25',	'2',	'0279281684',	'vasanti.hippolyte@ymeal.com',	'2020-08-21 16:00:00',	''),
-(13,	'24292651',	'2A6B9CE2A4DB4DE9',	'12acd97a4e9f587fc2f0de2108b158c3',	'McKenzie ',	'Houston',	'Jessye',	'1948-12-08',	'2',	'0279281684',	'mckenzie.jessye@ymeal.com',	'2020-08-21 19:56:47',	''),
+(11,	'43217890',	'12341234asdfasdf',	'b1dd603315de7d03d3c9be460e141033',	'Noburu',	'Danya',	'Lea',	'1940-08-29',	'2',	'12341234',	'noburu.lea@ymeal.com',	'2020-09-24 16:58:12',	'ci1g9s0y35.png'),
+(12,	'24192651',	'2A6B9CE2A46B1DE9',	'617445834661adc756417af92adc683d',	'Vasanti',	'Elpidio',	'Hippolyte',	'1800-12-25',	'2',	'0279281684',	'vasanti.hippolyte@ymeal.com',	'2020-09-24 16:58:12',	''),
+(13,	'24292651',	'2A6B9CE2A4DB4DE9',	'24c2558e01bf9ebece44c54fb8e8ca73',	'McKenzie ',	'Houston',	'Jessye',	'1948-12-08',	'2',	'0279281684',	'mckenzie.jessye@ymeal.com',	'2020-09-24 16:58:12',	''),
 (14,	'7890acde',	'7890acde7890acde',	'911be9ad950a83ae1641c4b890e8b38a',	'Christian',	'',	'Murphy',	'1958-10-25',	'1',	'0948654123',	'asdsa@aa.afx',	'2017-12-31 16:00:00',	NULL),
-(15,	'12346542',	'1231234654246542',	'ae9c4e4e3b798747f313115bf518a86a',	'Senior',	'',	'No Address',	'1920-05-20',	'1',	'09234654265',	'asdf@asdc.zxc',	'2019-11-24 16:00:00',	NULL);
+(15,	'12346542',	'1231234654246542',	'7d3f640f0b7470da98c679e68bbb0a38',	'Senior',	'',	'No Address',	'1920-05-20',	'1',	'09234654265',	'asdf@asdc.zxc',	'2020-09-24 16:58:12',	NULL);
 
 DROP TABLE IF EXISTS `pharmacy`;
 CREATE TABLE `pharmacy` (
@@ -1179,4 +1299,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (7,	65,	'Pasay to Guadalupe | Senior - SJT',	26.79,	5.36,	21.43),
 (8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29);
 
--- 2020-09-24 16:08:18
+-- 2020-09-24 16:53:59

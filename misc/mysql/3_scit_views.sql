@@ -1,9 +1,11 @@
-use scit;
+CREATE DATABASE IF NOT EXISTS `scit`;
+USE `scit`;
 
 DROP VIEW IF EXISTS `view_companies`;
 CREATE VIEW `view_companies` AS
 (
-SELECT * FROM `db_osca`.`view_companies`);
+SELECT * FROM `db_osca`.`view_companies`
+);
 
 
 DROP VIEW IF EXISTS `view_pharma_transactions`;
