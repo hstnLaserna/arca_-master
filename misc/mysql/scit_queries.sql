@@ -50,6 +50,8 @@ SELECT  * FROM `db_osca`.`view_members_with_guardian`
 
 DROP VIEW IF EXISTS `view_drugs`;
 CREATE VIEW `view_drugs` AS 
-(
-SELECT  * FROM `db_osca`.`view_drugs`
-);
+SELECT * FROM `db_osca`.`view_drugs`;
+
+DROP VIEW IF EXISTS `view_qr_request`;
+CREATE VIEW `view_qr_request` AS 
+SELECT * FROM `db_osca`.`view_qr_request`;

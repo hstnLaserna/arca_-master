@@ -144,6 +144,12 @@ LEFT JOIN member m ON cr.member_id = m.id
 LEFT JOIN company c ON cr.company_id = c.id
 );
 
+-- view_drugs
 DROP VIEW IF EXISTS `view_drugs`;
 CREATE VIEW `view_drugs` AS 
-SELECT * FROM `db_osca`.`view_drugs`;
+SELECT * FROM `db_osca`.`drug`;
+
+-- view_qr_request
+DROP VIEW IF EXISTS `view_qr_request`;
+CREATE VIEW `view_qr_request` AS 
+SELECT * FROM `db_osca`.`qr_request`;
