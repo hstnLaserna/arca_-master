@@ -895,7 +895,8 @@ INSERT INTO `drug` (`id`, `generic_name`, `brand`, `dose`, `unit`, `is_otc`, `ma
 (8,	'cetirizine',	'virlix',	10,	'mg',	1,	70,	300),
 (9,	'carbocisteine,zinc',	'solmux',	500,	'mg',	1,	7000,	30000),
 (10,	'sodium ascorbate,zinc',	'immunpro',	500,	'mg',	1,	7000,	30000),
-(11,	'aa,sodium ascorbate',	'immunpro',	500,	'mg',	1,	30000,	7000);
+(11,	'aa,sodium ascorbate',	'immunpro',	500,	'mg',	1,	30000,	7000),
+(12,	'sodium ascorbate,zincx',	'immunpro',	500,	'mg',	1,	7000,	30000);
 
 DROP TABLE IF EXISTS `food`;
 CREATE TABLE `food` (
@@ -1079,13 +1080,14 @@ CREATE TABLE `qr_request` (
   `member_id` int(20) NOT NULL,
   `desc` varchar(120) COLLATE utf8mb4_bin NOT NULL,
   `token` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `trans_date` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   CONSTRAINT `fk_qr_request_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
-INSERT INTO `qr_request` (`id`, `member_id`, `desc`, `token`) VALUES
-(1,	2,	'Product: Biogesic Quantity: 7 Notes: kahit ano',	'8fok93kd2u09j8dk');
+INSERT INTO `qr_request` (`id`, `member_id`, `desc`, `token`, `trans_date`) VALUES
+(1,	2,	'Product: Biogesic Quantity: 7 Notes: kahit ano',	'9jifhjvahke0g9ai',	'2020-09-24 14:16:44');
 
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
@@ -1177,4 +1179,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (7,	65,	'Pasay to Guadalupe | Senior - SJT',	26.79,	5.36,	21.43),
 (8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29);
 
--- 2020-09-24 09:58:44
+-- 2020-09-24 16:08:18
