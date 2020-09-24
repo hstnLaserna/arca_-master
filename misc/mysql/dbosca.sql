@@ -199,8 +199,18 @@ BEGIN
 	COMMIT;
 END;;
 
+DROP PROCEDURE IF EXISTS `add_qr_request`;;
+CREATE PROCEDURE `add_qr_request`(IN `osca_id_` varchar(120), IN `desc_` varchar(120), OUT `msg` varchar(120))
+BEGIN
+  DECLARE member_id_ VARCHAR(120);
+    SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1);
+    INSERT INTO `qr_request`(`member_id`, `desc`) VALUES
+      (`member_id_`, `desc_`);
+    SET msg = LAST_INSERT_ID();
+END;;
+
 DROP PROCEDURE IF EXISTS `add_transaction`;;
-CREATE PROCEDURE `add_transaction`(IN `trans_date_` TIMESTAMP, IN `company_tin_` varchar(120), IN `osca_id_` varchar(120), IN `clerk_` varchar(120), OUT `msg` varchar(120))
+CREATE PROCEDURE `add_transaction`(IN `trans_date_` timestamp, IN `company_tin_` varchar(120), IN `osca_id_` varchar(120), IN `clerk_` varchar(120), OUT `msg` varchar(120))
 BEGIN
   DECLARE company_id_ INT(20);
   DECLARE member_id_ VARCHAR(120);
@@ -884,7 +894,8 @@ INSERT INTO `drug` (`id`, `generic_name`, `brand`, `dose`, `unit`, `is_otc`, `ma
 (7,	'cetirizine',	'watsons',	10,	'mg',	1,	70,	300),
 (8,	'cetirizine',	'virlix',	10,	'mg',	1,	70,	300),
 (9,	'carbocisteine,zinc',	'solmux',	500,	'mg',	1,	7000,	30000),
-(10,	'sodium ascorbate,zinc',	'immunpro',	500,	'mg',	1,	7000,	30000);
+(10,	'sodium ascorbate,zinc',	'immunpro',	500,	'mg',	1,	7000,	30000),
+(11,	'aa,sodium ascorbate',	'immunpro',	500,	'mg',	1,	30000,	7000);
 
 DROP TABLE IF EXISTS `food`;
 CREATE TABLE `food` (
@@ -1008,7 +1019,7 @@ CREATE TABLE `pharmacy` (
   KEY `drug_id` (`drug_id`),
   KEY `transaction_id` (`transaction_id`),
   CONSTRAINT `pharmacy_ibfk_10` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`),
-  CONSTRAINT `pharmacy_ibfk_11` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `pharmacy_ibfk_12` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
@@ -1061,6 +1072,20 @@ INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quan
 (53,	79,	NULL,	10,	1,	5.20,	65.00,	13.00,	52.00),
 (54,	80,	'Frozen Siomai Pack 25s Pack',	NULL,	NULL,	NULL,	249.75,	44.60,	205.15),
 (57,	83,	'Frozen Siomai Pack 25s Pack',	NULL,	NULL,	NULL,	249.75,	44.60,	205.15);
+
+DROP TABLE IF EXISTS `qr_request`;
+CREATE TABLE `qr_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(20) NOT NULL,
+  `desc` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `token` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `fk_qr_request_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `qr_request` (`id`, `member_id`, `desc`, `token`) VALUES
+(1,	2,	'Product: Biogesic Quantity: 7 Notes: kahit ano',	'8fok93kd2u09j8dk');
 
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
@@ -1152,4 +1177,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (7,	65,	'Pasay to Guadalupe | Senior - SJT',	26.79,	5.36,	21.43),
 (8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29);
 
--- 2020-09-22 00:51:40
+-- 2020-09-24 09:58:44

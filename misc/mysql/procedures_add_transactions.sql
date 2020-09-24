@@ -50,7 +50,7 @@ CREATE PROCEDURE `add_transaction_pharmacy_nondrug` (IN `trans_type` varchar(120
 BEGIN
   IF (`trans_type` = 'pharmacy' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
   THEN
-		INSERT INTO `pharmacy` (`transaction_id`, `desc_nondrug`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+    INSERT INTO `pharmacy` (`transaction_id`, `desc_nondrug`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
       (`transaction_id_`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
     SET msg = "1";
   ELSE 
@@ -65,7 +65,7 @@ CREATE PROCEDURE `add_transaction_transportation` (IN `trans_type` varchar(120),
 BEGIN
   IF (`trans_type` = 'transportation' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
   THEN
-		INSERT INTO `transportation` (`transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+    INSERT INTO `transportation` (`transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
       (`transaction_id_`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
     SET msg = "1";
   ELSE 
@@ -73,3 +73,39 @@ BEGIN
   END IF;
 END;;
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS `add_qr_request`;
+DELIMITER ;;
+CREATE PROCEDURE `add_qr_request` (IN `osca_id_` varchar(120), IN `desc_` varchar(120), IN `token_` varchar(120), OUT `msg` varchar(120))
+BEGIN
+  DECLARE member_id_ VARCHAR(120);
+    IF ((SELECT count(*) FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_`) = 1)
+    THEN
+      SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1);
+      INSERT INTO `qr_request`(`member_id`, `desc`, `token`) VALUES
+        (`member_id_`, `desc_`, `token_`);
+      SET msg = 1;
+    ELSE 
+      SET msg = 0;
+    END IF;
+END;;
+DELIMITER ;
+/*
+
+btnAuthorize_click()
+{
+  Open Fillup Form. Input Authorized meds to buy
+}
+
+btnSubmit_button_from_fillup_form(){
+  generate random string as `token`. Example in php below
+  // $token = substr(MD5(rand(100000,999999)),0,16);
+
+  call stored proceduure: `add_qr_request`('$osca_id', 'desc', '$token', @`msg`);
+}
+
+
+
+
+
