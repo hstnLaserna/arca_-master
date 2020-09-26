@@ -82,7 +82,7 @@ if(isset($_POST['id']) &&
 
                                 //for script
                                 $post_destination = "../backend/update_address.php";
-                                $delete_button = '<button type="button" id="delete" class="btn btn-danger">Delete</button>';
+                                $delete_button = '';//<button type="button" id="delete" class="btn btn-danger">Delete</button>';
                             } else {
                                 $placeholder_and_value_add1 = "placeholder='Address Line 1'";
                                 $placeholder_and_value_add2 = "placeholder='Address Line 2'";

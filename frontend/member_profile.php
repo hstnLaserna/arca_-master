@@ -7,6 +7,7 @@
 
     $osca_id = "";
     $member_id = "";
+    $fullname = "";
     $first_name = "";
     $middle_name =  "";
     $last_name =  "";
@@ -42,6 +43,7 @@
             $first_name = $row_member['first_name'];
             $middle_name =  $row_member['middle_name'];
             $last_name =  $row_member['last_name'];
+            $fullname = strtoupper("$first_name $middle_name $last_name");
             $sex2 =  $row_member['sex'];
             $contact_number =  $row_member['contact_number'];
             $email =  $row_member['email'];
@@ -58,8 +60,8 @@
             }
 
             $member_buttons = '
-            <button type="button" id="edit_basic" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>
-            <button type="button" id="add_address" class="btn btn-secondary m-2 w-75">Add Address</button>';
+            <!--button type="button" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>
+            <button type="button" id="add_address" class="btn btn-secondary m-2 w-75">Add Address</button-->';
         } else {
         }
 
@@ -68,7 +70,7 @@
 
     } else {}
 ?>
-            <div class="card digital-card-contents">
+            <div class="digital-card-contents">
                 <div class="card-right">
                     <div class="profile-picture-container">
                         <form action="../backend/upload.php" id="form_photo" method="post" enctype="multipart/form-data" >
@@ -83,52 +85,91 @@
                         </form>
                     </div>
                 </div>
-                <div class="card-bottom-right">
+                <!--div class="card-bottom-right">
                 <?php echo $member_buttons;?>
-                </div>
+                </div-->
                 <div class="card-left">
-                    <div class="card">
-                        <p>Lastname: <?php echo $last_name; ?></p>
-                        <p>Firstname: <?php echo $first_name; ?> </p>
-                        <p>Middlename: <?php echo $middle_name; ?></p>
-                        <p>Sex:  <?php echo determine_sex($sex2, "display_long"); ?> </p>
-                        <p>Birthdate: <?php echo "$bdate (Age: $age y.o.)"; ?></p>
-                        <?php
-                            read_address($member_id, true);
-                        ?>
-                        <p>Phone Number: <?php echo $contact_number; ?> </p>
-                        <p>E-mail: <?php echo $email; ?></p>
-                        <p>OSCA ID: <?php echo $osca_id; ?> </p>
-                        <p>Member since: <?php echo $memship_date; ?> </p>
+                    <div class="basic">
+                        <button class="ml-auto btn btn-link edit" id="edit_basic"><i class="fa fa-edit"></i></button>
+                        <h4 class="ml-1"> Basic Information </h4>
+                        <ul class="profile-details">
+                            <li class="profile-item">
+                                <span class="title">Fullname</span> 
+                                <span class="content"><?php echo $fullname; ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">Sex</span> 
+                                <span class="content"><?php echo determine_sex($sex2, "display_long"); ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">Birthdate</span> 
+                                <span class="content"><?php echo "$bdate (Age: $age y.o.)"; ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">Phone Number</span> 
+                                <span class="content"><?php echo $contact_number; ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">E-mail</span> 
+                                <span class="content"><?php echo $email; ?></span>
+                            </li>
+                                <?php  //address
+                                    $addresses = read_address2($member_id, true);
+                                    $address_id = $addresses['address_id'];
+                                    $address1 = $addresses['address1'];
+                                    $address2 = $addresses['address2'];
+                                    $city = $addresses['city'];
+                                    $province = $addresses['province'];
+                                ?>
+                            <li class='profile-item disp_address' id='addNum_<?php echo $address_id?>'> 
+                                <span class='title'>Address</span>
+                                <span class="content"><?php echo "$address1, $address2, $city, $province";?></span>
+                                <button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button>
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="card">
-                        <h3> Guardian's Details </h3>
+                    <div class="guardian">
+                        <h4 class="ml-1"> Guardian's Details </h4>
                         <div>
                             <?php
                                 read_guardian($osca_id);
                             ?>
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="p-3 border border-dark rounded overflow-auto transactions">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all-transactions" aria-selected="true">All</a>
-                        <a class="nav-item nav-link" id="nav-ph-tab" data-toggle="tab" href="#nav-ph" role="tab" aria-controls="nav-pharmacy-transactions" aria-selected="false">Pharmacy</a>
-                        <a class="nav-item nav-link" id="nav-rs-tab" data-toggle="tab" href="#nav-rs" role="tab" aria-controls="nav-restaurant-transactions" aria-selected="false">Restaurant</a>
-                        <a class="nav-item nav-link" id="nav-tr-tab" data-toggle="tab" href="#nav-tr" role="tab" aria-controls="nav-transportation-transactions" aria-selected="false">Transportation</a>
-                        <a class="nav-item nav-link ml-auto" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
+
+                    <div class="">
+                        <h4 class="ml-1"> Membership Details</h4>
+                        <ul class="profile-details">
+                            <li class="profile-item">
+                                <span class="title">OSCA ID</span> 
+                                <span class="content"><?php echo $osca_id; ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">Member since</span> 
+                                <span class="content"><?php echo $memship_date; ?></span>
+                            </li>
+                        </ul>
                     </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-transactions-tab"> </div>
-                    <div class="tab-pane fade" id="nav-ph" role="tabpanel" aria-labelledby="nav-pharmacy-transactions-tab"> </div>
-                    <div class="tab-pane fade" id="nav-rs" role="tabpanel" aria-labelledby="nav-restaurant-transactions-tab"> </div>
-                    <div class="tab-pane fade" id="nav-tr" role="tabpanel" aria-labelledby="nav-transportation-transactions-tab"> </div>
-                    <div class="tab-pane fade" id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>
+                </div>
+            
+                <div class="card transactions">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all-transactions" aria-selected="true">All</a>
+                            <a class="nav-item nav-link" id="nav-ph-tab" data-toggle="tab" href="#nav-ph" role="tab" aria-controls="nav-pharmacy-transactions" aria-selected="false">Pharmacy</a>
+                            <a class="nav-item nav-link" id="nav-rs-tab" data-toggle="tab" href="#nav-rs" role="tab" aria-controls="nav-restaurant-transactions" aria-selected="false">Restaurant</a>
+                            <a class="nav-item nav-link" id="nav-tr-tab" data-toggle="tab" href="#nav-tr" role="tab" aria-controls="nav-transportation-transactions" aria-selected="false">Transportation</a>
+                            <a class="nav-item nav-link ml-auto" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-transactions-tab"> </div>
+                        <div class="tab-pane fade" id="nav-ph" role="tabpanel" aria-labelledby="nav-pharmacy-transactions-tab"> </div>
+                        <div class="tab-pane fade" id="nav-rs" role="tabpanel" aria-labelledby="nav-restaurant-transactions-tab"> </div>
+                        <div class="tab-pane fade" id="nav-tr" role="tabpanel" aria-labelledby="nav-transportation-transactions-tab"> </div>
+                        <div class="tab-pane fade" id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>
+                    </div>
                 </div>
             </div>
 
@@ -185,7 +226,7 @@ var loadFile = function(event) {
 
 $(document).ready(function(){
     var member_id = <?php echo $member_id; ?>;
-    var osca_id = <?php echo $osca_id; ?>;
+    var osca_id = "<?php echo $osca_id; ?>";
     var counter = 1;
     var ctr2 = 1;
     var type = "";
@@ -200,7 +241,7 @@ $(document).ready(function(){
     $('#edit_basic').click(function () {
         var url = 'edit_member.php';
         var form = $(   '<form action="' + url + '" method="get">' +
-                            '<input type="hidden" name="member_id" value="' + <?php echo $osca_id?> + '" />' +
+                            '<input type="hidden" name="member_id" value="<?php echo $osca_id?>" />' +
                         '</form>');
         $('div.container').append(form);
         form.submit();
@@ -224,14 +265,14 @@ $(document).ready(function(){
     
     $('.edit_guardian').click(function () {
         var gid= $(this).parent().attr("id").replace("gid", "");
-        var osca_id= <?php echo $osca_id;?>;
+        var osca_id= "<?php echo $osca_id;?>";
         $('#_kf939s').load("../frontend/edit_guardian.php?action=edit", {osca_id:osca_id, gid:gid}, function(){
             $('#_kf939s').modal();
         });
     });
     
     $('.add_guardian').click(function () {
-        var osca_id= <?php echo $osca_id;?>;
+        var osca_id= "<?php echo $osca_id;?>";
         $('#_kf939s').load("../frontend/edit_guardian.php?action=add", {osca_id:osca_id}, function(){
             $('#_kf939s').modal();
         });

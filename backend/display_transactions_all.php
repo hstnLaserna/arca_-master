@@ -23,7 +23,7 @@
         if($row_count == 1) {
         
             $ctr1 = 1;
-            $items_per_page = 2;
+            $items_per_page = 5;
 
 
             if(isset($_POST['ctr1'])){ // Meaning user prompted to view more transaction data. Disable the "transactions for the last month" condition.

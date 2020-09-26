@@ -43,6 +43,7 @@
         $first_name = $row['first_name'];
         $middle_name = $row['middle_name'];
         $last_name = strtoupper($row['last_name']);
+        $fullname = strtoupper("$first_name $middle_name $last_name");
         $birthdate = $row['birth_date'];
         $sex2 = $row['sex'];
         $contact_number = $row['contact_number'];
@@ -69,38 +70,65 @@
     mysqli_close($mysqli);
 ?>
     
-<div class="card digital-card-contents">
-    <div class="card-right">
-        <div class="profile-picture-container">
-            <form action="../backend/upload.php" id="form_photo" method="post" enctype="multipart/form-data" >
-                <img class="profile-picture" src="<?php echo $avatar; ?>" id="output">
-                <div class="middle">
-                    <input type="file" name="photo" accept="image/x-png,image/jpeg" onchange="loadFile(event)" id="file" class="inputfile">
-                    <input type="hidden" name="entity_key" value="<?php echo $user_name;?>">
-                    <input type="hidden" name="entity_type" value="admin">
-                    <label for="file" class="text">Change</label>
-                    <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
-                </div>
-            </form>
+    <div class="digital-card-contents">
+        <div class="card-right">
+            <div class="profile-picture-container">
+                <form action="../backend/upload.php" id="form_photo" method="post" enctype="multipart/form-data" >
+                    <img class="profile-picture" src="<?php echo $avatar; ?>" id="output">
+                    <div class="middle">
+                        <input type="file" name="photo" accept="image/x-png,image/jpeg" onchange="loadFile(event)" id="file" class="inputfile">
+                        <input type="hidden" name="entity_key" value="<?php echo $user_name;?>">
+                        <input type="hidden" name="entity_type" value="admin">
+                        <label for="file" class="text">Change</label>
+                        <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    
-    <div class="card-left">
-        <p class="mb-0"><?php echo $last_name; ?>,</p>
-        <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
-        <p>Username: <?php echo $user_name; ?> </p>
-        <p>Position: <?php echo $position; ?> </p>
-        <p>Sex:  <?php echo determine_sex($sex2, "display_long"); ?> </p>
-        <p>Birthdate: <?php echo $birthdate; ?> </p>
-        <p>Contact Number: <?php echo $contact_number; ?> </p>
-        <p>E-mail: <?php echo $email; ?> </p>
         
-        <p>
-        </p>
+        <div class="card-left">
+            <div class="basic">
+                <h4 class="ml-1"> Basic Information </h4>
+                <ul class="profile-details">
+                    <li class="profile-item">
+                        <span class="title">Fullname</span> 
+                        <span class="content"><?php echo $fullname; ?></span>
+                    </li>
+                    <li class="profile-item">
+                        <span class="title">Birthdate</span> 
+                        <span class="content"><?php echo $birthdate; ?></span>
+                    </li>
+                    <li class="profile-item">
+                        <span class="title">Sex</span> 
+                        <span class="content"><?php echo determine_sex($sex2, "display_long"); ?></span>
+                    </li>
+                    <li class="profile-item">
+                        <span class="title">Contact Number</span> 
+                        <span class="content"><?php echo $contact_number; ?></span>
+                    </li>
+                    <li class="profile-item">
+                        <span class="title">E-mail</span> 
+                        <span class="content"><?php echo $email; ?></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="basic">
+                <h4 class="ml-1"> Account Information </h4>
+                <ul class="profile-details">
+                    <li class="profile-item">
+                        <span class="title">Username</span> 
+                        <span class="content"><?php echo $user_name; ?></span>
+                    </li>
+                    <li class="profile-item">
+                        <span class="title">Position</span> 
+                        <span class="content"><?php echo $position; ?></span>
+                    </li>
+                </ul>
+                    <?php echo $member_buttons;?>
+            </div>
+        </div>
+        <input type="hidden" id="user_<?php echo $user_name;?>" name="user_name">
     </div>
-    <?php echo $member_buttons;?>
-    <input type="hidden" id="user_<?php echo $user_name;?>" name="user_name">
-</div>
 
 
 <div class="container">

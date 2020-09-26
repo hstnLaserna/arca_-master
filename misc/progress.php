@@ -152,8 +152,24 @@ tables:
 [x] Picture upload
 
 [x] terminal
+<?php
 
+// List of DB changes due to: change implementation of osca_id
+    table:  member 
+            address_jt 
+            address 
+            city 
+    procedure:  add_member
+    views: re-create views 
 
+// in POS, new form: Override form for senior citizens:
+    txtOSCA_ID
+    txtFirstName
+    txtMiddleName
+    txtLastName
+    accept button // mag forward ng json with the above fields, plus additional field: business_type
+    // another event na mangyayari dito sa form before close:
+    // mag-wait for serial comms data. Contains msg if senior validation success
 
 
 
@@ -190,3 +206,45 @@ The OSCA can still issue physical IDs for the senior citizens. Pero to avail dis
 
 //  RECOMMENDATION
     future researchers, make device available offline if necessary
+
+
+
+
+    //scratch
+
+    
+    /************ PHP FILE READING THE serialread.py ********/
+    /*
+    $json_string = shell_exec("sudo python /var/www/html/pythonfiles/serialread.py");
+    $json_object = json_decode($json_tring, true);
+
+    var_dump($json_string);
+    var_dump($json_object);
+
+    
+    /************ PYTHON FILE READING FROM SERIAL  ********/
+    // PYTHON FILE READING FROM SERIAL
+    //   - first part ng code just the same,
+    //   - then yung while code same lang din nung last
+    /*
+    x = ""
+    while 1: // Di ko sure tama pagkakaalala ko. Pacheck na lang nito ang aim is to save yung mga readline() sa "x"
+        a = ser.readline()
+        x = x + a.decode("utf8")
+        if "]" in x:
+            break
+    print(x)
+    */
+    // pa-check walang ibang print() bukod sa print(x)
+    // WHAT HAPPENED: instead of write the variable "x" in file, just output the "x" variable
+    // so when script is finished running in PHP, it will save the outputs in the $json_string
+
+
+
+    //write to serial
+
+
+    //read from camera
+
+
+    //read from nfc

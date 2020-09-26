@@ -18,6 +18,7 @@
                         $first_name = $row['first_name'];
                         $middle_name = $row['middle_name'];
                         $last_name = $row['last_name'];
+                        $fullname = strtoupper("$first_name $middle_name $last_name");
                         $birthdate = $row['birth_date'];
                         $sex2 = $row['sex'];
                         $contact_number = $row['contact_number'];
@@ -32,20 +33,42 @@
 
                         
                             <div class="card card digital-card-contents">
-                                <div class="card-right">
+                                <div class="modal-card-left">
+                                    <div class="basic">
+                                        <ul class="modal-profile-details">
+                                            <li class="profile-item">
+                                                <div class="content"><?php echo $fullname; ?></div>
+                                                <div class="subtitle">Fullname</div> 
+                                            </li>
+                                            <li class="profile-item">
+                                                <div class="content"><?php echo determine_sex($sex2, "display_long"); ?></div>
+                                                <div class="subtitle">Sex</div> 
+                                            </li>
+                                            <li class="profile-item">
+                                                <div class="content"><?php echo $position; ?></div>
+                                                <div class="subtitle">Position</div> 
+                                            </li>
+                                            <li class="profile-item">
+                                                <div class="content"><?php echo $birthdate ?></div>
+                                                <div class="subtitle">Birthdate</div> 
+                                            </li>
+                                            <li class="profile-item">
+                                                <div class="content"><?php echo $contact_number; ?></div>
+                                                <div class="subtitle">Phone Number</div> 
+                                            </li>
+                                            <li class="profile-item">
+                                                <div class="content"><?php echo $email; ?></div>
+                                                <div class="subtitle">E-mail</div> 
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                                
+                                <div class="modal-card-right">
                                     <img class="picture" src=<?php echo $avatar;?>>
                                 </div>
-                                <p><?php echo $last_name; ?>,</p>
-                                <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
-                                <p>Username: <?php echo $user_name; ?> </p>
-                                <p>Position: <?php echo $position; ?> </p>
-                                <p>Sex:  <?php echo determine_sex($sex2, "display_long"); ?> </p>
-                                <p>Birthdate: <?php echo $birthdate; ?> </p>
-                                <p>Contact Number: <?php echo $contact_number; ?> </p>
-                                <p>E-mail: <?php echo $email; ?> </p>
-                                
-                                <p>
-                                </p>
                             </div>
                             
                             <div class="modal-footer">

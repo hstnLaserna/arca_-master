@@ -10,6 +10,7 @@
         $query = "  SELECT * FROM `member` m
                     INNER JOIN `guardian` g ON g.member_id = m.id
                     WHERE m.`osca_id` = '$selected_osca_id' AND g.`id` = '$selected_g_id';";
+                    echo $query;
                             
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);

@@ -227,7 +227,7 @@
             }
             if(!(preg_match("/((^(\+)(\d){12}$)|(^\d{11}$))/",$g_contact_number)))
             {
-                array_push($errors, "Phone number must be between 4 - 30 digits");
+                array_push($errors, "Phone number must be between 11 digits");
             }
             if(!filter_var($g_email, FILTER_VALIDATE_EMAIL))
             {
@@ -347,13 +347,6 @@
                     array_push($errors, "NFC must be between 16 characters");
                 }
                 if(strlen($password) != 0)
-                {
-                    if(strlen($password) < 8 || strlen($password) > 20)
-                    {
-                        array_push($errors, "Password length must be between 8 to 20 characters");
-                    }
-                }
-                if(isset($with_password) && $with_password)
                 {
                     if(strlen($password) < 8 || strlen($password) > 20)
                     {

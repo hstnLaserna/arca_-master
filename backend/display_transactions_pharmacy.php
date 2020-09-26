@@ -25,7 +25,7 @@
         if($row_count == 1) {
         
             $ctr2 = 1;
-            $items_per_page = 2;
+            $items_per_page = 5;
 
 
             if(isset($_POST['ctr2'])){ // Meaning user prompted to view more transaction data. Disable the "transactions for the last month" condition.
@@ -55,7 +55,6 @@
                                     LIMIT $displayed_items;";
             $result = $mysqli->query($transaction_query);
             $row_count_display = mysqli_num_rows($result);
-            echo $transaction_query;
 
             /*
             if($row_count_display == 0 && $row_count_orig > 0) {

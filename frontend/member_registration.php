@@ -149,16 +149,7 @@
                     <div>
                         System Password
                         <input type="password" class="form-control" name="password">
-                    </div> 
-                    <!--
-                    <div>
-                            Picture
-                        
-                        
-                            <input type="file" name="photo" id="fileSelect" >
-                        
                     </div>
-                    -->
                 </div>
             </form>
             <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>

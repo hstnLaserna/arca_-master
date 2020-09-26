@@ -7,7 +7,7 @@
   $with_address = true;
   $with_guardian = true;
   include('../backend/import_post_variables.php');
-  
+  // '$nfc_serial', '$osca_id', 
   if($array_length == 0 && isset($validated) && $validated)
   {
     $query1 = "SELECT `osca_id` FROM `member` WHERE `osca_id` = '$osca_id';";
@@ -20,12 +20,11 @@
     if ($rows1 == 0 && $rows2 == 0) { // OSCA ID is unique
       $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', 
                   '$sex2', '$contact_number', '$email', '$membership_date',
-                  '$address_line1', '$address_line2', '$address_city', '$address_province', 
-                  '$nfc_serial', '$osca_id', '$password', 
+                  '$address_line1', '$address_line2', '$address_city', '$address_province', '$password', 
                   '$g_firstname', '$g_middlename', '$g_lastname',
                   '$g_contact_number', '$g_sex2', '$g_relationship', '$g_email')";
       if($mysqli->query($query)){
-        echo "$query";
+        echo "true";
       }
       else {
         echo "ERROR: Unable to execute. \r\n $query" . mysqli_error($mysqli);

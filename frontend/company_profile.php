@@ -50,7 +50,7 @@
 
     } else {}
 ?>
-            <div class="card digital-card-contents">
+            <div class="digital-card-contents">
                 <div class="card-right">
                     <div class="profile-picture-container">
                         <form action="../backend/upload.php" id="form_photo" method="post" enctype="multipart/form-data" >
@@ -65,33 +65,56 @@
                         </form>
                     </div>
                 </div>
-                <div class="card-bottom-right">
-                <?php echo $buttons;?>
-                </div>
-                <div class="card-left">
-                    <div class="card">
-                        <p>Name: <?php echo $company_name; ?></p>
-                        <p>Branch: <?php echo $branch; ?> </p>
-                        <p>Company TIN: <?php echo $company_tin; ?></p>
-                        <p>Business type: <?php echo $business_type; ?></p>
-                        <?php
-                            read_address($company_tin, true, "company");
-                        ?>
+                <div class="company-card-left">
+                    <div class="basic">
+                        <button class="ml-auto btn btn-link edit" id="edit_basic"><i class="fa fa-edit"></i></button>
+                        <h4 class="ml-1"> Company Information </h4>
+                        <ul class="profile-details">
+                            <li class="profile-item">
+                                <span class="title">Company Name</span> 
+                                <span class="content"><?php echo $company_name; ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">Branch</span> 
+                                <span class="content"><?php echo $branch; ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">Company TIN</span> 
+                                <span class="content"><?php echo $company_tin; ?></span>
+                            </li>
+                            <li class="profile-item">
+                                <span class="title">Business Type</span> 
+                                <span class="content"><?php echo ucwords($business_type); ?></span>
+                            </li>
+                                <?php  //address
+                                    $addresses = read_address2($company_tin, "company");
+                                    $address_id = $addresses['address_id'];
+                                    $address1 = $addresses['address1'];
+                                    $address2 = $addresses['address2'];
+                                    $city = $addresses['city'];
+                                    $province = $addresses['province'];
+                                ?>
+                            <li class='profile-item disp_address' id='addNum_<?php echo $address_id?>'> 
+                                <span class='title'>Address</span>
+                                <span class="content"><?php echo "$address1, $address2, $city, $province";?></span>
+                                <button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
             
             
-            <div class="p-3 border border-dark rounded overflow-auto transactions">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-trans-tab" data-toggle="tab" href="#nav-trans" role="tab" aria-controls="nav-transactions" aria-selected="true">Transactions</a>
-                        <a class="nav-item nav-link" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
+                <div class="p-3 border border-dark rounded overflow-auto transactions">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-trans-tab" data-toggle="tab" href="#nav-trans" role="tab" aria-controls="nav-transactions" aria-selected="true">Transactions</a>
+                            <a class="nav-item nav-link" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active"  id="nav-trans" role="tabpanel" aria-labelledby="nav-transactions-tab"> </div>
+                        <div class="tab-pane fade"              id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>
                     </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active"  id="nav-trans" role="tabpanel" aria-labelledby="nav-transactions-tab"> </div>
-                    <div class="tab-pane fade"              id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>
                 </div>
             </div>
 

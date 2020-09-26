@@ -119,8 +119,7 @@ include('foot.php');
 
     $("#submit").click(function(){
         $.post("../backend/update_company.php", $("#editCompany").serialize(), function(d){
-            if(d == "truetrue") {
-                var company_tin = $("#selected_id").val();
+            if(d == "true") {
                 location.replace("../frontend/companies.php");
             } else {
                 alert(d);

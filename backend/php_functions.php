@@ -142,6 +142,46 @@
         }
     }
 
+    function read_address2($selected_id, $type="member")
+    {
+        if(isset($selected_id))
+        {
+            include('../backend/conn.php');
+            if($type=="member"){
+                $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
+                                FROM `member` m
+                                INNER JOIN `address_jt` `ajt` ON `ajt`.`member_id` = m.`id`
+                                INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                WHERE m.`id` = '$selected_id'";
+            } else if($type == "company") {
+                $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
+                                FROM `company` c
+                                INNER JOIN `address_jt` `ajt` ON `ajt`.`company_id` = c.`id`
+                                INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                WHERE c.`company_tin` = '$selected_id'";
+            } else if($type == "guardian") {
+                $address_query = " SELECT `a`.`id` `address_id`, `address1`, `address2`, `city`, `province`, `is_active`  
+                                FROM `guardian` g
+                                INNER JOIN `address_jt` `ajt` ON `ajt`.`guardian_id` = g.`id`
+                                INNER JOIN `address` `a` ON `ajt`.`address_id` = a.`id`
+                                WHERE g.`id` = '$selected_id'";
+            }
+            
+            $result = $mysqli->query($address_query);
+            $row_count = mysqli_num_rows($result);
+            if($row_count > 0){
+                return mysqli_fetch_array($result);
+            } else {
+                // id does not have address
+                return false;
+            }
+            mysqli_close($mysqli);
+        } else {
+            // no id given
+            return false;
+        }
+    }
+
     function read_guardian($osca_id, $edit=true)
     {
         if(isset($osca_id))
@@ -179,16 +219,32 @@
                             $g_contact_number =  $row['g_contact_number'];
                             $g_email =  $row['g_email'];
                             $g_relationship =  $row['g_relationship'];
+                            $g_fullname = strtoupper("$g_first_name $g_middle_name $g_last_name");
                             ?>
-                            <div class="card disp_guardian" id="gid<?php echo $g_id ?>" >
-                                <p>Full Name: <?php echo "$g_first_name $g_middle_name $g_last_name"; ?></p>
-                                <p>Relationship: <?php echo "$g_relationship"; ?></p>
-                                <p>Sex: <?php echo determine_sex($g_sex2, "display_long"); ?> </p>
-                                <p>Contact Number: <?php echo "$g_contact_number"; ?></p>
-                                <p>Email: <?php echo "$g_email"; ?></p>
+                            <ul class="disp_guardian" id="gid<?php echo $g_id ?>" >
+                                <li class="profile-item">
+                                    <span class="title">Full Name</span> 
+                                    <span class="content"><?php echo $g_fullname; ?></span>
+                                </li>
+                                <li class="profile-item">
+                                    <span class="title">Relationship</span> 
+                                    <span class="content"><?php echo $g_relationship; ?></span>
+                                </li>
+                                <li class="profile-item">
+                                    <span class="title">Sex</span> 
+                                    <span class="content"><?php echo determine_sex($g_sex2, "display_long"); ?></span>
+                                </li>
+                                <li class="profile-item">
+                                    <span class="title">Contact Number</span> 
+                                    <span class="content"><?php echo $g_contact_number; ?></span>
+                                </li>
+                                <li class="profile-item">
+                                    <span class="title">Email</span> 
+                                    <span class="content"><?php echo $g_email; ?></span>
+                                </li>
                                 
                                 <button class="btn btn-link edit edit_guardian"><i class="fa fa-edit"></i></button>
-                            </div>
+                            </ul>
                             <?php
                         }
                     }

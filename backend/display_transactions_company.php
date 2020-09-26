@@ -23,7 +23,7 @@
 
         $company_tin = $mysqli->real_escape_string($_POST['company_tin']);
         $counter = 1;
-        $items_per_page = 2;
+        $items_per_page = 5;
 
         $WHERE_CLAUSE = " WHERE company_tin = '$company_tin' ";
 

@@ -49,7 +49,6 @@
                             if($msg == "0") {
                                 echo "Company does not exist $query";
                             } else if ($msg == "1") {
-                                echo "true";
                             }
     
                         } else {
@@ -70,7 +69,6 @@
                             } else if ($msg == "1") {
                                 echo "\r\n Company's address does not exist \r\n $query";
                             } else if ($msg == "2") {
-                                echo "true";
                             } else {echo "Query executed";
                             }
     

@@ -53,33 +53,61 @@
                         $first_name = $row['first_name'];
                         $middle_name =  $row['middle_name'];
                         $last_name =  $row['last_name'];
+                        $fullname = strtoupper("$first_name $middle_name $last_name");
+                        $last_name =  $row['last_name'];
                         $sex2 =  $row['sex'];
                         $bdate =  $row['bdate'];
                         $age =  $row['age'];
                         $memship_date =  $row['memship_date'];
                         $contact_number =  $row['contact_number'];
                         $email =  $row['email'];
-                        
                         ?>
-
-                    
                         <div class="card digital-card-contents">
-                            <div class="card-right">
-                                <img class="picture" src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'" '; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
-                                <p><?php echo $osca_id; ?><br><i>OSCA ID</i></p>
-                                <p><?php echo $memship_date; ?><br><i>Membership Date</i></p>
+                            <div class="modal-card-left">
+                                <div class="basic">
+                                    <ul class="modal-profile-details">
+                                        <li class="profile-item">
+                                            <div class="content"><?php echo $fullname; ?></div>
+                                            <div class="subtitle">Fullname</div> 
+                                        </li>
+                                        <li class="profile-item">
+                                            <div class="content"><?php echo determine_sex($sex2, "display_long"); ?></div>
+                                            <div class="subtitle">Sex</div> 
+                                        </li>
+                                        <li class="profile-item">
+                                            <div class="content"><?php echo "$bdate (Age: $age y.o.)"; ?></div>
+                                            <div class="subtitle">Birthdate</div> 
+                                        </li>
+                                        <li class="profile-item">
+                                            <div class="content"><?php echo $contact_number; ?></div>
+                                            <div class="subtitle">Phone Number</div> 
+                                        </li>
+                                        <li class="profile-item">
+                                            <div class="content"><?php echo $email; ?></div>
+                                            <div class="subtitle">E-mail</div> 
+                                        </li>
+                                            <?php  //address
+                                                $addresses = read_address2($member_id, true);
+                                                $address_id = $addresses['address_id'];
+                                                $address1 = $addresses['address1'];
+                                                $address2 = $addresses['address2'];
+                                                $city = $addresses['city'];
+                                                $province = $addresses['province'];
+                                            ?>
+                                        <li class='profile-item disp_address'>
+                                            <div class="content"><?php echo "$address1, $address2, $city, $province";?></div>
+                                            <div class="subtitle">Address</div> 
+                                            
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="card-left">
-                                <p class="mb-0"><?php echo $last_name; ?>,</p>
-                                <p><?php echo $first_name; ?> <?php echo $middle_name; ?></p>
-                                
-                                <p>Sex:  <?php echo determine_sex($sex2, "display_long"); ?></p>
-                                <p>Birthdate: <?php echo "$bdate (Age: $age y.o.)"; ?></p>
-                                    <?php
-                                        read_address($member_id);
-                                    ?>
-                                <p>Phone Number: <?php echo $contact_number; ?></p>
-                                <p>E-mail: <?php echo $email; ?></p>
+                            <div class="modal-card-right">
+                                <img class="picture" src=<?php $picture = '../resources/members/'.$row["picture"]; if (file_exists($picture) && $row["picture"] != null) { echo '"'.$picture.'" '; } else{ echo '"../resources/images/unknown_m_f.png"'; } ?>>
+                                <div class="content"><?php echo $osca_id; ?></div>
+                                <div class="subtitle">OSCA ID</div> 
+                                <div class="content"><?php echo $memship_date; ?></div>
+                                <div class="subtitle">Membership Date</div> 
                             </div>
                         </div>
                     
@@ -113,7 +141,7 @@ $(document).ready(function(){
     $('#view').click(function () {
         var url = '../frontend/member_profile.php';
         var form = $(   '<form action="' + url + '" method="get">' +
-                            '<input type="hidden" name="member_id" value="' + <?php echo $osca_id ?> + '" />' +
+                            '<input type="hidden" name="member_id" value="<?php echo $osca_id ?>" />' +
                         '</form>');
         $('div.card').append(form);
         form.submit();

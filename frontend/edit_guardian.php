@@ -32,7 +32,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
                     
                     $result = $mysqli->query($query_1);
                     $row_count = mysqli_num_rows($result);
-                    if($row_count == 0) { echo $msg;} else
+                    if($row_count == 0) { echo $query_1;} else
                     {
                         while($row = mysqli_fetch_array($result))
                         {
@@ -65,7 +65,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
 
                                 //for script
                                 $post_destination = "../backend/update_guardian.php";
-                                $delete_button = '<button type="button" id="delete" class="btn btn-danger">Delete</button>';
+                                $delete_button = '';//<button type="button" id="delete" class="btn btn-danger">Delete</button>';
                             } else {
                                 $ph_g_first_name = "placeholder=''";
                                 $ph_g_middle_name = "placeholder=''";
@@ -134,7 +134,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
                 }
                 ?>
             </div>
-                <button type="button" class="btn btn-primary btn-lg col-md-4" id="submit">Submit</button>
+                <button type="button" class="btn btn-primary btn-lg col-md-4" id="submit_guardian">Submit</button>
                 <button type="reset" class="btn btn-secondary btn-lg col-md-4">Reset Values</button>
             <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
         </form>
@@ -158,7 +158,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
 <script>
   $(document).ready(function(){
 
-    $('input[name!="middle_name"]').blur(function(){
+    $('input[name!="g_middle_name"]').blur(function(){
         if($(this).val().length === 0) {
             $(this).addClass('input_error');
         }
@@ -167,7 +167,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
         }
     });
 
-    $("#submit").click(function(){
+    $("#submit_guardian").click(function(){
         $.post("<?php  echo $post_destination ?>", $("#guardian_form").serialize(), function(d){
             if(d == "true") {
                 location.reload();
