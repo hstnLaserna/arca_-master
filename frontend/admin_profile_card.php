@@ -95,16 +95,8 @@
 <script>
 $(document).ready(function(){
     $('#view').click(function () {
-        
-        
-        var user = $('input[name="user_name"]').attr("id").replace("user_", "")
-        var url = '../frontend/user_profile.php';
-        var form = $(   '<form action="' + url + '" method="get">' +
-                            '<input type="hidden" name="user" value="' + user + '" />' +
-                        '</form>');
-        $('div.card').append(form);
-        form.submit();
-        
+        var user = $('input[name="user_name"]').attr("id").replace("user_", "");
+        location.replace("../frontend/user_profile.php?user=" + user);
     });
 });
 </script>

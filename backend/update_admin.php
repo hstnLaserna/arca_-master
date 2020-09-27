@@ -55,6 +55,6 @@
             mysqli_close($mysqli);
         }
     } else {
-        echo "Invalid id ".$selected_id;
+        echo "Invalid ID";
     }
 ?>

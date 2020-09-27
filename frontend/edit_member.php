@@ -125,11 +125,12 @@ include('foot.php');
 
     $("#submit").click(function(){
         $.post("../backend/update_member.php", $("#editMember").serialize(), function(d){
-            if(d == "true") {
+            var status = d.trim();
+            if(status == "true") {
                 var member_id = $('input[name="osca_id"]').val();
                 location.replace("member_profile.php?member_id=" + member_id);
             } else {
-                alert(d);
+                alert(status);
             }
         });
     });

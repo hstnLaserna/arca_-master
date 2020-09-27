@@ -119,7 +119,7 @@ include('foot.php');
 
     $("#submit").click(function(){
         $.post("../backend/update_company.php", $("#editCompany").serialize(), function(d){
-            if(d == "true") {
+            if(d.trim() == "true") {
                 location.replace("../frontend/companies.php");
             } else {
                 alert(d);

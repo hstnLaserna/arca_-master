@@ -169,7 +169,7 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
 
     $("#submit_guardian").click(function(){
         $.post("<?php  echo $post_destination ?>", $("#guardian_form").serialize(), function(d){
-            if(d == "true") {
+            if(d.trim() == "true") {
                 location.reload();
             } else {
                 alert(d);

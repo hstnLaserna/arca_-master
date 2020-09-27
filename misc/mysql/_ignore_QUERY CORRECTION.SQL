@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
@@ -128,6 +129,38 @@ INSERT INTO `address_jt` (`id`, `address_id`, `member_id`, `company_id`, `guardi
 (55,	57,	NULL,	28,	NULL),
 (56,	58,	NULL,	26,	NULL);
 
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE `admin` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `password` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `first_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `middle_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `last_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `birth_date` date NOT NULL,
+  `sex` varchar(10) COLLATE utf8mb4_bin NOT NULL,
+  `position` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `contact_number` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+  `email` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  `is_enabled` int(10) NOT NULL,
+  `log_attempts` int(10) NOT NULL,
+  `answer1` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `answer2` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `temporary_password` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `avatar` varchar(250) COLLATE utf8mb4_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `contact_number`, `email`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`) VALUES
+(1,	'ralf',	'3cca634013591eb51173fb6207572e37',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'admin',	'07283754',	'ralph.ortiz@ymeal.com',	1,	1,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
+(2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
+(3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'32101107',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
+(4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'09123456789',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
+(5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'88d0f2663ebfacb8.jpg'),
+(6,	'shang',	'8379c86250c50c0537999a6576e18aa7',	'Jess',	'',	'Monty',	'1990-01-24',	'1',	'user',	'76567752',	'jess.monty@ymeal.com',	1,	2,	'shang',	'shang',	'4347da',	'py1c2qjcpq.png'),
+(7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'user',	'96493119',	'synth.synth@ymeal.com',	0,	0,	'synth',	'synth',	'synthsynth',	'8ea533f799ce6fc3.jpg'),
+(8,	'dsfadgasdg',	'd15fd399edbb0b84811b7d18378692a3',	'asdgasdgasdg',	'asdgasdg',	'asdgasdgasdg',	'2019-08-26',	'2',	'admin',	'09123987456',	'6541234@asd.zxc',	1,	0,	'sdfgsdfgsdf',	'sdfgsdfg',	'dsfadgasdg',	'45a3f40a62f2cfef.png');
+
 DROP TABLE IF EXISTS `city_code`;
 CREATE TABLE `city_code` (
   `id` int(255) NOT NULL DEFAULT '0',
@@ -136,7 +169,7 @@ CREATE TABLE `city_code` (
   `regDesc` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `provCode` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `citymunCode` varchar(255) CHARACTER SET utf8 DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `city_code` (`id`, `psgcCode`, `citymunDesc`, `regDesc`, `provCode`, `citymunCode`) VALUES
 (1,	'012801000',	'ADAMS',	'01',	'0128',	'012801'),
@@ -1787,6 +1820,213 @@ INSERT INTO `city_code` (`id`, `psgcCode`, `citymunDesc`, `regDesc`, `provCode`,
 (1646,	'168506000',	'SAN JOSE',	'16',	'1685',	'168506'),
 (1647,	'168507000',	'TUBAJON',	'16',	'1685',	'168507');
 
+DROP TABLE IF EXISTS `company`;
+CREATE TABLE `company` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `company_tin` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `company_name` varchar(250) COLLATE utf8mb4_bin NOT NULL,
+  `branch` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `business_type` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `logo` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `company_tin_UNIQUE` (`company_tin`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `company` (`id`, `company_tin`, `company_name`, `branch`, `business_type`, `logo`) VALUES
+(1,	'654132150',	'Jollibee',	'Gen. Luna, Ermita',	'food',	'jollibee.png'),
+(2,	'123654789',	'Diligence Cafe',	'Malate, Manila',	'food',	'diligence.jpg'),
+(3,	'5514917468',	'Jollibee',	'Tandang Sora, Commonwealth',	'food',	'jollibee.png'),
+(4,	'7752487534',	'Dunkin Donuts',	'Sangandaan, Quezon City',	'food',	'dunkin.png'),
+(5,	'1239874563',	'Greenwich',	'Farmer\'s Plaza',	'food',	'greenwich.png'),
+(6,	'1550792273',	'Mang Inasal',	'Alphaland Southgate Towers',	'food',	'mang inasal.png'),
+(7,	'6070323661',	'Kenny Rogers Roasters',	'T3 - NAIA',	'food',	'kennyrogers.png'),
+(8,	'5200487589',	'Chowking',	'Hi-Top Supermarket, Aurora Blvd.',	'food',	'chowking.png'),
+(9,	'123498742',	'KFC',	'Mall of Asia',	'food',	'kfc.png'),
+(10,	'3411927270',	'Aristocrat',	'Malate, Manila',	'food',	'7f0s8h7d0s0c.png'),
+(11,	'6171762815',	'Mercury Drug',	'GMA, Cavite',	'pharmacy',	'mercury.png'),
+(12,	'4632180231',	'Mercury Drug',	'Hidalgo St., Quiapo',	'pharmacy',	'mercury.png'),
+(13,	'3591867572',	'Mercury Drug',	'BGC Market Market',	'pharmacy',	'mercury.png'),
+(14,	'9871234562',	'Watsons',	'Portal, GMA, Cavite',	'pharmacy',	'watsons.png'),
+(15,	'8323848273',	'Watsons',	'Montillano St., Alabang',	'pharmacy',	'watsons.png'),
+(16,	'7965766163',	'Watsons',	'Waltermart, Gen. Trias',	'pharmacy',	'watsons.png'),
+(17,	'5821645777',	'Watsons',	'SM Manila',	'pharmacy',	'watsons.png'),
+(18,	'8690961165',	'The Generics Pharmacy',	'Arnaiz Ave., Makati',	'pharmacy',	'tgp.png'),
+(19,	'3983278667',	'The Generics Pharmacy',	'Quirino Ave, Paranaque',	'pharmacy',	'tgp.png'),
+(20,	'6344364475',	'The Generics Pharmacy',	'Boni Ave., Mandaluyong',	'pharmacy',	'tgp.png'),
+(21,	'8016618868',	'LRT',	'Central Station',	'transportation',	'lrta.png'),
+(22,	'9690147404',	'LRT',	'Doroteo Jose Station',	'transportation',	'lrta.png'),
+(23,	'2035775056',	'LRT',	'United Nations Station',	'transportation',	'lrta.png'),
+(24,	'8063147891',	'LRT',	'Gil Puyat Station',	'transportation',	'lrta.png'),
+(25,	'2019924979',	'LRT',	'Pedro Gil Station',	'transportation',	'lrta.png'),
+(26,	'2949532037',	'MRT',	'Taft Station',	'transportation',	'lrta.png'),
+(27,	'5100616960',	'MRT',	'Guadalupe Station',	'transportation',	'lrta.png'),
+(28,	'7282645530',	'MRT',	'Magallanes Station',	'transportation',	'lrta.png'),
+(29,	'3115335081',	'MRT',	'Araneta - Cubao Station',	'transportation',	'lrta.png'),
+(30,	'9271004158',	'MRT',	'Ayala Station',	'transportation',	'lrta.png'),
+(31,	'6545671280',	'Mercury Drug',	'Guiguinto, Bulacan',	'pharmacy',	'mercury.png');
+
+DROP TABLE IF EXISTS `company_accounts`;
+CREATE TABLE `company_accounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `password` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `company_id` int(20) NOT NULL,
+  `is_enabled` int(10) NOT NULL,
+  `log_attempts` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `company_id` (`company_id`),
+  CONSTRAINT `company_accounts_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `company_accounts` (`id`, `user_name`, `password`, `company_id`, `is_enabled`, `log_attempts`) VALUES
+(1,	'jb_genluna',	'497be5f0198c1013006e9d996989025f',	1,	0,	7),
+(2,	'diligence_malate',	'f9aa9714846b01a8e53e9e1fbf48b645',	2,	1,	0),
+(3,	'jb_tsora',	'c5447f2456099ffe25b72d33a4306b98',	3,	1,	0),
+(4,	'dd_sangandaan',	'd6cc7d23565cb3a613845f3aa5494785',	4,	1,	0),
+(5,	'gw_farmers',	'57cd02849719667bcda9907cf7d06367',	5,	1,	0),
+(6,	'mi_alphaland',	'85c1a1370fbd5445bd04a7b9baeb3142',	6,	1,	0),
+(7,	'krr_naiat3',	'88bdd553895ad4e8cc9f423bf5ce6d30',	7,	1,	0),
+(8,	'ck_hitop',	'e8ac986e7fc025944fd255d79e11cbd9',	8,	1,	0),
+(9,	'kfc_moa1',	'11f0dc647cc8d1dc45be423e76bf57a1',	9,	1,	0),
+(10,	'ars_malate',	'd09e2d16db0d34ea17b22b6ea797a81c',	10,	1,	0),
+(11,	'md_gmacav',	'7dea03553e42d350f4d495b471e1e93c',	11,	1,	0),
+(12,	'md_hidalgo',	'dbfcae8c1e9d8c11b4e10c7cd6b017dc',	12,	1,	0),
+(13,	'md_bgcmarket',	'325686ffdbf76c771a7442acc32de0ed',	13,	1,	0),
+(14,	'wats_portal',	'dc6f58dd01e606eff0879d3a4b49105b',	14,	1,	0),
+(15,	'wats_montillano',	'820d92d47034ef55e5ec73cfae112071',	15,	1,	0),
+(16,	'wats_wmgentri',	'2bcdd43285f1e6918ed141f94c211a5b',	16,	1,	0),
+(17,	'wats_smmanila',	'c4aca91ed91cdb8f20c455f358ef82e7',	17,	1,	0),
+(18,	'tgp_arnaiz',	'7b8ad0271d4c27fbb644cbb8bf38af84',	18,	1,	0),
+(19,	'tgp_quirino',	'6ebef3a0dc58f31f29fc9fb62e1a9787',	19,	1,	0),
+(20,	'tgp_boni',	'883a5d99edd0d7ff659f408425f6f35f',	20,	1,	0),
+(21,	'lrt_central',	'213a685e9492411de7648789f3388e0a',	21,	1,	0),
+(22,	'lrt_djose',	'e290b31b851111f7ff96908d309c172b',	22,	1,	0),
+(23,	'lrt_un',	'803aa5a49b417aab8543eb610ca09c8e',	23,	1,	0),
+(24,	'lrt_gp',	'844bad0f042113287b99138680cd2f48',	24,	1,	0),
+(25,	'lrt_pg',	'be9fcad3a6db5f5fc323838867d3d286',	25,	1,	0),
+(26,	'mrt_taft',	'295eb00c7e0bd88685dd5be2b59fda97',	26,	1,	0),
+(27,	'mrt_guada',	'10760d0affc120b7fa4b7390ace0d9cc',	27,	1,	0),
+(28,	'mrt_maga',	'f1031948b5f83cc72411cf5d5e5ea534',	28,	1,	0),
+(29,	'mrt_araneta',	'35603a4ee8e6fa6b59f8062c961322f7',	29,	1,	0),
+(30,	'mrt_ayala',	'6226dd56a733a525c6aaa76b7e7a6702',	30,	1,	0),
+(31,	'md_wmguiguinto',	'85f0dcc21eb3ca8173867aae85baee97',	31,	1,	0);
+
+DROP TABLE IF EXISTS `complaint_report`;
+CREATE TABLE `complaint_report` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `desc` varchar(300) COLLATE utf8mb4_bin DEFAULT NULL,
+  `report_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `company_id` int(20) DEFAULT NULL,
+  `member_id` int(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  KEY `company_id` (`company_id`),
+  CONSTRAINT `complaint_report_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`),
+  CONSTRAINT `complaint_report_ibfk_2` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `complaint_report` (`id`, `desc`, `report_date`, `company_id`, `member_id`) VALUES
+(2,	'Epal nung bantay',	'2020-08-27 06:46:30',	1,	2),
+(3,	'No discount given',	'2020-08-27 06:46:30',	11,	3);
+
+DROP TABLE IF EXISTS `drug`;
+CREATE TABLE `drug` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `generic_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `brand` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `dose` int(20) NOT NULL,
+  `unit` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `is_otc` int(10) NOT NULL,
+  `max_monthly` int(20) DEFAULT NULL,
+  `max_weekly` int(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `drug` (`id`, `generic_name`, `brand`, `dose`, `unit`, `is_otc`, `max_monthly`, `max_weekly`) VALUES
+(1,	'paracetamol',	'biogesic',	500,	'mg',	1,	45000,	12000),
+(2,	'paracetamol',	'bioflu',	500,	'mg',	1,	45000,	13500),
+(3,	'ibuprofen,paracetamol',	'alaxan',	500,	'mg',	1,	45000,	14000),
+(4,	'diphenhydramine',	'benadryl',	500,	'mg',	1,	45000,	21000),
+(5,	'loratidine',	'claritin ',	500,	'mg',	1,	45000,	21000),
+(6,	'calcium carbonate,famotidine,magnesium hydroxide',	'kremil-s advance',	500,	'mg',	0,	45000,	21000),
+(7,	'cetirizine',	'watsons',	10,	'mg',	1,	70,	300),
+(8,	'cetirizine',	'virlix',	10,	'mg',	1,	70,	300),
+(9,	'carbocisteine,zinc',	'solmux',	500,	'mg',	1,	7000,	30000),
+(10,	'sodium ascorbate,zinc',	'immunpro',	500,	'mg',	1,	7000,	30000),
+(11,	'aa,sodium ascorbate',	'immunpro',	500,	'mg',	1,	30000,	7000),
+(12,	'sodium ascorbate,zincx',	'immunpro',	500,	'mg',	1,	7000,	30000);
+
+DROP TABLE IF EXISTS `food`;
+CREATE TABLE `food` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `transaction_id` int(20) NOT NULL,
+  `desc` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  `vat_exempt_price` decimal(13,2) NOT NULL,
+  `discount_price` decimal(13,2) NOT NULL,
+  `payable_price` decimal(13,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `transaction_id` (`transaction_id`),
+  CONSTRAINT `food_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `food` (`id`, `transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+(1,	7,	'meals for 2',	100.00,	20.00,	80.00),
+(2,	8,	'meals',	100.00,	20.00,	80.00),
+(3,	9,	'meals for 2',	100.00,	20.00,	80.00),
+(4,	10,	'meals',	100.00,	20.00,	80.00),
+(5,	11,	'meals',	100.00,	20.00,	80.00),
+(6,	12,	'meals',	100.00,	20.00,	80.00),
+(7,	38,	'Deiri melk 3s',	200.00,	40.00,	160.00),
+(8,	38,	'Gardenko 6s',	1000.00,	200.00,	800.00),
+(9,	38,	'Neskopi 11-in-1',	500.00,	100.00,	400.00),
+(10,	66,	'Dine in meals for 2',	1227.68,	245.54,	982.14),
+(11,	73,	'Meals for 3',	892.86,	178.57,	714.29),
+(12,	78,	'1 King Lasagna 2 Pizza',	799.11,	159.82,	639.29);
+
+DROP TABLE IF EXISTS `guardian`;
+CREATE TABLE `guardian` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `middle_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `last_name` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `sex` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
+  `relationship` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `contact_number` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `email` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  `member_id` int(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `guardian_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `guardian` (`id`, `first_name`, `middle_name`, `last_name`, `sex`, `relationship`, `contact_number`, `email`, `member_id`) VALUES
+(1,	'Gary',	'Jenelle',	'Winton',	'1',	'Grandfather',	'0256890796',	'garywinton9@gmeal.com',	1),
+(2,	'Nonie',	'',	'Irene',	'2',	'Grandmother',	'09123654789',	'nonieirene20@gmeal.com',	2),
+(3,	'Kelsey',	'Eulalia',	'Diamond',	'1',	'Grandfather',	'0238471073',	'kelseydiamond9@gmeal.com',	3),
+(4,	'Galen',	'Avah',	'Kirby',	'2',	'Grandmother',	'0211549317',	'galenkirby7@gmeal.com',	4),
+(5,	'Kristine',	'Marcy',	'Charissa',	'1',	'Grandfather',	'0228048410',	'kristinecharissa17@gmeal.com',	5),
+(6,	'Cheyanne',	'Paulette',	'Jaylee',	'1',	'Grandfather',	'0266301227',	'cheyannejaylee9@gmeal.com',	6),
+(7,	'Avalon',	'Brynlee',	'Aspen',	'1',	'Grandfather',	'09123654654',	'avalonaspen19@gmeal.com',	7),
+(8,	'Vianne',	'Kassidy',	'Ursula',	'2',	'Grandmother',	'0214578421',	'vianneursula9@gmeal.com',	8),
+(9,	'Rayzer',	'Kentt',	'Carran',	'2',	'Grandmother',	'0274763308',	'raycarran7@gmeal.com',	9),
+(10,	'Pamella',	'Russel',	'Corey',	'2',	'Grandmother',	'0288296230',	'pamellacorey1@gmeal.com',	10),
+(11,	'Lacy',	'Bekki',	'Marcy',	'1',	'Grandfather',	'0277137953',	'lacymarcy18@gmeal.com',	11),
+(12,	'Love',	'Demelzaxx',	'Paulette',	'1',	'Grandfather',	'0288759308',	'lovepaulette0@gmeal.com',	12),
+(13,	'Goldie',	'Marilynn',	'Vianne',	'1',	'Grandfather',	'0261176212',	'goldievianne13@gmeal.com',	13),
+(14,	'Kimson',	'',	'Kingston',	'1',	'Grandfather',	'029384723',	'sdlkfj@meal.ccc',	14),
+(23,	'Live',	'News',	'Portal',	'1',	'hackerist',	'09654666999',	'livenews@yicjpb.csx',	20);
+
+DROP TABLE IF EXISTS `lost_report`;
+CREATE TABLE `lost_report` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `report_date` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `member_id` int(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `lost_report_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
@@ -1823,6 +2063,187 @@ INSERT INTO `member` (`id`, `member_count`, `osca_id`, `nfc_serial`, `password`,
 (13,	00013,	'0314-2000013',	'2A6B9CE2A4DB4DE9',	'24c2558e01bf9ebece44c54fb8e8ca73',	'McKenzie ',	'Houston',	'Jessye',	'1948-12-08',	'2',	'0279281684',	'mckenzie.jessye@ymeal.com',	'2020-09-25 08:51:26',	''),
 (14,	00014,	'0410-2000014',	'7890acde7890acde',	'911be9ad950a83ae1641c4b890e8b38a',	'Christian',	'',	'Murphy',	'1958-10-25',	'1',	'0948654123',	'asdsa@aa.afx',	'2020-09-25 08:51:26',	NULL),
 (20,	00020,	'1374-2000020',	NULL,	'828fd9255753432d51df95eb62d61722',	'Akosi',	'',	'Dogiedog2',	'1948-03-01',	'1',	'09654123987',	'livenews@youchub.com',	'2020-09-25 09:22:13',	'665b47cef370ec24.png');
+
+DROP TABLE IF EXISTS `pharmacy`;
+CREATE TABLE `pharmacy` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `transaction_id` int(20) NOT NULL,
+  `desc_nondrug` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  `drug_id` int(20) DEFAULT NULL,
+  `quantity` int(20) DEFAULT NULL,
+  `unit_price` decimal(13,2) DEFAULT NULL,
+  `vat_exempt_price` decimal(13,2) NOT NULL,
+  `discount_price` decimal(13,2) NOT NULL,
+  `payable_price` decimal(13,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `drug_id` (`drug_id`),
+  KEY `transaction_id` (`transaction_id`),
+  CONSTRAINT `pharmacy_ibfk_10` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`),
+  CONSTRAINT `pharmacy_ibfk_12` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `pharmacy` (`id`, `transaction_id`, `desc_nondrug`, `drug_id`, `quantity`, `unit_price`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+(1,	1,	'',	2,	8,	1120.00,	1000.00,	200.00,	800.00),
+(2,	2,	'',	6,	10,	112.00,	100.00,	20.00,	80.00),
+(3,	3,	'',	3,	4,	896.00,	800.00,	160.00,	640.00),
+(4,	4,	'',	4,	3,	448.00,	400.00,	80.00,	320.00),
+(5,	5,	'',	3,	14,	1500.00,	1339.29,	267.86,	1071.43),
+(6,	6,	'',	1,	18,	2000.00,	1785.71,	357.14,	1428.57),
+(7,	19,	'',	3,	10,	5.00,	50.00,	10.00,	40.00),
+(8,	21,	'',	1,	14,	100.00,	1250.00,	250.00,	1000.00),
+(9,	23,	'',	1,	18,	100.00,	1250.00,	250.00,	1000.00),
+(10,	24,	'',	1,	14,	100.00,	1250.00,	250.00,	1000.00),
+(17,	23,	'',	2,	10,	201.60,	1800.00,	360.00,	1440.00),
+(18,	29,	'',	6,	10,	4.00,	35.71,	7.14,	28.56),
+(19,	33,	'Dairy Milk',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(20,	41,	'Deiri melk',	NULL,	NULL,	NULL,	200.00,	40.00,	160.00),
+(21,	42,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(22,	42,	'Nice Kopi 11in1 - 10s',	NULL,	NULL,	NULL,	200.00,	40.00,	160.00),
+(23,	44,	'Kopinya 10s',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(24,	45,	'Grate Caste White 30s',	NULL,	NULL,	NULL,	150.00,	30.00,	120.00),
+(25,	46,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(26,	46,	'Starbox Prop-puchino 330ml',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(27,	48,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(28,	48,	'Starbox Prop-puchino 330ml',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(29,	50,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(30,	50,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(31,	50,	NULL,	3,	10,	5.00,	100.00,	20.00,	80.00),
+(32,	50,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(33,	50,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(34,	55,	NULL,	6,	10,	5.00,	100.00,	20.00,	80.00),
+(35,	55,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(36,	55,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(37,	58,	NULL,	6,	10,	5.00,	100.00,	20.00,	80.00),
+(38,	58,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(39,	58,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(40,	61,	NULL,	6,	10,	5.00,	100.00,	20.00,	80.00),
+(41,	61,	'Quai-ker Oathmill',	NULL,	NULL,	NULL,	100.00,	20.00,	80.00),
+(42,	61,	'Pudgey Vars 12s',	NULL,	NULL,	NULL,	97.32,	19.46,	77.86),
+(43,	67,	NULL,	6,	14,	8.15,	101.88,	20.38,	81.50),
+(44,	68,	NULL,	8,	7,	6.25,	39.06,	7.81,	31.25),
+(45,	68,	NULL,	9,	7,	8.00,	50.00,	10.00,	40.00),
+(46,	68,	NULL,	1,	1,	5.20,	65.00,	13.00,	52.00),
+(47,	68,	NULL,	10,	1,	5.20,	65.00,	13.00,	52.00),
+(48,	72,	NULL,	9,	7,	8.00,	50.00,	10.00,	40.00),
+(49,	76,	'Meals for 3',	NULL,	NULL,	NULL,	892.86,	178.57,	714.29),
+(50,	79,	NULL,	7,	7,	6.25,	39.06,	7.81,	31.25),
+(51,	79,	NULL,	9,	7,	8.00,	50.00,	10.00,	40.00),
+(52,	79,	NULL,	1,	1,	5.20,	65.00,	13.00,	52.00),
+(53,	79,	NULL,	10,	1,	5.20,	65.00,	13.00,	52.00),
+(54,	80,	'Frozen Siomai Pack 25s Pack',	NULL,	NULL,	NULL,	249.75,	44.60,	205.15),
+(57,	83,	'Frozen Siomai Pack 25s Pack',	NULL,	NULL,	NULL,	249.75,	44.60,	205.15),
+(58,	84,	NULL,	7,	7,	6.25,	39.06,	7.81,	31.25),
+(59,	84,	NULL,	9,	10,	8.00,	50.00,	10.00,	40.00),
+(60,	84,	NULL,	1,	1,	5.20,	65.00,	13.00,	52.00),
+(61,	84,	NULL,	12,	1,	5.20,	65.00,	13.00,	52.00);
+
+DROP TABLE IF EXISTS `qr_request`;
+CREATE TABLE `qr_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(20) NOT NULL,
+  `desc` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `token` varchar(120) COLLATE utf8mb4_bin NOT NULL,
+  `trans_date` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `fk_qr_request_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `qr_request` (`id`, `member_id`, `desc`, `token`, `trans_date`) VALUES
+(1,	2,	'Product: Biogesic Quantity: 7 Notes: kahit ano',	'9jifhjvahke0g9ai',	'2020-09-24 14:16:44');
+
+DROP TABLE IF EXISTS `transaction`;
+CREATE TABLE `transaction` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `trans_date` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `company_id` int(20) NOT NULL,
+  `member_id` int(20) NOT NULL,
+  `clerk` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `company_id` (`company_id`),
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `fk_transaction_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transaction_member` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `transaction` (`id`, `trans_date`, `company_id`, `member_id`, `clerk`) VALUES
+(1,	'2020-09-06 13:12:45',	14,	4,	'M Reyes'),
+(2,	'2020-07-27 20:45:34',	13,	2,	''),
+(3,	'2020-09-07 15:15:25',	14,	3,	'Cy'),
+(4,	'2020-07-24 21:39:00',	15,	3,	''),
+(5,	'2020-08-11 17:36:53',	16,	4,	''),
+(6,	'2020-07-04 17:36:53',	17,	2,	''),
+(7,	'2020-09-12 09:27:18',	4,	4,	''),
+(8,	'2020-08-15 17:36:55',	4,	4,	''),
+(9,	'2020-06-17 17:36:55',	6,	5,	''),
+(10,	'2020-01-11 17:36:55',	5,	2,	''),
+(11,	'2020-02-18 17:36:55',	4,	3,	''),
+(12,	'2020-08-11 17:36:55',	9,	4,	''),
+(13,	'2020-03-12 17:36:55',	21,	2,	''),
+(14,	'2020-07-11 17:36:55',	28,	4,	''),
+(15,	'2020-04-13 17:36:55',	24,	3,	''),
+(16,	'2020-05-15 17:36:55',	27,	3,	''),
+(17,	'2020-02-11 17:36:55',	27,	1,	''),
+(18,	'2020-03-11 17:36:55',	26,	2,	''),
+(19,	'2020-08-15 23:15:28',	14,	2,	NULL),
+(21,	'2020-08-16 00:57:09',	18,	2,	''),
+(23,	'2020-09-02 06:10:45',	14,	2,	''),
+(24,	'2020-09-02 06:07:17',	14,	4,	''),
+(28,	'2020-09-02 06:07:17',	14,	2,	''),
+(29,	'2020-09-08 16:03:50',	11,	2,	'Cy'),
+(33,	'2020-08-28 05:25:34',	13,	2,	'AB Dela Rosa'),
+(38,	'2020-09-10 13:12:45',	4,	2,	'AB Garcia'),
+(41,	'2020-09-10 13:12:45',	14,	2,	'AB Garcia'),
+(42,	'2020-09-11 05:11:11',	14,	2,	'CD Efren'),
+(43,	'2020-09-11 05:10:18',	14,	2,	'CD Efren'),
+(44,	'2020-09-11 08:43:49',	14,	2,	'CD Efren'),
+(45,	'2020-09-13 01:25:34',	14,	2,	'CD Efren'),
+(46,	'2020-09-14 04:18:10',	14,	2,	'CD Efren'),
+(48,	'2020-09-14 04:35:48',	14,	2,	'CD Efren'),
+(50,	'2020-09-14 07:48:09',	14,	2,	'GH Igol'),
+(55,	'2020-09-15 03:14:31',	14,	2,	'GH Igol'),
+(58,	'2020-09-13 07:48:09',	14,	3,	'GH Igol'),
+(61,	'2020-09-16 01:56:37',	14,	2,	'JB Meneses'),
+(65,	'2020-09-18 11:30:13',	26,	2,	'jeppie boi'),
+(66,	'2020-09-11 12:38:08',	10,	2,	'AR Magnayo'),
+(67,	'2020-09-14 10:45:37',	19,	3,	'AR Magnayo'),
+(68,	'2020-09-17 10:40:11',	19,	3,	'AL Manalon'),
+(72,	'2020-09-17 13:11:11',	14,	2,	'JK MARLU'),
+(73,	'2020-09-15 03:11:11',	5,	2,	'XY Zinger'),
+(74,	'2020-09-16 03:11:11',	14,	2,	'XY Zinger'),
+(75,	'2020-09-17 15:11:11',	14,	2,	'XY Zinger'),
+(76,	'2020-09-17 15:11:11',	14,	2,	'XY Zinger'),
+(77,	'2020-09-16 03:11:11',	24,	3,	'AL Wanwan'),
+(78,	'2020-09-16 03:11:11',	5,	1,	'AL Wanwan'),
+(79,	'2020-09-17 13:11:11',	11,	6,	'AL Manalon'),
+(80,	'2020-09-17 15:23:23',	13,	2,	'Ling Maker'),
+(83,	'2020-09-21 22:59:59',	13,	6,	'Baxia Master'),
+(84,	'2020-09-17 13:11:11',	14,	1,	'AL Manalon'),
+(85,	'2020-09-20 03:11:11',	26,	2,	'AB Ignacio');
+
+DROP TABLE IF EXISTS `transportation`;
+CREATE TABLE `transportation` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `transaction_id` int(20) NOT NULL,
+  `desc` varchar(120) COLLATE utf8mb4_bin DEFAULT NULL,
+  `vat_exempt_price` decimal(13,2) NOT NULL,
+  `discount_price` decimal(13,2) NOT NULL,
+  `payable_price` decimal(13,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `transaction_id` (`transaction_id`),
+  CONSTRAINT `transportation_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+(1,	13,	'Bound to Pasay',	100.00,	20.00,	80.00),
+(2,	14,	'Bound to Pasay',	100.00,	20.00,	80.00),
+(3,	15,	'Bound to DJose',	100.00,	20.00,	80.00),
+(4,	16,	'Bound to Pasay',	100.00,	20.00,	80.00),
+(5,	17,	'Bound to Cubao',	100.00,	20.00,	80.00),
+(6,	18,	'Bound to EDSA',	100.00,	20.00,	80.00),
+(7,	65,	'Pasay to Guadalupe | Senior - SJT',	26.79,	5.36,	21.43),
+(8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29),
+(9,	85,	'Pasay to Guadalupe | Senior - SJT',	22.32,	4.46,	17.86);
 
 DELIMITER ;; 
 

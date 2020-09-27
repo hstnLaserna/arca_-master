@@ -231,13 +231,8 @@
         
 
         $('#edit').click(function () {
-            var user = $('input[name="user_name"]').attr("id").replace("user_", "")
-            var url = 'edit_admin.php';
-            var form = $(   '<form action="' + url + '" method="<?php echo $user_edit_method?>">' +
-                                '<input type="hidden" name="user" value="' + user + '" />' +
-                            '</form>');
-            $('div.container').append(form);
-            form.submit();
+            var user = $('input[name="user_name"]').attr("id").replace("user_", "");
+            location.replace("../frontend/edit_admin.php?user=" + user);
             
         });
     });

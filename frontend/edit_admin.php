@@ -44,7 +44,7 @@ if(isset($_GET['user']) && $logged_position == "admin")
         <div class="card">
             <div class="registration-form">
               <h3 class="registration-title">Edit <?php echo $first_name?>'s Account</h3>
-                <form method="post" enctype="multipart/form-data" autocomplete="off" id="newAdmin">
+                <form method="post" enctype="multipart/form-data" autocomplete="off" id="edit_admin">
                     <div class="form-contents">
                         <div>
                             Username
@@ -127,9 +127,9 @@ if(isset($_GET['user']) && $logged_position == "admin")
                         </div>
                         -->
                         </div>
+                        <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $admin_id;?>">
                     </div>
                 </form>
-                <input type="hidden" name="selected_id" id ="selected_id" value="<?php echo $admin_id;?>">
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
                 <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
             </div>
@@ -185,16 +185,18 @@ include('foot.php');
             $(this).removeClass('input_error');
         }
     });
-
+    
     $("#submit").click(function(){
         $.post("../backend/update_admin.php", $("#edit_admin").serialize(), function(d){
-            if(d == "true") {
-                var new_user = $('input[name="user_name"]').val();
-                location.replace("../frontend/user_profile.php?user=" + new_user);
+            var status = d.trim();
+            if(status == "true") {
+                var new_user_name = $('input[name="user_name"]').val();
+                location.replace("../frontend/user_profile.php?user=" + new_user_name);
             } else {
                 alert(d);
             }
         });
     });
+
   });
 </script>

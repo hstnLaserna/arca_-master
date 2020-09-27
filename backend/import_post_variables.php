@@ -338,14 +338,6 @@
                     array_push($errors, "Memership must be valid $membership_date");
                 }
                 
-                if(strlen($osca_id) != 8)
-                {
-                    array_push($errors, "OSCA ID must be between 8 characters");
-                }
-                if(strlen($nfc_serial) != 16)
-                {
-                    array_push($errors, "NFC must be between 16 characters");
-                }
                 if(strlen($password) != 0)
                 {
                     if(strlen($password) < 8 || strlen($password) > 20)

@@ -176,7 +176,7 @@ if(isset($_POST['id']) &&
 
     $("#submit_edit").click(function(){
         $.post("<?php  echo $post_destination ?>", $("#address_form").serialize(), function(d){
-            if(d == "true") {
+            if(d.trim() == "true") {
                 location.reload();
             } else {
                 alert(d);
@@ -185,7 +185,7 @@ if(isset($_POST['id']) &&
     });
     $("#delete").click(function(){
         $.post("<?php  echo $post_destination ?>?action=delete", $("#address_form").serialize(), function(d){
-            if(d == "true") {
+            if(d.trim() == "true") {
                 location.reload();
             } else {
                 alert(d);
