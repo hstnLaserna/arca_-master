@@ -71,20 +71,20 @@
                         <h4 class="ml-1"> Company Information </h4>
                         <ul class="profile-details">
                             <li class="profile-item">
-                                <span class="title">Company Name</span> 
-                                <span class="content"><?php echo $company_name; ?></span>
+                                <div class="title">Company Name</div> 
+                                <div class="content"><?php echo $company_name; ?></div>
                             </li>
                             <li class="profile-item">
-                                <span class="title">Branch</span> 
-                                <span class="content"><?php echo $branch; ?></span>
+                                <div class="title">Branch</div> 
+                                <div class="content"><?php echo $branch; ?></div>
                             </li>
                             <li class="profile-item">
-                                <span class="title">Company TIN</span> 
-                                <span class="content"><?php echo wordwrap($company_tin , 3 , '-' , true ); ?></span>
+                                <div class="title">Company TIN</div> 
+                                <div class="content"><?php echo wordwrap($company_tin , 3 , '-' , true ); ?></div>
                             </li>
                             <li class="profile-item">
-                                <span class="title">Business Type</span> 
-                                <span class="content"><?php echo ucwords($business_type); ?></span>
+                                <div class="title">Business Type</div> 
+                                <div class="content"><?php echo ucwords($business_type); ?></div>
                             </li>
                                 <?php  //address
                                     $addresses = read_address2($company_tin, "company");
@@ -95,22 +95,25 @@
                                     $province = $addresses['province'];
                                 ?>
                             <li class='profile-item disp_address' id='addNum_<?php echo $address_id?>'> 
-                                <span class='title'>Address</span>
-                                <span class="content"><?php echo "$address1, $address2, $city, $province";?></span>
+                                <div class='title'>Address</div>
+                                <div class="content"><?php echo "$address1, $address2, $city, $province";?></div>
                                 <button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button>
                             </li>
                         </ul>
                     </div>
                 </div>
-            
-            
-                <div class="card overflow-auto transactions">
+
+                
+                <div class="nav-tab">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-trans-tab" data-toggle="tab" href="#nav-trans" role="tab" aria-controls="nav-transactions" aria-selected="true">Transactions</a>
                             <a class="nav-item nav-link" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
                         </div>
                     </nav>
+                </div>
+            
+                <div class="card transactions">
                     <div class="tab-content" id="nav-tabContent">
                         <div class="tab-pane fade show active"  id="nav-trans" role="tabpanel" aria-labelledby="nav-transactions-tab"> </div>
                         <div class="tab-pane fade"              id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>

@@ -1,9 +1,8 @@
-<div id="complaints-list">
+<div id="lost-report-list">
     <?php
     include("../backend/conn.php");
     //declare
     $osca_id = "null";
-    $customer = "null";
     $report_date = "null";
     $desc = "null";
     $row_count_orig = 0;
@@ -26,43 +25,33 @@
         
         $displayed_items = ($counter) * $items_per_page;
         $transaction_query = "SELECT *
-                                FROM `view_complaints`
-                                WHERE osca_id = '$osca_id'
-                                ORDER BY report_date ASC";
+                                FROM `view_lost_report`
+                                WHERE `osca_id` = '$osca_id'
+                                ORDER BY `report_date` ASC";
 
         $result = $mysqli->query($transaction_query);
         $row_count_orig = mysqli_num_rows($result);
 
-
         $transaction_query = "SELECT *
-                                FROM `view_complaints`
-                                WHERE osca_id = '$osca_id'
-                                ORDER BY report_date ASC
+                                FROM `view_lost_report`
+                                WHERE `osca_id` = '$osca_id'
+                                ORDER BY `report_date` ASC
                                 LIMIT $displayed_items;";
-
         $result = $mysqli->query($transaction_query);
         $row_count_display = mysqli_num_rows($result);
         if($row_count_display != 0)
         {?>
             <table class="table table-hover">
-                <th>Company</th>
-                <th>Date reported</th>
-                <th>Description</th>
+                <th>Date Reported</th>
+                <th>Status</th>
                 <?php
                 while($row = mysqli_fetch_array($result))
                 {
-                    $company_tin = $row['company_tin'];
-                    $company_name = $row['company_name'];
-                    $branch = $row['branch'];
                     $report_date = $row['report_date'];
-                    $desc = $row['desc'];
+                    $id = $row['lost_id'];
+                    $desc = ($row['desc'] == null || $row['desc'] == "")? "Unserved": $row['desc'];
                     ?>
-                    <tr>
-                        <td>
-                            <a href="../frontend/company_profile.php?company_tin=<?php echo $company_tin;?>" class="view_">
-                                <?php echo "$company_name <br> <i> $branch</i>" ?>
-                            </a>
-                        </td>
+                    <tr id="lostid_<?php echo $id?>" class="lost_row">
                         <td><?php echo $report_date ?></td>
                         <td><?php echo $desc ?></td>
                     </tr>
@@ -76,7 +65,7 @@
             <?php
             
         } else {
-            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No filed complaints </div>";
+            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No Reports on Lost NFC Tags</div>";
         }
         
         //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
@@ -88,16 +77,27 @@
 <div class="_dfg987">
 </div>
 
-<button class="btn btn-block btn-dark" id="expand-complaints">Show More</button>
+<button class="btn btn-block btn-dark" id="expand-lost-report">Show More</button>
 
 <script>
 $(document).ready(function(){
     var osca_id = <?php echo $osca_id; ?>;
-    var ctr_complaints = 1;
+    var ctr_lost_report = 1;
 
-    $("#expand-complaints").click(function() {
-        ctr_complaints++;
-        $("#complaints-list").load("../backend/display_complaints_member.php #complaints-list", {osca_id : "<?php echo $osca_id;?>", counter: ctr_complaints});
+    $("#expand-lost-report").click(function() {
+        ctr_lost_report++;
+        $("#lost-report-list").load("../backend/display_lost_report.php #lost-report-list", {osca_id : "<?php echo $osca_id;?>", counter: ctr_lost_report});
+    });
+
+    $(".lost_row").click(function(){
+        var osca_id= <?php echo $osca_id;?>;
+        var lost_id = $(this).attr("id").replace("lostid_", "");
+        alert("aa" + lost_id);
+        
+        $('._dfg987').load("../frontend/response_lost.php", {id:osca_id, lost_id:lost_id},function(){
+            $('._dfg987').modal();
+        });
+
     });
 });
 </script>

@@ -171,6 +171,17 @@ tables:
     // another event na mangyayari dito sa form before close:
     // mag-wait for serial comms data. Contains msg if senior validation success
 
+    // added 9/29/20
+    added: lost module in member_profile
+    fixed: display of all entities in arca_-master => member_profile.php
+
+    table:
+        + member.nfc_active && member.account_enabled -- if 0, noone can call you 
+        + qr_request table added trans_date at transaction_id;
+    recreate views
+    recreate procedures esp PROCEDURE login_member
+
+
 
 
 eto para sakin,

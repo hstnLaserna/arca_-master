@@ -119,7 +119,7 @@ SELECT m.id `member_id`, m.osca_id, m.first_name, m.last_name, t.id `trans_numbe
 DROP VIEW IF EXISTS `view_members_with_guardian`;
 CREATE VIEW `view_members_with_guardian` AS 
 (
-SELECT m.`id` member_id, m.`osca_id`, m.`nfc_serial`, m.`password`, m.`first_name`, m.`middle_name`, m.`last_name`, m.`sex`, 
+SELECT m.`id` member_id, m.`osca_id`, m.`nfc_serial`, m.`nfc_active`, m.`password`, m.`account_enabled`, m.`first_name`, m.`middle_name`, m.`last_name`, m.`sex`, 
     concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`)) `bdate`, 
     YEAR(CURDATE()) - YEAR(birth_date) - IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(birth_date), '-', DAY(birth_date)) ,'%Y-%c-%e') > CURDATE(), 1, 0) age,
     concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`)) `memship_date`, 
@@ -131,6 +131,7 @@ FROM member m
 INNER JOIN guardian g ON g.`member_id` = m.id
 INNER JOIN address_jt ajt on ajt.`member_id` = m.id
 INNER JOIN address a on ajt.`address_id` = a.id
+
 );
 
 DROP VIEW IF EXISTS `view_complaints`;
@@ -144,12 +145,31 @@ LEFT JOIN member m ON cr.member_id = m.id
 LEFT JOIN company c ON cr.company_id = c.id
 );
 
--- view_drugs
 DROP VIEW IF EXISTS `view_drugs`;
 CREATE VIEW `view_drugs` AS 
 SELECT id FROM `db_osca`.`drug`;
 
--- view_qr_request
 DROP VIEW IF EXISTS `view_qr_request`;
 CREATE VIEW `view_qr_request` AS 
 SELECT * FROM `db_osca`.`qr_request`;
+
+DROP VIEW IF EXISTS `view_lost_report`;
+CREATE VIEW `view_lost_report` AS 
+SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, l.`report_date`
+FROM `db_osca`.`lost_report` l
+INNER JOIN `db_osca`.`member` m on l.`member_id` = m.`id`
+;
+
+DROP VIEW IF EXISTS `view_qr_request_transactions`;
+CREATE VIEW `view_qr_request_transactions` AS 
+SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, `desc`, v.`trans_date` `request_date`, t.id `transaction_id`, t.`trans_date` `transaction_date`, `company_tin` `company_tin`, c.`company_name` `company_name`
+FROM `view_qr_request` v
+INNER JOIN `member` m ON v.`member_id` = m.`id`
+INNER JOIN `transaction` t on v.transaction_id = t.id
+INNER JOIN `company` c on t.company_id = c.id
+WHERE v.id NOT IN (SELECT v2.id FROM view_qr_request v2 WHERE (v2.`transaction_id` IS NULL OR v2.`transaction_id` = ""))
+UNION
+SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, `desc`, v.`trans_date` `request_date`, null `transaction_id`, null `transaction_date`, null `company_tin`, null `company_name`
+FROM `view_qr_request` v
+INNER JOIN `member` m ON v.`member_id` = m.`id`
+WHERE (v.`transaction_id` IS NULL OR v.`transaction_id` = "");

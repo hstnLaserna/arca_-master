@@ -216,6 +216,7 @@ img.avatar:hover {
   background-color: #fff;
   border-bottom-style: none;
   padding: 0.5rem !important;
+  display: block;
 }
 
 
@@ -224,11 +225,12 @@ img.avatar:hover {
   border: #cdcdcd;
   border-bottom-style: solid;
   border-bottom-width: thin;
+  display: flex;
   
   padding: 1rem;
 }
 
-span.title{
+div.title{
   width: 10rem;
   display: inline-block;
 }
@@ -244,6 +246,7 @@ div.subtitle{
 .guardian{
   position: relative;
 }
+
 .disp_guardian {
   display: flex;
   flex-direction: column;
@@ -394,17 +397,10 @@ i.sort_icon{
 .digital-card-contents {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
   min-height: 350px;
   padding: 10px 1rem;
 }
 
-.card-left {
-  grid-column: 1 / 3;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 2rem;
-}
 
 .card-right {
   grid-column: 1 / 3;
@@ -422,6 +418,23 @@ i.sort_icon{
   margin-top: 20px;
 }
 
+.card-left {
+  grid-column: 1 / 3;
+  display: grid;
+  grid-gap: 2rem;
+}
+
+.left {
+  display: grid;
+  grid-gap: 2rem;
+  grid-auto-rows: min-content;
+}
+.right {
+  display: grid;
+  grid-gap: 2rem;
+  grid-auto-rows: min-content;
+}
+
 .company-card-left {
   grid-column: 1 / 3;
   grid-gap: 2rem;
@@ -432,33 +445,88 @@ i.sort_icon{
   grid-gap: 2rem;
 }
 
-.modal-card-right {
-  grid-column: 3/4;
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+  .card-left {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 4rem;
+  }
 
-  text-align: center;
-  padding: 2rem 0;
+  .left {
+    grid-column: 1 / 2;
+    display: grid;
+    grid-gap: 2rem;
+    grid-auto-rows: min-content;
+  }
+  .right {
+    grid-column: 2 / 3;
+    display: grid;
+    grid-gap: 2rem;
+    grid-auto-rows: min-content;
+  }
+
+  .company-card-left {
+    grid-column: 1 / 3;
+    grid-gap: 2rem;
+  }
+
+  .modal-card-left {
+    grid-column: 1 / 3;
+    grid-gap: 2rem;
+  }
+
+  .modal-card-right {
+    grid-column: 3/4;
+
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .modal-card-right>img{
+    max-width: 150px !important;
+    border-radius: 1rem;
+  }
+
+  .modal-card-right > p {
+    margin-top: 20px;
+  }
 }
 
-.modal-card-right>img{
-  max-width: 150px !important;
-  border-radius: 1rem;
+.nav-tab {
+  grid-column: 1 / 3 !important;
+  margin-top: 3rem !important;
 }
-
-.modal-card-right > p {
-  margin-top: 20px;
-}
-
 
 .transactions {
   grid-column: 1 / 3;
-  margin-top: 1rem;
   padding: 1rem !important; 
   min-height: 500px;
   height: 75vh;
 
-
   border-radius: .25rem !important;
   overflow: auto !important;
+}
+.status_active {
+  color: rgb(0, 205, 0);
+  font-weight: bold;
+}
+.status_inactive {
+  color: rgb(255, 0, 0);
+  font-weight: bold;
 }
 
 .profile-picture-container {

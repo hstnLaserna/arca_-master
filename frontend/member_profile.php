@@ -6,6 +6,8 @@
     // declare variables 
 
     $osca_id = "";
+    $nfc_active = false;
+    $account_enabled = true;
     $member_id = "";
     $fullname = "";
     $first_name = "";
@@ -19,12 +21,21 @@
     $memship_date =  "";
     $picture = "../resources/images/unknown_m_f.png";
     $member_buttons = '';
+    $g_id = "";
+    $g_first_name = "";
+    $g_middle_name = "";
+    $g_last_name =  "";
+    $g_sex2 =  "";
+    $g_contact_number =  "";
+    $g_email =  "";
+    $g_relationship =  "";
+    $g_fullname = "";
 
     if(isset($_GET['member_id']))
     {
         $selected_osca_id = $_GET['member_id'];
 
-        $query = "SELECT m.`id` member_id, m.`osca_id`, m.`nfc_serial`, m.`password`, m.`first_name`, m.`middle_name`, m.`last_name`, m.`sex`, 
+        $query = "SELECT m.`id` member_id, m.`osca_id`, m.`nfc_serial`, m.`nfc_active`, m.`password`, m.`account_enabled`, m.`first_name`, m.`middle_name`, m.`last_name`, m.`sex`, 
                     concat(day(`birth_date`), ' ', monthname(`birth_date`), ' ', year(`birth_date`)) `bdate`, 
                     YEAR(CURDATE()) - YEAR(birth_date) - IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(birth_date), '-', DAY(birth_date)) ,'%Y-%c-%e') > CURDATE(), 1, 0) age,
                     concat(day(`membership_date`), ' ', monthname(`membership_date`), ' ', year(`membership_date`)) `memship_date`, 
@@ -59,6 +70,9 @@
                 $picture = "../resources/images/unknown_m_f.png";
             }
 
+            $nfc_active = ($row_member['nfc_active'] == 1)? true:false;
+            $account_enabled = ($row_member['account_enabled'] == 1)? true:false;
+
             $member_buttons = '
             <!--button type="button" class="btn btn-secondary my-2 w-75">Edit Basic Details</button>
             <button type="button" id="add_address" class="btn btn-secondary m-2 w-75">Add Address</button-->';
@@ -88,72 +102,146 @@
                 <!--div class="card-bottom-right">
                 <?php echo $member_buttons;?>
                 </div-->
-                <div class="card-left">
-                    <div class="basic">
-                        <button class="ml-auto btn btn-link edit" id="edit_basic"><i class="fa fa-edit"></i></button>
-                        <h4 class="ml-1"> Basic Information </h4>
-                        <ul class="profile-details">
-                            <li class="profile-item">
-                                <span class="title">Fullname</span> 
-                                <span class="content"><?php echo $fullname; ?></span>
-                            </li>
-                            <li class="profile-item">
-                                <span class="title">Sex</span> 
-                                <span class="content"><?php echo determine_sex($sex2, "display_long"); ?></span>
-                            </li>
-                            <li class="profile-item">
-                                <span class="title">Birthdate</span> 
-                                <span class="content"><?php echo "$bdate (Age: $age y.o.)"; ?></span>
-                            </li>
-                            <li class="profile-item">
-                                <span class="title">Phone Number</span> 
-                                <span class="content"><?php echo $contact_number; ?></span>
-                            </li>
-                            <li class="profile-item">
-                                <span class="title">E-mail</span> 
-                                <span class="content"><?php echo $email; ?></span>
-                            </li>
-                                <?php  //address
-                                    $addresses = read_address2($member_id, true);
-                                    $address_id = $addresses['address_id'];
-                                    $address1 = $addresses['address1'];
-                                    $address2 = $addresses['address2'];
-                                    $city = $addresses['city'];
-                                    $province = $addresses['province'];
-                                ?>
-                            <li class='profile-item disp_address' id='addNum_<?php echo $address_id?>'> 
-                                <span class='title'>Address</span>
-                                <span class="content"><?php echo "$address1, $address2, $city, $province";?></span>
-                                <button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="guardian">
-                        <h4 class="ml-1"> Guardian's Details </h4>
-                        <div>
-                            <?php
-                                read_guardian($osca_id);
-                            ?>
+                <div class="card-left" >
+                    <div class="left">
+                        <div class="basic">
+                            <button class="ml-auto btn btn-link edit" id="edit_basic"><i class="fa fa-edit"></i></button>
+                            <h4 class="ml-1"> Basic Information </h4>
+                            <ul class="profile-details">
+                                <li class="profile-item">
+                                    <div class="title">Fullname</div> 
+                                    <div class="content"><?php echo $fullname; ?></div>
+                                </li>
+                                <li class="profile-item">
+                                    <div class="title">Sex</div> 
+                                    <div class="content"><?php echo determine_sex($sex2, "display_long"); ?></div>
+                                </li>
+                                <li class="profile-item">
+                                    <div class="title">Birthdate</div> 
+                                    <div class="content"><?php echo "$bdate ($age y/o)"; ?></div>
+                                </li>
+                                <li class="profile-item">
+                                    <div class="title">Phone Number</div> 
+                                    <div class="content"><?php echo $contact_number; ?></div>
+                                </li>
+                                <li class="profile-item">
+                                    <div class="title">E-mail</div> 
+                                    <div class="content"><?php echo $email; ?></div>
+                                </li>
+                                    <?php  //address
+                                        $addresses = read_address2($member_id, true);
+                                        $address_id = $addresses['address_id'];
+                                        $address1 = $addresses['address1'];
+                                        $address2 = $addresses['address2'];
+                                        $city = $addresses['city'];
+                                        $province = $addresses['province'];
+                                        $address_string = "$address1, $address2, $city, $province";
+                                    ?>
+                                <li class='profile-item disp_address' id='addNum_<?php echo $address_id?>'> 
+                                    <div class='title'>Address</div>
+                                    <div class="content"><?php echo $address_string;?></div>
+                                    <button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="membership">
+                            <h4 class="ml-1"> Membership Details</h4>
+                            <ul class="profile-details">
+                                <li class="profile-item">
+                                    <div class="title">OSCA ID</div> 
+                                    <div class="content"><?php echo $osca_id; ?></div>
+                                </li>
+                                <li class="profile-item">
+                                    <div class="title">Member since</div> 
+                                    <div class="content"><?php echo $memship_date; ?></div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-
-                    <div class="">
-                        <h4 class="ml-1"> Membership Details</h4>
-                        <ul class="profile-details">
-                            <li class="profile-item">
-                                <span class="title">OSCA ID</span> 
-                                <span class="content"><?php echo $osca_id; ?></span>
-                            </li>
-                            <li class="profile-item">
-                                <span class="title">Member since</span> 
-                                <span class="content"><?php echo $memship_date; ?></span>
-                            </li>
-                        </ul>
+                    <div class="right">
+                        <div class="guardian">
+                            <h4 class="ml-1"> Guardian's Details </h4>
+                            <div>
+                                <?php
+                                    $guardian = read_guardian($osca_id);
+                                
+                                    foreach($guardian as $item => $row)
+                                    {
+                                        $g_id = $row['g_id'];
+                                        $g_first_name = $row['g_first_name'];
+                                        $g_middle_name = $row['g_middle_name'];
+                                        $g_last_name =  $row['g_last_name'];
+                                        $g_sex2 =  $row['g_sex'];
+                                        $g_contact_number =  $row['g_contact_number'];
+                                        $g_email =  $row['g_email'];
+                                        $g_relationship =  $row['g_relationship'];
+                                        $g_fullname = strtoupper("$g_first_name $g_middle_name $g_last_name");
+                                    }
+                                ?>
+                                
+                                <ul class="disp_guardian" id="gid<?php echo $g_id ?>" >
+                                    <li class="profile-item">
+                                        <div class="title">Full Name</div> 
+                                        <div class="content"><?php echo $g_fullname; ?></div>
+                                    </li>
+                                    <li class="profile-item">
+                                        <div class="title">Relationship</div> 
+                                        <div class="content"><?php echo $g_relationship; ?></div>
+                                    </li>
+                                    <li class="profile-item">
+                                        <div class="title">Sex</div> 
+                                        <div class="content"><?php echo determine_sex($g_sex2, "display_long"); ?></div>
+                                    </li>
+                                    <li class="profile-item">
+                                        <div class="title">Contact Number</div> 
+                                        <div class="content"><?php echo $g_contact_number; ?></div>
+                                    </li>
+                                    <li class="profile-item">
+                                        <div class="title">Email</div> 
+                                        <div class="content"><?php echo $g_email; ?></div>
+                                    </li>
+                                    
+                                    <button class="btn btn-link edit edit_guardian"><i class="fa fa-edit"></i></button>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lost">
+                            <h4 class="ml-1"></h4>
+                            <ul class="profile-details">
+                                <li class="profile-item">
+                                    <div class="title">NFC Tag</div> 
+                                    <div class="content">
+                                        <?php 
+                                            if($nfc_active){
+                                                echo "<span class='status_active'>Active</span>";
+                                            } else {
+                                                echo "<span class='status_inactive'>Inactive</span>";
+                                            }
+                                            
+                                            ?>
+                                    
+                                    </div>
+                                </li>
+                                <li class="profile-item">
+                                    <div class="title">Account</div> 
+                                    <div class="content">
+                                        <?php 
+                                            if($account_enabled){
+                                                echo "<span class='status_active'>Enabled</span>";
+                                            } else {
+                                                echo "<span class='status_inactive'>Disabled</span>";
+                                            }
+                                            
+                                            ?>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            
-                <div class="card transactions">
+
+                
+                <div class="nav-tab">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all-transactions" aria-selected="true">All</a>
@@ -161,14 +249,21 @@
                             <a class="nav-item nav-link" id="nav-rs-tab" data-toggle="tab" href="#nav-rs" role="tab" aria-controls="nav-restaurant-transactions" aria-selected="false">Restaurant</a>
                             <a class="nav-item nav-link" id="nav-tr-tab" data-toggle="tab" href="#nav-tr" role="tab" aria-controls="nav-transportation-transactions" aria-selected="false">Transportation</a>
                             <a class="nav-item nav-link ml-auto" id="nav-complaints-tab" data-toggle="tab" href="#nav-complaints" role="tab" aria-controls="nav-complaints" aria-selected="true">Complaints</a>
+                            <a class="nav-item nav-link" id="nav-qr-tab" data-toggle="tab" href="#nav-qr" role="tab" aria-controls="nav-qr" aria-selected="true">QR Requests</a>
+                            <a class="nav-item nav-link" id="nav-lost-tab" data-toggle="tab" href="#nav-lost" role="tab" aria-controls="nav-lost" aria-selected="true">Lost Reports</a>
                         </div>
                     </nav>
+                </div>
+            
+                <div class="card transactions">
                     <div class="tab-content" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-transactions-tab"> </div>
                         <div class="tab-pane fade" id="nav-ph" role="tabpanel" aria-labelledby="nav-pharmacy-transactions-tab"> </div>
                         <div class="tab-pane fade" id="nav-rs" role="tabpanel" aria-labelledby="nav-restaurant-transactions-tab"> </div>
                         <div class="tab-pane fade" id="nav-tr" role="tabpanel" aria-labelledby="nav-transportation-transactions-tab"> </div>
                         <div class="tab-pane fade" id="nav-complaints" role="tabpanel" aria-labelledby="nav-complaints-tab"> </div>
+                        <div class="tab-pane fade" id="nav-qr" role="tabpanel" aria-labelledby="nav-qr-tab"> </div>
+                        <div class="tab-pane fade" id="nav-lost" role="tabpanel" aria-labelledby="nav-lost-tab"> </div>
                     </div>
                 </div>
             </div>
@@ -236,6 +331,8 @@ $(document).ready(function(){
     $("#nav-rs").load("../backend/display_transactions_restaurant.php", {member_id : member_id});
     $("#nav-tr").load("../backend/display_transactions_transportation.php", {member_id : member_id});
     $("#nav-complaints").load("../backend/display_complaints_member.php", {osca_id : osca_id});
+    $("#nav-qr").load("../backend/display_qr_request.php", {osca_id : osca_id});
+    $("#nav-lost").load("../backend/display_lost_report.php", {osca_id : osca_id});
     
 
     $('#edit_basic').click(function () {

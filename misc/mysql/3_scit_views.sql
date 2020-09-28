@@ -57,3 +57,7 @@ SELECT * FROM `db_osca`.`view_drugs`;
 DROP VIEW IF EXISTS `view_qr_request`;
 CREATE VIEW `view_qr_request` AS 
 SELECT * FROM `db_osca`.`view_qr_request`;
+
+DROP VIEW IF EXISTS `view_qr_request_transactions`;
+CREATE VIEW `view_qr_request_transactions` AS 
+SELECT * FROM `db_osca`.`view_qr_request_transactions`;

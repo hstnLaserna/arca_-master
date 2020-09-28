@@ -202,58 +202,13 @@
                                 INNER JOIN `member` m on g.`member_id` = m.`id`        
                                 WHERE m.`osca_id` = '$osca_id';";
 
-                    $result = $mysqli->query($query);
-                    $row_count = mysqli_num_rows($result);
-                    if($row_count == 0) {
-                        echo    "<p class='disp_guardian'>No guardian on record
-                                    <button class='btn btn-link edit add_guardian'><i class='fa fa-edit'></i></button>
-                                </p>";
-                    } else {
-                        while($row = mysqli_fetch_array($result))
-                        {
-                            $g_id = $row['g_id'];
-                            $g_first_name = $row['g_first_name'];
-                            $g_middle_name = $row['g_middle_name'];
-                            $g_last_name =  $row['g_last_name'];
-                            $g_sex2 =  $row['g_sex'];
-                            $g_contact_number =  $row['g_contact_number'];
-                            $g_email =  $row['g_email'];
-                            $g_relationship =  $row['g_relationship'];
-                            $g_fullname = strtoupper("$g_first_name $g_middle_name $g_last_name");
-                            ?>
-                            <ul class="disp_guardian" id="gid<?php echo $g_id ?>" >
-                                <li class="profile-item">
-                                    <span class="title">Full Name</span> 
-                                    <span class="content"><?php echo $g_fullname; ?></span>
-                                </li>
-                                <li class="profile-item">
-                                    <span class="title">Relationship</span> 
-                                    <span class="content"><?php echo $g_relationship; ?></span>
-                                </li>
-                                <li class="profile-item">
-                                    <span class="title">Sex</span> 
-                                    <span class="content"><?php echo determine_sex($g_sex2, "display_long"); ?></span>
-                                </li>
-                                <li class="profile-item">
-                                    <span class="title">Contact Number</span> 
-                                    <span class="content"><?php echo $g_contact_number; ?></span>
-                                </li>
-                                <li class="profile-item">
-                                    <span class="title">Email</span> 
-                                    <span class="content"><?php echo $g_email; ?></span>
-                                </li>
-                                
-                                <button class="btn btn-link edit edit_guardian"><i class="fa fa-edit"></i></button>
-                            </ul>
-                            <?php
-                        }
-                    }
+                    return $mysqli->query($query);
                 }
             }
 
             mysqli_close($mysqli);
         } else {
-            echo "Member does not exist";
+            return false;
         }
     }
 

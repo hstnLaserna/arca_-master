@@ -75,7 +75,7 @@
                                             <div class="subtitle">Sex</div> 
                                         </li>
                                         <li class="profile-item">
-                                            <div class="content"><?php echo "$bdate (Age: $age y.o.)"; ?></div>
+                                            <div class="content"><?php echo "$bdate ($age y/o)"; ?></div>
                                             <div class="subtitle">Birthdate</div> 
                                         </li>
                                         <li class="profile-item">

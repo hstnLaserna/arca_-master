@@ -91,24 +91,24 @@
                 <h4 class="ml-1"> Basic Information </h4>
                 <ul class="profile-details">
                     <li class="profile-item">
-                        <span class="title">Fullname</span> 
-                        <span class="content"><?php echo $fullname; ?></span>
+                        <div class="title">Fullname</div> 
+                        <div class="content"><?php echo $fullname; ?></div>
                     </li>
                     <li class="profile-item">
-                        <span class="title">Birthdate</span> 
-                        <span class="content"><?php echo $birthdate; ?></span>
+                        <div class="title">Birthdate</div> 
+                        <div class="content"><?php echo $birthdate; ?></div>
                     </li>
                     <li class="profile-item">
-                        <span class="title">Sex</span> 
-                        <span class="content"><?php echo determine_sex($sex2, "display_long"); ?></span>
+                        <div class="title">Sex</div> 
+                        <div class="content"><?php echo determine_sex($sex2, "display_long"); ?></div>
                     </li>
                     <li class="profile-item">
-                        <span class="title">Contact Number</span> 
-                        <span class="content"><?php echo $contact_number; ?></span>
+                        <div class="title">Contact Number</div> 
+                        <div class="content"><?php echo $contact_number; ?></div>
                     </li>
                     <li class="profile-item">
-                        <span class="title">E-mail</span> 
-                        <span class="content"><?php echo $email; ?></span>
+                        <div class="title">E-mail</div> 
+                        <div class="content"><?php echo $email; ?></div>
                     </li>
                 </ul>
             </div>
@@ -116,12 +116,12 @@
                 <h4 class="ml-1"> Account Information </h4>
                 <ul class="profile-details">
                     <li class="profile-item">
-                        <span class="title">Username</span> 
-                        <span class="content"><?php echo $user_name; ?></span>
+                        <div class="title">Username</div> 
+                        <div class="content"><?php echo $user_name; ?></div>
                     </li>
                     <li class="profile-item">
-                        <span class="title">Position</span> 
-                        <span class="content"><?php echo $position; ?></span>
+                        <div class="title">Position</div> 
+                        <div class="content"><?php echo $position; ?></div>
                     </li>
                 </ul>
                     <?php echo $member_buttons;?>
