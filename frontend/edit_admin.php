@@ -130,8 +130,8 @@ if(isset($_GET['user']) && $logged_position == "admin")
                         <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $admin_id;?>">
                     </div>
                 </form>
-                <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
-                <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
+                <button type="button" class="btn btn-light btn-lg btn-block" id="submit">Submit</button>
+                <button type="reset" class="btn btn-close btn-lg btn-block">Reset Values</button>
             </div>
         </div>
     </div>

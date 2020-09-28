@@ -1,3 +1,5 @@
+USE `db_osca`;
+SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
@@ -34,7 +36,7 @@ INSERT INTO `address` (`id`, `address1`, `address2`, `city`, `province`, `is_act
 (25,	'2002 Kabihasnan St.',	'Gen. Luna',	'Ermita',	'Ncr, City Of Manila, First District',	1,	'2020-09-25 13:17:36'),
 (26,	'Portal Mall GF',	'Brgy. San Gabriel II',	'General Mariano Alvarez',	'Cavite',	0,	'2020-09-02 18:31:38'),
 (27,	'Taft Ave. cor. Quirino St',	'Brgy 6969',	'Malate',	'Ncr, City Of Manila, First District',	0,	'2020-09-11 21:42:18'),
-(32,	'Somewhere',	'Out there',	'Quezon City',	'Ncr, Second District',	1,	'2020-09-25 09:13:10'),
+(32,	'Somewhere',	'Out there',	'Quezon City',	'Ncr, Second District',	1,	'2020-09-27 11:14:51'),
 (34,	'Hidalgo St., Quiapo',	'Raon',	'Quiapo',	'Ncr, City Of Manila, First District',	0,	'2020-09-25 13:11:13'),
 (35,	'0295 Mokmok St.',	'Sangandaan',	'Quezon City',	'Ncr, Second District',	0,	'2020-09-25 13:12:32'),
 (36,	'Kamuning Rd',	'Hi-Top Supermarket',	'Quezon City',	'Ncr, Second District',	0,	'2020-09-25 13:14:08'),
@@ -154,12 +156,12 @@ CREATE TABLE `admin` (
 INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `position`, `contact_number`, `email`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`) VALUES
 (1,	'ralf',	'3cca634013591eb51173fb6207572e37',	'Ralph Christian',	'Arbiol',	'Ortiz',	'1990-01-14',	'1',	'admin',	'07283754',	'ralph.ortiz@ymeal.com',	1,	1,	'ralp',	'orti',	'ralfralf',	'inuho1wjbk.png'),
 (2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
-(3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'32101107',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasq',	'matt',	'1dngb3owoz.png'),
+(3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'09123654123',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasqa',	'matt',	'1dngb3owoz.png'),
 (4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'09123456789',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
 (5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'88d0f2663ebfacb8.jpg'),
 (6,	'shang',	'8379c86250c50c0537999a6576e18aa7',	'Jess',	'',	'Monty',	'1990-01-24',	'1',	'user',	'76567752',	'jess.monty@ymeal.com',	1,	2,	'shang',	'shang',	'4347da',	'py1c2qjcpq.png'),
-(7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'user',	'96493119',	'synth.synth@ymeal.com',	0,	0,	'synth',	'synth',	'synthsynth',	'8ea533f799ce6fc3.jpg'),
-(8,	'dsfadgasdg',	'd15fd399edbb0b84811b7d18378692a3',	'asdgasdgasdg',	'asdgasdg',	'asdgasdgasdg',	'2019-08-26',	'2',	'admin',	'09123987456',	'6541234@asd.zxc',	1,	0,	'sdfgsdfgsdf',	'sdfgsdfg',	'dsfadgasdg',	'45a3f40a62f2cfef.png');
+(7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'user',	'96493119',	'synth.synth@ymeal.com',	1,	0,	'synth',	'synth',	'synthsynth',	'bde5a3192a556564.png'),
+(8,	'dsfaasdgasdg',	'd15fd399edbb0b84811b7d18378692a3',	'asdg',	'asd',	'asdgasdgasdg',	'2019-08-26',	'2',	'admin',	'09123987456',	'6541234@asd.zxc',	0,	0,	'sdfgsdfgsdf',	'sdfgsdfg',	'dsfadgasdg',	'45a3f40a62f2cfef.png');
 
 DROP TABLE IF EXISTS `city_code`;
 CREATE TABLE `city_code` (
@@ -169,7 +171,7 @@ CREATE TABLE `city_code` (
   `regDesc` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `provCode` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `citymunCode` varchar(255) CHARACTER SET utf8 DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `city_code` (`id`, `psgcCode`, `citymunDesc`, `regDesc`, `provCode`, `citymunCode`) VALUES
 (1,	'012801000',	'ADAMS',	'01',	'0128',	'012801'),
@@ -2014,7 +2016,7 @@ INSERT INTO `guardian` (`id`, `first_name`, `middle_name`, `last_name`, `sex`, `
 (12,	'Love',	'Demelzaxx',	'Paulette',	'1',	'Grandfather',	'0288759308',	'lovepaulette0@gmeal.com',	12),
 (13,	'Goldie',	'Marilynn',	'Vianne',	'1',	'Grandfather',	'0261176212',	'goldievianne13@gmeal.com',	13),
 (14,	'Kimson',	'',	'Kingston',	'1',	'Grandfather',	'029384723',	'sdlkfj@meal.ccc',	14),
-(23,	'Live',	'News',	'Portal',	'1',	'hackerist',	'09654666999',	'livenews@yicjpb.csx',	20);
+(23,	'Live',	'News',	'Portal',	'1',	'grandpapa',	'09654666999',	'livenews@yicjpb.csx',	20);
 
 DROP TABLE IF EXISTS `lost_report`;
 CREATE TABLE `lost_report` (
@@ -2049,7 +2051,7 @@ CREATE TABLE `member` (
 
 INSERT INTO `member` (`id`, `member_count`, `osca_id`, `nfc_serial`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `membership_date`, `picture`) VALUES
 (1,	00001,	'1376-2000001',	'0415916a',	'3b33d36e03d1e0510d0bc88a269ad342',	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-09-25 11:25:41',	'ci1g9s0y35.png'),
-(2,	00002,	'0421-2000002',	'040af172',	'3e4752ed713a565b662a2db13a7a62ba',	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'046-538-5233',	'ruby.glass@ymeal.com',	'2020-09-25 11:25:41',	'ci1g9s0y35.png'),
+(2,	00002,	'0421-2000002',	'040af172',	'4e8d33c45616cbaeecb1bc03268552aa',	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'09123321456',	'ruby.glass@ymeal.com',	'2020-09-24 16:00:00',	'ci1g9s0y35.png'),
 (3,	00003,	'0421-2000003',	'04e29172',	'c70368723fb1780003b3c4986223a232',	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-25 11:25:41',	'j6bo6kqm07.png'),
 (4,	00004,	'0421-2000004',	'046c6d6a',	'47a3a5537a5fdba16042736763c71bca',	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-09-25 11:25:41',	'ci1g9s0y35.png'),
 (5,	00005,	'1376-2000005',	'043af50a',	'd9334221988275625af60e69ce83d33e',	'Olimpia',	'',	'Ollis',	'1998-01-01',	'9',	NULL,	'olimpia.ollis@ymeal.com',	'2020-09-25 11:25:41',	'j6bo6kqm07.png'),
@@ -2062,7 +2064,7 @@ INSERT INTO `member` (`id`, `member_count`, `osca_id`, `nfc_serial`, `password`,
 (12,	00012,	'1339-2000012',	'2A6B9CE2A46B1DE9',	'617445834661adc756417af92adc683d',	'Vasanti',	'Elpidio',	'Hippolyte',	'1800-12-25',	'2',	'0279281684',	'vasanti.hippolyte@ymeal.com',	'2020-09-25 08:51:26',	''),
 (13,	00013,	'0314-2000013',	'2A6B9CE2A4DB4DE9',	'24c2558e01bf9ebece44c54fb8e8ca73',	'McKenzie ',	'Houston',	'Jessye',	'1948-12-08',	'2',	'0279281684',	'mckenzie.jessye@ymeal.com',	'2020-09-25 08:51:26',	''),
 (14,	00014,	'0410-2000014',	'7890acde7890acde',	'911be9ad950a83ae1641c4b890e8b38a',	'Christian',	'',	'Murphy',	'1958-10-25',	'1',	'0948654123',	'asdsa@aa.afx',	'2020-09-25 08:51:26',	NULL),
-(20,	00020,	'1374-2000020',	NULL,	'828fd9255753432d51df95eb62d61722',	'Akosi',	'',	'Dogiedog2',	'1948-03-01',	'1',	'09654123987',	'livenews@youchub.com',	'2020-09-25 09:22:13',	'665b47cef370ec24.png');
+(20,	00020,	'1374-2000020',	'9as8d7asg654',	'828fd9255753432d51df95eb62d61722',	'Akosie',	'',	'Dogiedog',	'1948-03-01',	'1',	'09654123987',	'livenews@youchub.com',	'2020-09-27 17:20:19',	'ff6f87deb1182bff.png');
 
 DROP TABLE IF EXISTS `pharmacy`;
 CREATE TABLE `pharmacy` (
@@ -2244,6 +2246,8 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (7,	65,	'Pasay to Guadalupe | Senior - SJT',	26.79,	5.36,	21.43),
 (8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29),
 (9,	85,	'Pasay to Guadalupe | Senior - SJT',	22.32,	4.46,	17.86);
+
+-- 2020-09-28 19:09:00
 
 DELIMITER ;; 
 

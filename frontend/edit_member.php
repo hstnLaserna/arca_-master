@@ -94,8 +94,8 @@ if(isset($_GET['member_id'])/* && isset($_GET['last_name'])*/)
                     </div>
 
                 <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $osca_id;?>">
-                <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
-                <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
+                <button type="button" class="btn btn-light btn-lg btn-block" id="submit">Submit</button>
+                <button type="reset" class="btn btn-close btn-lg btn-block">Reset Values</button>
             </form>
         </div>
         <?php

@@ -52,8 +52,7 @@
         $answer1 = $row['answer1'];
         $answer2 = $row['answer2'];
         
-        $member_buttons = '
-        <button type="button" id="edit" class="btn btn-secondary btn-lg btn-block">Edit</button>';
+        $member_buttons = '';//'<button type="button" id="edit" class="btn btn-secondary btn-lg btn-block">Edit</button>';
 
         $avatar = '../resources/avatars/'.$row["avatar"]; 
         if (file_exists($avatar) && $row["avatar"] == null) { $avatar = '../resources/images/unknown_m_f.png'; }
@@ -80,7 +79,7 @@
                         <input type="hidden" name="entity_key" value="<?php echo $user_name;?>">
                         <input type="hidden" name="entity_type" value="admin">
                         <label for="file" class="text">Change</label>
-                        <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
+                        <button type="submit" value="upload" id="submit" class="hidden btn-photo btn">Apply</button>
                     </div>
                 </form>
             </div>
@@ -88,6 +87,7 @@
         
         <div class="card-left">
             <div class="basic">
+                <button class="ml-auto btn btn-link edit" id="edit_basic"><i class="fa fa-edit"></i></button>
                 <h4 class="ml-1"> Basic Information </h4>
                 <ul class="profile-details">
                     <li class="profile-item">
@@ -230,7 +230,7 @@
 
         
 
-        $('#edit').click(function () {
+        $('#edit_basic').click(function () {
             var user = $('input[name="user_name"]').attr("id").replace("user_", "");
             location.replace("../frontend/edit_admin.php?user=" + user);
             

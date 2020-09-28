@@ -17,7 +17,7 @@
         <div class="container">
             <div class="content">
                 <div class="first-column">
-                    <img class="img-logo" src="resources/images/osca_logo_new.png" class="icon" alt="User Icon">
+                    <img class="img-logo" src="resources/images/OSCA logo.png" class="icon" alt="User Icon">
                     <h2 class="title title-primary">OFFICE FOR THE SENIOR CITIZEN AFFAIRS</h2>
                     <p class="description description-primary">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </div>

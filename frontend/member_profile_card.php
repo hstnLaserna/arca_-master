@@ -117,7 +117,7 @@
                                 if($is_modal)
                                 {
                                 ?>
-                            <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
+                            <button type="button" data-dismiss="modal" class="btn btn-close btn-lg btn-block">Close</button>
                         </div>  <?php
                                 } else { ?>
                         </div>  <?php }

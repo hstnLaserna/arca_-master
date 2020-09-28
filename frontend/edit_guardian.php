@@ -134,9 +134,8 @@ if(isset($_POST['osca_id']) && isset($_GET['action']))
                 }
                 ?>
             </div>
-                <button type="button" class="btn btn-primary btn-lg col-md-4" id="submit_guardian">Submit</button>
-                <button type="reset" class="btn btn-secondary btn-lg col-md-4">Reset Values</button>
-            <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
+            <button type="button" class="btn btn-light btn-lg btn-block" id="submit_guardian">Submit</button>
+            <button type="button" data-dismiss="modal" class="btn btn-close btn-lg btn-block">Close</button>
         </form>
     </div>
     <?php

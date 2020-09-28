@@ -73,7 +73,7 @@
                             
                             <div class="modal-footer">
                                 <button type="button" id="view" class="btn btn-light btn-lg btn-block">View</button>
-                                <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
+                                <button type="button" data-dismiss="modal" class="btn btn-close btn-lg btn-block">Close</button>
                             </div>
                             <input type="hidden" id="user_<?php echo $user_name;?>" name="user_name">
                         

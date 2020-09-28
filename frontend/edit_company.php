@@ -99,7 +99,8 @@ if(isset($_GET['company_tin'])/* && isset($_GET['last_name'])*/)
                     </div>
                 </div>
             </form>
-            <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
+            <button type="button" class="btn btn-light btn-lg btn-block" id="submit">Submit</button>
+            <button type="reset" class="btn btn-close btn-lg btn-block" id="submit">Reset</button>
         </div>
         <?php
         mysqli_close($mysqli);

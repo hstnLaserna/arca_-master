@@ -80,7 +80,7 @@
                                 <input type="hidden" name="entity_key" value="<?php echo $osca_id;?>">
                                 <input type="hidden" name="entity_type" value="member">
                                 <label for="file" class="text">Change</label>
-                                <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
+                                <button type="submit" value="upload" id="submit" class="hidden btn btn-photo">Apply</button>
                             </div>
                         </form>
                     </div>

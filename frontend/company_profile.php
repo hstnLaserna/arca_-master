@@ -60,7 +60,7 @@
                                 <input type="hidden" name="entity_key" value="<?php echo $company_tin;?>">
                                 <input type="hidden" name="entity_type" value="company">
                                 <label for="file" class="text">Change</label>
-                                <button type="submit" value="upload" id="submit" class="hidden">Apply</button>
+                                <button type="submit" value="upload" id="submit" class="hidden btn btn-photo">Apply</button>
                             </div>
                         </form>
                     </div>
@@ -80,7 +80,7 @@
                             </li>
                             <li class="profile-item">
                                 <span class="title">Company TIN</span> 
-                                <span class="content"><?php echo $company_tin; ?></span>
+                                <span class="content"><?php echo wordwrap($company_tin , 3 , '-' , true ); ?></span>
                             </li>
                             <li class="profile-item">
                                 <span class="title">Business Type</span> 
@@ -104,7 +104,7 @@
                 </div>
             
             
-                <div class="p-3 border border-dark rounded overflow-auto transactions">
+                <div class="card overflow-auto transactions">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-trans-tab" data-toggle="tab" href="#nav-trans" role="tab" aria-controls="nav-transactions" aria-selected="true">Transactions</a>

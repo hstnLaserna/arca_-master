@@ -144,9 +144,8 @@ if(isset($_POST['id']) &&
                 }
                 ?>
             </table>
-            <button type="button" class="btn btn-primary btn-lg btn-block" id="submit_edit">Submit</button>
-            <button type="reset" class="btn btn-secondary btn-lg btn-block">Reset Values</button>
-            <button type="button" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block">Close</button>
+            <button type="button" class="btn btn-light btn-lg btn-block" id="submit_edit">Submit</button>
+            <button type="button" data-dismiss="modal" class="btn btn-close btn-lg btn-block">Close</button>
         </form>
     </div>
     <?php
