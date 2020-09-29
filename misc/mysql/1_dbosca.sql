@@ -744,7 +744,8 @@ BEGIN
     `osca_id`, `password`, `picture`,
     `bdate`, `sex`, `memship_date`, `contact_number`,
     CONCAT(`first_name`, ' ', `last_name`) AS `full_name`,
-    CONCAT(`address_1`, ' ', `address_2`, ' ', `city`, ' ', `province`) AS address
+    CONCAT(`address_1`, ' ', `address_2`, ' ', `city`, ' ', `province`) AS address,
+    `nfc_active`, `account_enabled`
   from
     `view_members_with_guardian`
   where
