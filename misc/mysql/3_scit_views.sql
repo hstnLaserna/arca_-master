@@ -44,6 +44,7 @@ CREATE VIEW `view_all_transactions` AS
 SELECT  * FROM `db_osca`.`view_all_transactions`
 );
 
+use scit;
 DROP VIEW IF EXISTS `view_members_with_guardian`;
 CREATE VIEW `view_members_with_guardian` AS 
 (
@@ -57,7 +58,3 @@ SELECT * FROM `db_osca`.`view_drugs`;
 DROP VIEW IF EXISTS `view_qr_request`;
 CREATE VIEW `view_qr_request` AS 
 SELECT * FROM `db_osca`.`view_qr_request`;
-
-DROP VIEW IF EXISTS `view_qr_request_transactions`;
-CREATE VIEW `view_qr_request_transactions` AS 
-SELECT * FROM `db_osca`.`view_qr_request_transactions`;

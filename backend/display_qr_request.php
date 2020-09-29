@@ -62,7 +62,6 @@
                                     $company_name = $row['company_name'];
                                     $branch = $row['branch'];
                                 ?>
-                            Served. <br>
                             <a href="../frontend/company_profile.php?company_tin=<?php echo $company_tin;?>" class="view_">
                                 <?php echo "$company_name <br><i> $branch </i>" ?>
                             </a>

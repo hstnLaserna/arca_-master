@@ -520,6 +520,22 @@ i.sort_icon{
   border-radius: .25rem !important;
   overflow: auto !important;
 }
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+}
+.status-label {
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+  align-items: end; /* Pack items from the end */ 
+}
+.status-content{
+  flex: 0 0 66.666666%;
+  max-width: 66.666666%;
+  align-items: start; /* Pack items from the end */ 
+}
+
 .status_active {
   color: rgb(0, 205, 0);
   font-weight: bold;

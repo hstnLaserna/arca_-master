@@ -4,6 +4,8 @@
     //declare
     $osca_id = "null";
     $report_date = "null";
+    $nfc_active = false;
+    $account_enabled = false;
     $desc = "null";
     $row_count_orig = 0;
     $row_count_display = 0;
@@ -74,7 +76,7 @@
     ?>
 
 </div>
-<div class="_dfg987">
+<div id="_8d9s02" class="modal fade" role="dialog">
 </div>
 
 <button class="btn btn-block btn-dark" id="expand-lost-report">Show More</button>
@@ -90,12 +92,10 @@ $(document).ready(function(){
     });
 
     $(".lost_row").click(function(){
-        var osca_id= <?php echo $osca_id;?>;
+        var osca_id= "<?php echo $osca_id;?>";
         var lost_id = $(this).attr("id").replace("lostid_", "");
-        alert("aa" + lost_id);
-        
-        $('._dfg987').load("../frontend/response_lost.php", {id:osca_id, lost_id:lost_id},function(){
-            $('._dfg987').modal();
+        $('#_8d9s02').load("../frontend/response_lost.php", {id:osca_id, lost_id:lost_id},function(){
+            $('#_8d9s02').modal();
         });
 
     });

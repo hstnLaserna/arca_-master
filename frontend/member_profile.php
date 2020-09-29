@@ -7,7 +7,7 @@
 
     $osca_id = "";
     $nfc_active = false;
-    $account_enabled = true;
+    $account_enabled = false;
     $member_id = "";
     $fullname = "";
     $first_name = "";

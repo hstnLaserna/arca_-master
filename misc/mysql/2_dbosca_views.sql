@@ -149,27 +149,29 @@ DROP VIEW IF EXISTS `view_drugs`;
 CREATE VIEW `view_drugs` AS 
 SELECT id FROM `db_osca`.`drug`;
 
+use db_osca;
 DROP VIEW IF EXISTS `view_qr_request`;
 CREATE VIEW `view_qr_request` AS 
-SELECT * FROM `db_osca`.`qr_request`;
+SELECT *, IF(`trans_date` >(now() - INTERVAL 1 DAY), 0, 1) as `is_expired` FROM `db_osca`.`qr_request`;
 
 DROP VIEW IF EXISTS `view_lost_report`;
 CREATE VIEW `view_lost_report` AS 
-SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, l.`report_date`
+SELECT m.`id` `member_id`, l.id `lost_id`, l.`desc`, m.`osca_id` `osca_id`, l.`report_date`
 FROM `db_osca`.`lost_report` l
 INNER JOIN `db_osca`.`member` m on l.`member_id` = m.`id`
 ;
 
+use db_osca;
 DROP VIEW IF EXISTS `view_qr_request_transactions`;
 CREATE VIEW `view_qr_request_transactions` AS 
-SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, `desc`, v.`trans_date` `request_date`, t.id `transaction_id`, t.`trans_date` `transaction_date`, `company_tin` `company_tin`, c.`company_name` `company_name`
+SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, `desc`, v.`trans_date` `request_date`, v.`is_expired`, t.id `transaction_id`, t.`trans_date` `transaction_date`, `company_tin` `company_tin`, c.`company_name` `company_name`, c.`branch`
 FROM `view_qr_request` v
 INNER JOIN `member` m ON v.`member_id` = m.`id`
 INNER JOIN `transaction` t on v.transaction_id = t.id
 INNER JOIN `company` c on t.company_id = c.id
 WHERE v.id NOT IN (SELECT v2.id FROM view_qr_request v2 WHERE (v2.`transaction_id` IS NULL OR v2.`transaction_id` = ""))
 UNION
-SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, `desc`, v.`trans_date` `request_date`, null `transaction_id`, null `transaction_date`, null `company_tin`, null `company_name`
+SELECT m.`id` `member_id`, m.`osca_id` `osca_id`, `desc`, v.`trans_date` `request_date`, v.`is_expired`, null `transaction_id`, null `transaction_date`, null `company_tin`, null `company_name`, null `branch`
 FROM `view_qr_request` v
 INNER JOIN `member` m ON v.`member_id` = m.`id`
 WHERE (v.`transaction_id` IS NULL OR v.`transaction_id` = "");
