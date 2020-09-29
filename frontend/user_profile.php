@@ -20,6 +20,7 @@
     $avatar = "";
     $member_buttons = "";
     $personal_profile = false;
+    $account_enabled = false;
 
     if(isset($_GET['user']) && $logged_position == "admin")
     {
@@ -30,7 +31,7 @@
         $query_basis = "`user_name` = '$user_name'";
     }
 
-    $query = "SELECT `id`, `user_name`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, 
+    $query = "SELECT `id`, `user_name`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `is_enabled`,
                     `contact_number`, `email`, `position`, `answer1`, `answer2`, `avatar` 
                     FROM `admin` WHERE $query_basis";
     $result = $mysqli->query($query);
@@ -51,6 +52,7 @@
         $position = strtolower($row['position']);
         $answer1 = $row['answer1'];
         $answer2 = $row['answer2'];
+        $account_enabled = ($row['is_enabled'] == 1)? true: false;
         
         $member_buttons = '';//'<button type="button" id="edit" class="btn btn-secondary btn-lg btn-block">Edit</button>';
 
@@ -123,6 +125,14 @@
                         <div class="title">Position</div> 
                         <div class="content"><?php echo $position; ?></div>
                     </li>
+                    <li class="profile-item">
+                        <div class="title">Account</div> 
+                        <div class="content">
+                            <?php 
+                            echo ($account_enabled)? "<span class='acct-status status_active'>Enabled</span>" :"<span class='acct-status status_inactive'>Disabled</span>";
+                            ?>
+                        </div>
+                    </li>
                 </ul>
                     <?php echo $member_buttons;?>
             </div>
@@ -192,43 +202,16 @@
             document.getElementById("submit").classList.remove("hidden");
             console.log("File is selected");
         }
-        /*
-        $('#a').click(function () {
-            var entity_type = $('input[name="entity_type"]').val();
-            var entity_key = $('input[name="entity_key"]').val();
-            alert(entity_type + " " + entity_key);
-            $.post("../backend/upload.php?entity_type="+entity_type+"&entity_key="+entity_key,$('form#form_photo'), function(d){
-                alert(d);
-                location.reload();
+
+        $('.acct-status').click(function () {
+            var user = $('input[name="user_name"]').attr("id").replace("user_", "");
+            $.post("../backend/toggle_admin_acct.php", {user:user},function(d){
+                if(d.trim() == "1")
+                {
+                    location.reload();
+                }
             });
         });
-
-        $("form#form_photo").submit(function() {
-            var formData = new FormData(this);
-            $.post($(this).attr("action"), formData, function(d) {
-                alert(d);
-                location.reload();
-            });
-            return false;
-        });
-
-        
-
-        $("#submit").click(function(){
-            $("#form_photo").submit(function(){
-                var formData = new FormData(this);
-                $.post("../backend/upload.php?entity_key=&entity_type=admin", formData, function(d){
-                    if(d == "true") {
-                        location.replace("../frontend/user_profile.php?user=);
-                    } else {
-                        alert(d);
-                    }
-                });
-            });
-        });
-        */
-
-        
 
         $('#edit_basic').click(function () {
             var user = $('input[name="user_name"]').attr("id").replace("user_", "");

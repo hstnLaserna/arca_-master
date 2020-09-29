@@ -16,10 +16,12 @@
     {
         $selected_company_tin = $_GET['company_tin'];
 
-        $query = "SELECT c.`id` id, c.`company_name` `company_name`, c.`branch` `branch`, 
-                        c.`company_tin` `company_tin`, c.`business_type` `business_type`, c.`logo` `logo`
+        $query = "SELECT c.`id` `id`, c.`company_name`, c.`branch`, 
+                    c.`company_tin`, c.`business_type`, c.`logo`,
+                    ca.`is_enabled`
                     FROM `company` c
-                    WHERE `company_tin` = '$selected_company_tin';";
+                    INNER JOIN `company_accounts` ca ON ca.`company_id` = c.`id`
+                    WHERE c.`company_tin` = '$selected_company_tin';";
                     
         $result = $mysqli->query($query);
         $row_count_member = mysqli_num_rows($result);
@@ -32,6 +34,7 @@
             $branch = $row['branch'];
             $company_tin = $row['company_tin'];
             $business_type = $row['business_type'];
+            $account_enabled = ($row['is_enabled'] == 1)? true: false;
             
             $logo =  "../resources/logo/".$row["logo"]; 
 
@@ -98,6 +101,15 @@
                                 <div class='title'>Address</div>
                                 <div class="content"><?php echo "$address1, $address2, $city, $province";?></div>
                                 <button class="ml-auto btn btn-link edit edit_address"><i class="fa fa-edit"></i></button>
+                            </li>
+                    
+                            <li class="profile-item">
+                                <div class="title">Account</div> 
+                                <div class="content">
+                                    <?php 
+                                    echo ($account_enabled)? "<span class='acct-status status_active'>Enabled</span>" :"<span class='acct-status status_inactive'>Disabled</span>";
+                                    ?>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -185,7 +197,6 @@ $(document).ready(function(){
             $('#_kf939s').modal();
         });
     });
-
     
     $('#edit_basic').click(function () {
         var url = 'edit_company.php';
@@ -195,6 +206,16 @@ $(document).ready(function(){
         $('div.container').append(form);
         form.submit();
         
+    });
+
+    $('.acct-status').click(function () {
+        var id= "<?php echo $company_id;?>";
+        $.post("../backend/toggle_company_acct.php", {id:id},function(d){
+            if(d.trim() == "1")
+            {
+                location.reload();
+            }
+        });
     });
 
     

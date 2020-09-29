@@ -212,13 +212,8 @@
                                     <div class="title">NFC Tag</div> 
                                     <div class="content">
                                         <?php 
-                                            if($nfc_active){
-                                                echo "<span class='status_active'>Active</span>";
-                                            } else {
-                                                echo "<span class='status_inactive'>Inactive</span>";
-                                            }
-                                            
-                                            ?>
+                                        echo ($nfc_active)? "<span class='nfc-status status_active'>Active</span>":"<span class=' nfc-status status_inactive'>Inactive</span>";
+                                        ?>
                                     
                                     </div>
                                 </li>
@@ -226,13 +221,8 @@
                                     <div class="title">Account</div> 
                                     <div class="content">
                                         <?php 
-                                            if($account_enabled){
-                                                echo "<span class='status_active'>Enabled</span>";
-                                            } else {
-                                                echo "<span class='status_inactive'>Disabled</span>";
-                                            }
-                                            
-                                            ?>
+                                        echo ($account_enabled)? "<span class='acct-status status_active'>Enabled</span>" :"<span class='acct-status status_inactive'>Disabled</span>";
+                                        ?>
                                     </div>
                                 </li>
                             </ul>
@@ -282,8 +272,9 @@ include('../frontend/foot.php');
 ?>
 
 <script>
-$('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
-var loadFile = function(event) {
+$(document).ready(function(){
+    $('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
+    var loadFile = function(event) {
         var output = document.getElementById('output');
         output.src = URL.createObjectURL(event.target.files[0]);
         output.onload = function() {
@@ -319,12 +310,8 @@ var loadFile = function(event) {
     //input.addEventListener('blur', function(){ input.classList.remove('has-focus'); });
 
 
-$(document).ready(function(){
     var member_id = <?php echo $member_id; ?>;
     var osca_id = "<?php echo $osca_id; ?>";
-    var counter = 1;
-    var ctr2 = 1;
-    var type = "";
 
     $("#nav-all").load("../backend/display_transactions_all.php", {member_id : member_id});
     $("#nav-ph").load("../backend/display_transactions_pharmacy.php", {member_id : member_id});
@@ -343,6 +330,26 @@ $(document).ready(function(){
         $('div.container').append(form);
         form.submit();
         
+    });
+
+    $('.nfc-status').click(function () {
+        var id= <?php echo $member_id;?>;
+        $.post("../backend/toggle_member_nfc.php", {id:id},function(d){
+            if(d.trim() == "1")
+            {
+                location.reload();
+            }
+        });
+    });
+
+    $('.acct-status').click(function () {
+        var id= <?php echo $member_id;?>;
+        $.post("../backend/toggle_member_acct.php", {id:id},function(d){
+            if(d.trim() == "1")
+            {
+                location.reload();
+            }
+        });
     });
     
     $('#add_address').click(function () {

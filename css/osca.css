@@ -230,6 +230,11 @@ img.avatar:hover {
   padding: 1rem;
 }
 
+.nfc-status, .acct-status {
+  cursor:pointer;
+}
+
+
 div.title{
   width: 10rem;
   display: inline-block;
