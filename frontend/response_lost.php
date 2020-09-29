@@ -57,43 +57,78 @@ if(isset($_POST['id']) &&
 
                             <div class="desc">
                                 <label for="desc">Action taken</label>
-                                <textarea wrap="off" cols="30" rows="5" class="form-control" name="desc"></textarea>
+                                <textarea wrap="off" cols="30" rows="5" class="form-control" name="desc" id ="desc"></textarea>
                             </div>
                             <div class="date">
-                                <label for="address_1">Date</label>
-                                <input type="text" class="form-control" name="desc" value="<?php echo $report_date; ?>">
+                                <label for="address_1">Date Reported</label>
+                                <input type="text" class="form-control" name="date" disabled value="<?php echo $report_date; ?>">
                             </div>
-                            <div class="action">
-                                    <div class="status">
-                                        <div class="status-label">NFC Tag</div> 
-                                        <div class="status-content">
-                                            
-                                        <input type="checkbox" id="test1" />
-                                        <label for="test1">Red</label>
-                                            <?php 
-                                                if($nfc_active){
-                                                    echo "<button class='btn status_active'>Active</button>";
-                                                } else {
-                                                    echo "<button class='btn status_inactive'>Inactive</button>";
-                                                }
-                                                ?>
-                                        </div>
+                            <div class="action mt-3">
+                                <div class="status">
+                                    <div class="status-label">NFC Tag</div> 
+                                    <div class="status-content">
+                                        <label class="switch" for="nfc_status">
+                                            <input type="checkbox" id="nfc_status" name="nfc_status"/>
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <input type="hidden" id="nfc_status_text" name="nfc_status_text">
                                     </div>
-                                    <div class="status">
-                                        <div class="status-label">Account</div> 
-                                        <div class="status-content">
-                                            <?php
-                                                if($account_enabled){
-                                                    echo "<button class='btn status_active'>Enabled</button>";
-                                                } else {
-                                                    echo "<button class='btn status_inactive'>Disabled</button>";
-                                                }
-                                                
-                                                ?>
-                                        </div>
+                                </div>
+                                <div class="status">
+                                    <div class="status-label">Account</div> 
+                                    <div class="status-content">
+                                        <label class="switch" for="account_status">
+                                            <input type="checkbox" id="account_status" name="account_status"/>
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <input type="hidden" id="account_status_text" name="account_status_text">
                                     </div>
+                                </div>
                             </div>
                         </div>
+                        <script>
+                        $(document).ready(function(){
+
+                            function setDescValue() {
+                                var today = new Date();
+                                var ttt = today.toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
+                                var dd = String(today.getDate()).padStart(2, '0');
+                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                var yyyy = today.getFullYear();
+                                today = mm + '/' + dd + '/' + yyyy;
+
+                                txtNFC = $('#nfc_status_text').val();
+                                txtAcct = $('#account_status_text').val();
+                                var newline = String.fromCharCode(13, 10);
+                                $('#desc').val("On " + today + " " + ttt + newline +txtNFC + newline + txtAcct);
+                            }
+
+                            $('input[type=checkbox]#nfc_status').click(function () {
+                                if ($('input[type=checkbox]').is(':checked')) {
+                                    $('#nfc_status_text').val('NFC Activated');
+                                }
+                                else{
+                                    $('#nfc_status_text').val('NFC Deactivated');
+                                }
+                                setDescValue();
+                            });
+                            $('input[type=checkbox]#account_status').click(function () {
+                                if ($('input[type=checkbox]').is(':checked')) {
+                                    $('#account_status_text').val('Account Activated');
+                                }
+                                else{
+                                    $('#account_status_text').val('Account Deactivated');
+                                }
+                                setDescValue();
+                            });
+                            $("#submit_response").click(function(){
+                                var aaa = $('#desc').val();
+                                alert(aaa);
+                            });
+                        });
+
+
+                        </script>
                         <?php
                     }
                 } else {
@@ -103,7 +138,7 @@ if(isset($_POST['id']) &&
                 mysqli_close($mysqli1);
             }
             ?>
-            <button type="button" class="btn btn-light btn-lg btn-block" id="submit_edit">Submit</button>
+            <button type="button" class="btn btn-light btn-lg btn-block" id="submit_response">Submit</button>
             <button type="button" data-dismiss="modal" class="btn btn-close btn-lg btn-block">Close</button>
         </form>
     </div>

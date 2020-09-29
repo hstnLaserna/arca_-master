@@ -67,7 +67,7 @@
             <?php
             
         } else {
-            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No Reports on Lost NFC Tags</div>";
+            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No loss reported</div>";
         }
         
         //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
