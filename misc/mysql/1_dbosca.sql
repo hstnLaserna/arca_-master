@@ -14,46 +14,46 @@ DELIMITER ;;
 DROP PROCEDURE IF EXISTS `activate_admin_account`;;
 CREATE PROCEDURE `activate_admin_account`(IN `user_name_` varchar(60), OUT `msg` int(10))
 BEGIN
-	IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
+  IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
     THEN
-		UPDATE `admin` SET
-		is_enabled = 1,
-		log_attempts = 0
-		WHERE `user_name` = `user_name_`;
-		SET `msg` = "1";
-	ELSE 
-		SET `msg` = "0";
-	END IF;
+    UPDATE `admin` SET
+    is_enabled = 1,
+    log_attempts = 0
+    WHERE `user_name` = `user_name_`;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_address`;;
 CREATE PROCEDURE `add_address`(IN `add1_` varchar(120), IN `add2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120), IN `is_active_` varchar(11), IN `member_id_` varchar(20), OUT `msg` varchar(1))
 BEGIN
-	IF ((SELECT COUNT(*) FROM `member` WHERE `id` = member_id_) = 1)
-	THEN
-		START TRANSACTION;
+  IF ((SELECT COUNT(*) FROM `member` WHERE `id` = member_id_) = 1)
+  THEN
+    START TRANSACTION;
         
-			IF (`is_active_` = 1) -- if is_active flag is set, clear other address of this entity
-			THEN
-				UPDATE `address` a
-				INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-				SET a.`is_active` = 0
-				WHERE ajt.`member_id` = (SELECT `id` FROM `member` WHERE `id` = `member_id_`);
-			ELSE
-				SET msg = 0; -- do nothing, 
-			END IF;
+      IF (`is_active_` = 1) -- if is_active flag is set, clear other address of this entity
+      THEN
+        UPDATE `address` a
+        INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+        SET a.`is_active` = 0
+        WHERE ajt.`member_id` = (SELECT `id` FROM `member` WHERE `id` = `member_id_`);
+      ELSE
+        SET msg = 0; -- do nothing, 
+      END IF;
             
-			INSERT	INTO `address` (`address1`, `address2`, `city`, `province`, `is_active`, `last_update`)
-			VALUES (`add1_`, `add2_`, `city_`, `province_`, `is_active_`, now());
-			
-			SET @last_inserted_id = LAST_INSERT_ID();
+      INSERT  INTO `address` (`address1`, `address2`, `city`, `province`, `is_active`, `last_update`)
+      VALUES (`add1_`, `add2_`, `city_`, `province_`, `is_active_`, now());
+      
+      SET @last_inserted_id = LAST_INSERT_ID();
 
-			INSERT INTO address_jt (`address_id`, `member_id`) VALUES (@last_inserted_id, (SELECT `id` FROM `member` WHERE `id` = `member_id_`));
-			SET msg = 1;  -- company exists
-		COMMIT;
-	ELSE 
-		SET msg = 0; -- company doesnt exist
-	END IF;
+      INSERT INTO address_jt (`address_id`, `member_id`) VALUES (@last_inserted_id, (SELECT `id` FROM `member` WHERE `id` = `member_id_`));
+      SET msg = 1;  -- company exists
+    COMMIT;
+  ELSE 
+    SET msg = 0; -- company doesnt exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_admin`;;
@@ -61,7 +61,7 @@ CREATE PROCEDURE `add_admin`(IN `username_` varchar(20), IN `password_` varchar(
 BEGIN
 
     IF
-        ((SELECT COUNT(*) FROM `admin` where `user_name` = `username_`) = 0)
+        ((SELECT COUNT(*) FROM `admin` WHERE `user_name` = `username_`) = 0)
     THEN
         INSERT INTO `admin` (`user_name`, `password`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `position`, `is_enabled`, `log_attempts`, `answer1`, `answer2`, `temporary_password`, `avatar`)
                     VALUES (`username_`, MD5(`password_`), `firstname_`, `middlename_`, `lastname_`, `birthdate_`, `sex_`, `contact_number_`, `email_`, `position_`, `isEnabled_`, 0, `answer1_`, `answer2_`, `password_`, 'null');
@@ -76,46 +76,46 @@ DROP PROCEDURE IF EXISTS `add_company`;;
 CREATE PROCEDURE `add_company`(IN `company_tin_` varchar(20), IN `company_name_` varchar(250), IN `branch_` varchar(120), IN `business_type_` varchar(120),
                                 IN `address1_` varchar(120), IN `address2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120))
 BEGIN
-	START TRANSACTION;
-	INSERT INTO `company` (`company_tin`, `company_name`, `branch`, `business_type`)
-		VALUES	(`company_tin_`, `company_name_`, `branch_`, `business_type_`);
-	SET @company_inserted_id = LAST_INSERT_ID();
+  START TRANSACTION;
+  INSERT INTO `company` (`company_tin`, `company_name`, `branch`, `business_type`)
+    VALUES  (`company_tin_`, `company_name_`, `branch_`, `business_type_`);
+  SET @company_inserted_id = LAST_INSERT_ID();
 
-	INSERT INTO `address` (`address1`, `address2`, `city`, `province`, `is_active`, `last_update`)
-		VALUES	(`address1_`, `address2_`, `city_`, `province_`, 1, now());
+  INSERT INTO `address` (`address1`, `address2`, `city`, `province`, `is_active`, `last_update`)
+    VALUES  (`address1_`, `address2_`, `city_`, `province_`, 1, now());
 
-	SET @address_inserted_id = LAST_INSERT_ID();
-	INSERT INTO address_jt (`address_id`, `company_id`) VALUES (@address_inserted_id, @company_inserted_id);
-	COMMIT;
+  SET @address_inserted_id = LAST_INSERT_ID();
+  INSERT INTO address_jt (`address_id`, `company_id`) VALUES (@address_inserted_id, @company_inserted_id);
+  COMMIT;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_company_address`;;
 CREATE PROCEDURE `add_company_address`(IN `add1_` varchar(120), IN `add2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120), IN `is_active_` varchar(11), IN `selected_id_` varchar(20), OUT `msg` varchar(1))
 BEGIN
-	IF ((SELECT COUNT(*) FROM `company` WHERE `id` = `selected_id_`) = 1)
-	THEN
-		START TRANSACTION;
+  IF ((SELECT COUNT(*) FROM `company` WHERE `id` = `selected_id_`) = 1)
+  THEN
+    START TRANSACTION;
         
-			IF (`is_active_` = 1) -- if is_active flag is set, clear other address of this entity
-			THEN
-				UPDATE `address` a
-				INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-				SET a.`is_active` = 0
-				WHERE ajt.`company_id` = (SELECT `id` FROM `company` WHERE `id` = `selected_id_`);
-			ELSE
-				SET msg = 0; -- do nothing, 
-			END IF;
-			
-			INSERT	INTO `address` (`address1`, `address2`, `city`, `province`, `is_active`, `last_update`)
-			VALUES (`add1_`, `add2_`, `city_`, `province_`, `is_active_`, now());
-			SET @last_inserted_id = LAST_INSERT_ID();
-			INSERT INTO address_jt (`address_id`, `company_id`) VALUES (@last_inserted_id, (SELECT `id` FROM `company` WHERE `id` = `selected_id_`));
+      IF (`is_active_` = 1) -- if is_active flag is set, clear other address of this entity
+      THEN
+        UPDATE `address` a
+        INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+        SET a.`is_active` = 0
+        WHERE ajt.`company_id` = (SELECT `id` FROM `company` WHERE `id` = `selected_id_`);
+      ELSE
+        SET msg = 0; -- do nothing, 
+      END IF;
+      
+      INSERT  INTO `address` (`address1`, `address2`, `city`, `province`, `is_active`, `last_update`)
+      VALUES (`add1_`, `add2_`, `city_`, `province_`, `is_active_`, now());
+      SET @last_inserted_id = LAST_INSERT_ID();
+      INSERT INTO address_jt (`address_id`, `company_id`) VALUES (@last_inserted_id, (SELECT `id` FROM `company` WHERE `id` = `selected_id_`));
             
-			SET msg = 1;  -- company exists
-		COMMIT;
-	ELSE 
-		SET msg = 0; -- company doesnt exist
-	END IF;
+      SET msg = 1;  -- company exists
+    COMMIT;
+  ELSE 
+    SET msg = 0; -- company doesnt exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_complaint_report`;;
@@ -159,18 +159,18 @@ END;;
 DROP PROCEDURE IF EXISTS `add_guardian`;;
 CREATE PROCEDURE `add_guardian`(IN `first_name_` varchar(120), IN `middle_name_` varchar(120), IN `last_name_` varchar(120), IN `sex_` varchar(10), IN `relationship_` varchar(120), IN `contact_number_` varchar(20), IN `email_` varchar(120), IN `member_id_` varchar(20), OUT `msg` int(1))
 BEGIN
-	IF ((SELECT COUNT(*) FROM `member` WHERE `id` = member_id_) = 1)
-	THEN
-		START TRANSACTION;
-			
-			INSERT	INTO `guardian` (`first_name`,	`middle_name`,	`last_name`,	`sex`,	`relationship`,	`contact_number`,	`email`,	`member_id`)
-				VALUES (`first_name_`,	`middle_name_`,	`last_name_`,	`sex_`,	`relationship_`,	`contact_number_`,	`email_`,	`member_id_`);
+  IF ((SELECT COUNT(*) FROM `member` WHERE `id` = member_id_) = 1)
+  THEN
+    START TRANSACTION;
+      
+      INSERT  INTO `guardian` (`first_name`,  `middle_name`,  `last_name`,  `sex`,  `relationship`,  `contact_number`,  `email`,  `member_id`)
+        VALUES (`first_name_`,  `middle_name_`,  `last_name_`,  `sex_`,  `relationship_`,  `contact_number_`,  `email_`,  `member_id_`);
 
-			SET msg= 1; -- member exists
-		COMMIT;
-	ELSE 
-		SET msg= 0; -- member does not exist
-	END IF;
+      SET msg= 1; -- member exists
+    COMMIT;
+  ELSE 
+    SET msg= 0; -- member does not exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `add_lost_report`;;
@@ -219,9 +219,9 @@ BEGIN
 
 
     UPDATE `member` m
-    INNER JOIN address_jt ajt on ajt.member_id = m.id
-    INNER JOIN address a on ajt.address_id = a.id
-    INNER JOIN city_code cc on LOWER(a.city) = LOWER(cc.citymunDesc)
+    INNER JOIN address_jt ajt ON ajt.member_id = m.id
+    INNER JOIN address a ON ajt.address_id = a.id
+    INNER JOIN city_code cc ON LOWER(a.city) = LOWER(cc.citymunDesc)
       SET
       m.osca_id =  CONCAT(provCode, '-', substr(year(membership_date), 3,3), m.member_count)
     WHERE m.id = @member_inserted_id;
@@ -234,12 +234,12 @@ BEGIN
   DECLARE member_id_ VARCHAR(120);
   IF ((SELECT count(*) FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1) = 1)
   THEN
-  SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1);
-  INSERT INTO `qr_request`(`member_id`, `desc`, `token`, `trans_date`) VALUES
-    (`member_id_`, `desc_`, `token_`, `request_date_`);
-  SET msg = 1;
+    SET `member_id_` = (SELECT `member_id` FROM `view_members_with_guardian` WHERE `osca_id` = `osca_id_` LIMIT 1);
+    INSERT INTO `qr_request`(`member_id`, `desc`, `token`, `trans_date`) VALUES
+      (`member_id_`, `desc_`, `token_`, `request_date_`);
+    SET msg = 1;
   ELSE
-  SET msg = 0;
+        SET msg = 0;
   END IF;
 END;;
 
@@ -286,7 +286,7 @@ CREATE PROCEDURE `add_transaction_pharmacy_nondrug`(IN `trans_type` varchar(120)
 BEGIN
   IF (`trans_type` = 'pharmacy' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
   THEN
-		INSERT INTO `pharmacy` (`transaction_id`, `desc_nondrug`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+    INSERT INTO `pharmacy` (`transaction_id`, `desc_nondrug`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
       (`transaction_id_`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
     SET msg = "1";
   ELSE 
@@ -299,7 +299,7 @@ CREATE PROCEDURE `add_transaction_transportation`(IN `trans_type` varchar(120), 
 BEGIN
   IF (`trans_type` = 'transportation' AND (SELECT COUNT(*) FROM `view_companies` WHERE `company_tin` = `company_tin_`) = 1)
   THEN
-		INSERT INTO `transportation` (`transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
+    INSERT INTO `transportation` (`transaction_id`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`) VALUES
       (`transaction_id_`, `desc_`, `vat_exempt_price_`, `discount_price_`, `payable_price_`);
     SET msg = "1";
   ELSE 
@@ -310,121 +310,121 @@ END;;
 DROP PROCEDURE IF EXISTS `deactivate_admin_account`;;
 CREATE PROCEDURE `deactivate_admin_account`(IN `user_name_` varchar(60), OUT `msg` int(10))
 BEGIN
-	IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
+  IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
     THEN
-		UPDATE `admin` SET
-		is_enabled = 0,
-		log_attempts = 0
-		WHERE `user_name` = `user_name_`;
-		SET `msg` = "0";
-	ELSE 
-		SET `msg` = "0";
-	END IF;
+    UPDATE `admin` SET
+    is_enabled = 0,
+    log_attempts = 0
+    WHERE `user_name` = `user_name_`;
+    SET `msg` = "0";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `delete_company_address`;;
 CREATE PROCEDURE `delete_company_address`(IN `company_id_` int(20), IN `company_name_` varchar(250), IN `branch_` varchar(120), OUT `msg` varchar(20))
 BEGIN
-	
-	IF(( SELECT count(*) FROM `company` c
-			WHERE c.`id` = `company_id_` 
-			AND c.`company_name` = `company_name_`
-			AND c.`branch` = `branch_`) = 1)
-	THEN
-		DELETE FROM `company`
-			WHERE `id` = `company_id_`;
-		IF(( SELECT count(*) FROM `address` a 
-				INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.`id`
-				WHERE ajt.`company_id` = `company_id_`) > 0)
-		THEN
-			DELETE FROM `address_jt`
-				WHERE `company_id` = `company_id_`;
-			SET msg = 2; -- member and address exists
-		ELSE
-			SET msg = 1; -- address doesnt exist
-		END IF;
-	ELSE
-		SET msg = 0; -- the company doesnt exist
-	END IF;
+  
+  IF(( SELECT count(*) FROM `company` c
+      WHERE c.`id` = `company_id_` 
+      AND c.`company_name` = `company_name_`
+      AND c.`branch` = `branch_`) = 1)
+  THEN
+    DELETE FROM `company`
+      WHERE `id` = `company_id_`;
+    IF(( SELECT count(*) FROM `address` a 
+        INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.`id`
+        WHERE ajt.`company_id` = `company_id_`) > 0)
+    THEN
+      DELETE FROM `address_jt`
+        WHERE `company_id` = `company_id_`;
+      SET msg = 2; -- member AND address exists
+    ELSE
+      SET msg = 1; -- address doesnt exist
+    END IF;
+  ELSE
+    SET msg = 0; -- the company doesnt exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `delete_guardian`;;
 CREATE PROCEDURE `delete_guardian`(IN `member_osca_id_` varchar(20), IN `id_` int(20), OUT `msg` int(1))
 BEGIN
-	IF((
-	SELECT count(*) FROM `guardian` g INNER JOIN `member` m on g.`member_id` = m.`id` WHERE g.`id` = `id_` AND m.`osca_id` = `member_osca_id_`) = 1)
-	THEN
-		
-		DELETE FROM `guardian`
-		WHERE `id` = `id_`;
+  IF((
+  SELECT count(*) FROM `guardian` g INNER JOIN `member` m ON g.`member_id` = m.`id` WHERE g.`id` = `id_` AND m.`osca_id` = `member_osca_id_`) = 1)
+  THEN
+    
+    DELETE FROM `guardian`
+    WHERE `id` = `id_`;
 
-		IF(( SELECT count(*) FROM address a INNER JOIN address_jt ajt ON ajt.address_id = a.id WHERE ajt.`guardian_id` = `id_`) = 1)
-		THEN            
-			DELETE FROM `address_jt`
-			WHERE `guardian_id` = `id_`;
-			
-			SET msg = 2; -- address for this guardian exists, guardian deleted
-		ELSE
+    IF(( SELECT count(*) FROM address a INNER JOIN address_jt ajt ON ajt.address_id = a.id WHERE ajt.`guardian_id` = `id_`) = 1)
+    THEN            
+      DELETE FROM `address_jt`
+      WHERE `guardian_id` = `id_`;
+      
+      SET msg = 2; -- address for this guardian exists, guardian deleted
+    ELSE
 
-			SET msg = 1; -- address for this guardian does not exist, guardian deleted
-		END IF;
-	ELSE
+      SET msg = 1; -- address for this guardian does not exist, guardian deleted
+    END IF;
+  ELSE
 
-		SET msg = 0; -- Guardian does not exist
-	END IF;
+    SET msg = 0; -- Guardian does not exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `delete_member_address`;;
 CREATE PROCEDURE `delete_member_address`(IN `member_id_` int(20), IN `id_` int(20), OUT `msg` varchar(120))
 BEGIN
-	IF(( SELECT count(*) FROM `member` m
-			INNER JOIN `address_jt` ajt ON ajt.`member_id` = m.`id`
-			WHERE ajt.`member_id` = `member_id_`) > 0)
-	THEN
-		IF(( SELECT count(*) FROM `address` a 
-				INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.`id`
+  IF(( SELECT count(*) FROM `member` m
+      INNER JOIN `address_jt` ajt ON ajt.`member_id` = m.`id`
+      WHERE ajt.`member_id` = `member_id_`) > 0)
+  THEN
+    IF(( SELECT count(*) FROM `address` a 
+        INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.`id`
                 WHERE ajt.`address_id` = `address_id_`) > 0)
-		THEN
-			DELETE FROM `address_jt`
-				WHERE `member_id` = `member_id_` AND `address_id` = `address_id_`;
-			DELETE FROM `address`
-				WHERE `id` = `address_id_`;
-			SET msg = 2; -- member and address exists
+    THEN
+      DELETE FROM `address_jt`
+        WHERE `member_id` = `member_id_` AND `address_id` = `address_id_`;
+      DELETE FROM `address`
+        WHERE `id` = `address_id_`;
+      SET msg = 2; -- member AND address exists
         ELSE
-			SET msg = 1; -- member exists but not the address
+      SET msg = 1; -- member exists but not the address
         END IF;
-	ELSE
-		SET msg = 0; -- the member doesnt exist
-	END IF;
+  ELSE
+    SET msg = 0; -- the member doesnt exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_address_company`;;
 CREATE PROCEDURE `edit_address_company`(IN `add1_` varchar(120), IN `add2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120), IN `id_` int(11), IN `company_id_` varchar(120), OUT `msg` varchar(120))
 BEGIN
-	IF( (SELECT count(*) FROM `company` c
+  IF( (SELECT count(*) FROM `company` c
                     WHERE c.`id` = `company_id_`) = 1)
     THEN
-		IF( (SELECT count(*) FROM `address` a
-			INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-			WHERE ajt.`company_id` = `company_id_` AND ajt.`address_id` = `id_`) = 1 )
-		THEN
-			UPDATE `address` a
-			INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-			SET `address1` = `add1_`,
-				`address2` = `add2_`,
-				`city` = `city_`,
-				`province` = `province_`,
-				`is_active` = `1`,
-				`last_update` = now()
-			WHERE a.`id` = `id_`
-			AND  ajt.`company_id` = `company_id_`;
-			SET msg = "2";  -- company exist and address exist
-		ELSE
-			SET msg = "1"; -- company exist but address doesnt
-		END IF;
-	ELSE 
-		SET msg = "0"; -- company doesnt exist
-	END IF;
+    IF( (SELECT count(*) FROM `address` a
+      INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+      WHERE ajt.`company_id` = `company_id_` AND ajt.`address_id` = `id_`) = 1 )
+    THEN
+      UPDATE `address` a
+      INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+      SET `address1` = `add1_`,
+        `address2` = `add2_`,
+        `city` = `city_`,
+        `province` = `province_`,
+        `is_active` = `1`,
+        `last_update` = now()
+      WHERE a.`id` = `id_`
+      AND  ajt.`company_id` = `company_id_`;
+      SET msg = "2";  -- company exist AND address exist
+    ELSE
+      SET msg = "1"; -- company exist but address doesnt
+    END IF;
+  ELSE 
+    SET msg = "0"; -- company doesnt exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_admin_no_pw`;;
@@ -446,15 +446,15 @@ WHERE id = uid;;
 DROP PROCEDURE IF EXISTS `edit_admin_picture`;;
 CREATE PROCEDURE `edit_admin_picture`(IN `user_name_` varchar(60), IN `avatar_` varchar(60), OUT `msg` int(10))
 BEGIN
-	IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
+  IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
     THEN
-		UPDATE `admin` SET
-		`avatar` = `avatar_`
-		WHERE `user_name` = `user_name_`;
-		SET `msg` = "1";
-	ELSE 
-		SET `msg` = "0";
-	END IF;
+    UPDATE `admin` SET
+    `avatar` = `avatar_`
+    WHERE `user_name` = `user_name_`;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_admin_with_pw`;;
@@ -478,126 +478,126 @@ WHERE id = uid;;
 DROP PROCEDURE IF EXISTS `edit_company`;;
 CREATE PROCEDURE `edit_company`(IN `company_tin_` varchar(20), IN `company_name_` varchar(250), IN `branch_` varchar(120), IN `business_type_` varchar(120), IN `company_id_` int(20), OUT `msg` varchar(60))
 BEGIN
-	IF( (SELECT count(*) FROM `company` c WHERE c.`id` = `company_id_`) = 1)
-	THEN
-		UPDATE `company`
-			SET 
-			`company_tin` = `company_tin_`,
-			`company_name` = `company_name_`,
-			`branch` = `branch_`,
-			`business_type` = `business_type_`
-			WHERE `id` = `company_id_`;
-		SET msg = "1"; -- company exists
-	ELSE 
-		SET msg = "0"; -- company exists
-	END IF;
+  IF( (SELECT count(*) FROM `company` c WHERE c.`id` = `company_id_`) = 1)
+  THEN
+    UPDATE `company`
+      SET 
+      `company_tin` = `company_tin_`,
+      `company_name` = `company_name_`,
+      `branch` = `branch_`,
+      `business_type` = `business_type_`
+      WHERE `id` = `company_id_`;
+    SET msg = "1"; -- company exists
+  ELSE 
+    SET msg = "0"; -- company exists
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_company_address`;;
 CREATE PROCEDURE `edit_company_address`(IN `add1_` varchar(120), IN `add2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120), IN `is_active_` varchar(120), IN `id_` int(11), IN `company_id_` varchar(120), OUT `msg` varchar(120))
 BEGIN
-	IF( (SELECT count(*) FROM `company` c
+  IF( (SELECT count(*) FROM `company` c
                     WHERE c.`id` = `company_id_`) = 1)
     THEN
-		IF( (SELECT count(*) FROM `address` a
-			INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-			WHERE ajt.`company_id` = `company_id_` AND ajt.`address_id` = `id_`) = 1 )
-		THEN
-			UPDATE `address` a
-			INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-			SET `address1` = `add1_`,
-				`address2` = `add2_`,
-				`city` = `city_`,
-				`province` = `province_`,
-				`is_active` = '1',
-				`last_update` = now()
-			WHERE a.`id` = `id_`
-			AND  ajt.`company_id` = `company_id_`;
-			SET msg = "2";  -- company exist and address exist
-		ELSE
-			SET msg = "1"; -- company exist but address doesnt
-		END IF;
-	ELSE 
-		SET msg = "0"; -- company doesnt exist
-	END IF;
+    IF( (SELECT count(*) FROM `address` a
+      INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+      WHERE ajt.`company_id` = `company_id_` AND ajt.`address_id` = `id_`) = 1 )
+    THEN
+      UPDATE `address` a
+      INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+      SET `address1` = `add1_`,
+        `address2` = `add2_`,
+        `city` = `city_`,
+        `province` = `province_`,
+        `is_active` = '1',
+        `last_update` = now()
+      WHERE a.`id` = `id_`
+      AND  ajt.`company_id` = `company_id_`;
+      SET msg = "2";  -- company exist AND address exist
+    ELSE
+      SET msg = "1"; -- company exist but address doesnt
+    END IF;
+  ELSE 
+    SET msg = "0"; -- company doesnt exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_company_logo`;;
 CREATE PROCEDURE `edit_company_logo`(IN `company_tin_` varchar(60), IN `logo_` varchar(60), OUT `msg` int(10))
 BEGIN
-	IF( (SELECT count(*) FROM `company` WHERE `company_tin` = `company_tin_`) = 1) 
+  IF( (SELECT count(*) FROM `company` WHERE `company_tin` = `company_tin_`) = 1) 
     THEN
-		UPDATE `company` SET
-		`logo` = `logo_`
-		WHERE `company_tin` = `company_tin_`;
-		SET `msg` = "1";
-	ELSE 
-		SET `msg` = "0";
-	END IF;
+    UPDATE `company` SET
+    `logo` = `logo_`
+    WHERE `company_tin` = `company_tin_`;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_guardian`;;
 CREATE PROCEDURE `edit_guardian`(IN `g_id_` int(20), IN `osca_id_` varchar(20), IN `first_name_` varchar(120), IN `middle_name_` varchar(120), IN `last_name_` varchar(120), IN `sex_` varchar(120), IN `relationship_` varchar(120), IN `contact_number_` varchar(120), IN `email_` varchar(120), OUT `msg` varchar(120))
 BEGIN
-	IF(
-	(SELECT count(*) FROM `member` m
+  IF(
+  (SELECT count(*) FROM `member` m
                     INNER JOIN `guardian` g ON g.member_id = m.id
                     WHERE m.`osca_id` = `osca_id_` AND g.`id` = `g_id_`) 
-	= 1) THEN
-			UPDATE `guardian` g
-			INNER JOIN `member` m ON g.`member_id` = m.id
-			SET 
-			g.`first_name` = `first_name_`,
-			g.`middle_name` = `middle_name_`,
-			g.`last_name` = `last_name_`,
-			g.`sex` = `sex_`,
-			g.`relationship` = `relationship_`,
-			g.`contact_number` = `contact_number_`,
-			g.`email` = `email_`
-			WHERE g.`id` = `g_id_`;
-			SET msg = "1";
-		ELSE 
-			SET msg = "0";
-		END IF;
+  = 1) THEN
+      UPDATE `guardian` g
+      INNER JOIN `member` m ON g.`member_id` = m.id
+      SET 
+      g.`first_name` = `first_name_`,
+      g.`middle_name` = `middle_name_`,
+      g.`last_name` = `last_name_`,
+      g.`sex` = `sex_`,
+      g.`relationship` = `relationship_`,
+      g.`contact_number` = `contact_number_`,
+      g.`email` = `email_`
+      WHERE g.`id` = `g_id_`;
+      SET msg = "1";
+    ELSE 
+      SET msg = "0";
+    END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_member_address`;;
 CREATE PROCEDURE `edit_member_address`(IN `add1_` varchar(120), IN `add2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120), IN `is_active_` varchar(120), IN `id_` int(11), IN `member_id_` varchar(120), OUT `msg` varchar(120))
 BEGIN
-	IF( (SELECT count(*) FROM `member` m
+  IF( (SELECT count(*) FROM `member` m
                     WHERE `id` = `member_id_`) = 1)
-	THEN 
-		IF(( SELECT count(*) FROM `address` a
-			INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-			WHERE ajt.`member_id` = `member_id_` AND ajt.`address_id` = `id_`) = 1)
-		THEN
-			IF (`is_active_` = 1)
-			THEN
-				UPDATE `address` a
-				INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-				SET `is_active` = 0
-				WHERE ajt.`member_id` = `member_id_`;
-			ELSE 
-				SET msg = "1";
-			END IF;
-			UPDATE `address` a
-				INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
-				SET 
-				`address1` = `add1_`,
-				`address2` = `add2_`,
-				`city` = `city_`,
-				`province` = `province_`,
-				`is_active` = `is_active_`,
-				`last_update` = now()
-				WHERE a.`id` = `id_`
-				AND  ajt.`member_id` = `member_id_`;
-				SET msg = "2"; -- Address and User exists. Successfully updated
-		ELSE
-			SET msg = "1"; -- Address for user does not exist
-		END IF;
-	ELSE
-		SET msg = "0"; -- user des not exist
-	END IF;
+  THEN 
+    IF(( SELECT count(*) FROM `address` a
+      INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+      WHERE ajt.`member_id` = `member_id_` AND ajt.`address_id` = `id_`) = 1)
+    THEN
+      IF (`is_active_` = 1)
+      THEN
+        UPDATE `address` a
+        INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+        SET `is_active` = 0
+        WHERE ajt.`member_id` = `member_id_`;
+      ELSE 
+        SET msg = "1";
+      END IF;
+      UPDATE `address` a
+        INNER JOIN `address_jt` ajt ON ajt.`address_id` = a.id
+        SET 
+        `address1` = `add1_`,
+        `address2` = `add2_`,
+        `city` = `city_`,
+        `province` = `province_`,
+        `is_active` = `is_active_`,
+        `last_update` = now()
+        WHERE a.`id` = `id_`
+        AND  ajt.`member_id` = `member_id_`;
+        SET msg = "2"; -- Address AND User exists. Successfully updated
+    ELSE
+      SET msg = "1"; -- Address for user does not exist
+    END IF;
+  ELSE
+    SET msg = "0"; -- user des not exist
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_member_no_pw`;;
@@ -618,15 +618,15 @@ WHERE id = uid;;
 DROP PROCEDURE IF EXISTS `edit_member_picture`;;
 CREATE PROCEDURE `edit_member_picture`(IN `osca_id_` varchar(60), IN `picture_` varchar(60), OUT `msg` int(10))
 BEGIN
-	IF( (SELECT count(*) FROM `member` WHERE `osca_id` = `osca_id_`) = 1) 
+  IF( (SELECT count(*) FROM `member` WHERE `osca_id` = `osca_id_`) = 1) 
     THEN
-		UPDATE `member` SET
-		`picture` = `picture_`
-		WHERE `osca_id` = `osca_id_`;
-		SET `msg` = "1";
-	ELSE 
-		SET `msg` = "0";
-	END IF;
+    UPDATE `member` SET
+    `picture` = `picture_`
+    WHERE `osca_id` = `osca_id_`;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `edit_member_with_pw`;;
@@ -646,73 +646,59 @@ membership_date = mdate
 WHERE id = uid;;
 
 DROP PROCEDURE IF EXISTS `fetch_food_transactions`;;
-CREATE PROCEDURE `fetch_food_transactions`(IN `osca_id` INT)
+CREATE PROCEDURE `fetch_food_transactions`(IN `osca_id_` varchar(20))
 BEGIN
-  select
-      `f`.trans_date,
-      `f`.company_name,
-      `f`.branch,
-      `f`.business_type,
-      `f`.`desc`,
-      `f`.vat_exempt_price,
-      `f`.discount_price,
-      `f`.payable_price
-    from
-      `view_food_transactions` `f`
-    where
-      `f`.osca_id = osca_id;
+  SELECT `trans_date`, `company_name`, `branch`, `business_type`, `desc`, `vat_exempt_price`, `discount_price`, `payable_price`
+  FROM `view_food_transactions`
+  WHERE `osca_id` = `osca_id_`;
 END;;
 
 DROP PROCEDURE IF EXISTS `fetch_password`;;
-CREATE PROCEDURE `fetch_password`(IN `osca_id` INT)
+CREATE PROCEDURE `fetch_password`(IN `osca_id_` varchar(20))
 BEGIN
-  select
-    `mg`.osca_id,
-    `mg`.`password`,
-    `mg`.contact_number
-  from
-    `view_members_with_guardian` `mg`
-  where
-    `mg`.osca_id = osca_id
-    AND `mg`.a_is_active = 1;
+  SELECT
+    `osca_id`, `password`, `contact_number`
+  FROM `view_members_with_guardian`
+  WHERE `osca_id` = `osca_id_`
+  AND  `a_is_active` = 1;
 END;;
 
 DROP PROCEDURE IF EXISTS `fetch_pharma_transactions`;;
-CREATE PROCEDURE `fetch_pharma_transactions`(IN `osca_id` INT)
+CREATE PROCEDURE `fetch_pharma_transactions`(IN `osca_id` varchar(20))
 BEGIN
-  select
-    `p`.trans_date,
-    `p`.company_name,
-    `p`.branch,
-    `p`.business_type,
-    concat(`p`.generic_name, '\n' , `p`.brand, '\n',
-      `p`.dose, '\n', `p`.unit, '\n',
-      `p`.quantity, '\n', `p`.unit_price) AS `desc`,
-    `p`.vat_exempt_price,
-    `p`.discount_price,
-    `p`.payable_price
-  from
-    `view_pharma_transactions` `p`
-  where
-    `p`.osca_id = osca_id;
+  SELECT
+      `view_pharma_transactions`.trans_date,
+      `view_pharma_transactions`.company_name,
+      `view_pharma_transactions`.branch,
+      `view_pharma_transactions`.business_type,
+            concat(`view_pharma_transactions`.generic_name, '\n' , `view_pharma_transactions`.brand, '\n',
+                `view_pharma_transactions`.dose, '\n', `view_pharma_transactions`.unit, '\n',
+          `view_pharma_transactions`.quantity, '\n', `view_pharma_transactions`.unit_price) AS `desc`,
+      `view_pharma_transactions`.vat_exempt_price,
+      `view_pharma_transactions`.discount_price,
+      `view_pharma_transactions`.payable_price
+    FROM
+      `view_pharma_transactions`
+    WHERE
+      `view_pharma_transactions`.osca_id = osca_id;
 END;;
 
 DROP PROCEDURE IF EXISTS `fetch_transportation_transactions`;;
-CREATE PROCEDURE `fetch_transportation_transactions`(IN `osca_id` INT)
+CREATE PROCEDURE `fetch_transportation_transactions`(IN `osca_id` varchar(20))
 BEGIN
-  select
-    `t`.trans_date,
-    `t`.company_name,
-    `t`.branch,
-    `t`.business_type,
-    `t`.`desc`,
-    `t`.vat_exempt_price,
-    `t`.discount_price,
-    `t`.payable_price
-  from
-    `view_transportation_transactions` `t`
-  where
-    `t`.osca_id = osca_id;
+  SELECT
+      `view_transportation_transactions`.trans_date,
+      `view_transportation_transactions`.company_name,
+      `view_transportation_transactions`.branch,
+      `view_transportation_transactions`.business_type,
+      `view_transportation_transactions`.`desc`,
+      `view_transportation_transactions`.vat_exempt_price,
+      `view_transportation_transactions`.discount_price,
+      `view_transportation_transactions`.payable_price
+  FROM
+    `view_transportation_transactions`
+  WHERE
+    `view_transportation_transactions`.osca_id = osca_id;
 END;;
 
 DROP PROCEDURE IF EXISTS `forgot_pw_admin`;;
@@ -729,26 +715,25 @@ END IF;;
 DROP PROCEDURE IF EXISTS `invalid_login`;;
 CREATE DEFINER=`dbosca`@`localhost` PROCEDURE `invalid_login`(IN `uname` varchar(20))
 BEGIN
-  DECLARE selected_id INT(8);
-  SET selected_id = (select id from `admin` where `user_name`=uname);
-  UPDATE `admin` SET log_attempts = log_attempts + 1 WHERE `id` = selected_id;
-  IF (select log_attempts from admin where `user_name`=uname) > 2
-  THEN UPDATE admin SET is_enabled = 0 WHERE id = selected_id;
+  DECLARE SELECTed_id INT(8);
+  SET SELECTed_id = (SELECT id FROM `admin` WHERE `user_name`=uname);
+  UPDATE `admin` SET log_attempts = log_attempts + 1 WHERE `id` = SELECTed_id;
+  IF (SELECT log_attempts FROM admin WHERE `user_name`=uname) > 2
+  THEN UPDATE admin SET is_enabled = 0 WHERE id = SELECTed_id;
   END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `login_member`;;
 CREATE PROCEDURE `login_member`(IN `osca_id_` varchar(120), IN `password_` varchar(120))
 BEGIN
-  select
+  SELECT
     `osca_id`, `password`, `picture`,
     `bdate`, `sex`, `memship_date`, `contact_number`,
     CONCAT(`first_name`, ' ', `last_name`) AS `full_name`,
-    CONCAT(`address_1`, ' ', `address_2`, ' ', `city`, ' ', `province`) AS address,
-    `nfc_active`, `account_enabled`
-  from
+    CONCAT(`address_1`, ' ', `address_2`, ' ', `city`, ' ', `province`) AS address
+  FROM
     `view_members_with_guardian`
-  where
+  WHERE
     `osca_id` = `osca_id_`
     AND `password` = md5(`password_`)
     AND `a_is_active` = 1
@@ -756,14 +741,13 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `validate_login`;;
-CREATE DEFINER=`dbosca`@`localhost` PROCEDURE `validate_login`(IN `osca_id` INT, IN `password` VARCHAR(120))
+CREATE DEFINER=`dbosca`@`localhost` PROCEDURE `validate_login`(IN `osca_id` varchar(20), IN `password` VARCHAR(120))
 BEGIN
-	select user.osca_id, user.password, concat(first_name, " ", middle_name, " ", last_name) as full_name, user.birth_date, user.sex, user.membership_date, user.avatar, concat(address1, " ", address2, ", " , city, ", ", province) as address
-	from user
-	right join address
-	on user.address_id = address.id
-	where user.osca_id = osca_id and user.password = password;
-
+  SELECT user.osca_id, user.password, concat(first_name, " ", middle_name, " ", last_name) as full_name, user.birth_date, user.sex, user.membership_date, user.avatar, concat(address1, " ", address2, ", " , city, ", ", province) as address
+  FROM user
+  RIGHT JOIN address
+  ON user.address_id = address.id
+  WHERE user.osca_id = osca_id AND user.password = password;
 END;;
 
 DELIMITER ;
@@ -927,7 +911,7 @@ INSERT INTO `admin` (`id`, `user_name`, `password`, `first_name`, `middle_name`,
 (2,	'hstn',	'fc29f6ea32a347d55bd690c5d11ed8e3',	'Justine',	'Ildefonso',	'Laserna',	'1990-01-25',	'1',	'admin',	'86554553',	'justine.laserna@ymeal.com',	1,	0,	'hustino',	'hustino',	'b18340',	'c4ef6d230c396efc.png'),
 (3,	'matt',	'ce86d7d02a229acfaca4b63f01a1171b',	'Matthew Franz',	'Castro',	'Vasquez',	'1990-01-15',	'1',	'admin',	'09123654123',	'matthew.vasquez@ymeal.com',	1,	0,	'matt',	'vasqa',	'matt',	'1dngb3owoz.png'),
 (4,	'fred',	'2697359d57024a8f41301b0332a8ba39',	'Frederick Allain',	'',	'Dela Cruz',	'1990-01-01',	'1',	'admin',	'09123456789',	'frederick.dela.cruz@ymeal.com',	1,	0,	'fred',	'lain',	'fredfred',	'izkue0sbn0.png'),
-(5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'88d0f2663ebfacb8.jpg'),
+(5,	'alycheese',	'6230471bd10839658f414438bc33c88a',	'Aly',	'x',	'Cheese',	'1990-11-11',	'2',	'user',	'09654123789',	'cyrel.lalikan@ymeal.com',	1,	0,	'swan',	'song',	'',	'k1ylycon4h.png'),
 (6,	'shang',	'8379c86250c50c0537999a6576e18aa7',	'Jess',	'',	'Monty',	'1990-01-24',	'1',	'user',	'76567752',	'jess.monty@ymeal.com',	1,	2,	'shang',	'shang',	'4347da',	'py1c2qjcpq.png'),
 (7,	'synth',	'4b418ed51830f54c3f9af6262b2201d2',	'synth',	'synth',	'synth',	'1980-08-19',	'2',	'user',	'96493119',	'synth.synth@ymeal.com',	1,	0,	'synth',	'synth',	'synthsynth',	'bde5a3192a556564.png'),
 (8,	'dsfaasdgasdg',	'd15fd399edbb0b84811b7d18378692a3',	'asdg',	'asd',	'asdgasdgasdg',	'2019-08-26',	'2',	'admin',	'09123987456',	'6541234@asd.zxc',	0,	0,	'sdfgsdfgsdf',	'sdfgsdfg',	'dsfadgasdg',	'45a3f40a62f2cfef.png');
@@ -2832,17 +2816,17 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `member` (`id`, `member_count`, `osca_id`, `nfc_serial`, `nfc_active`, `password`, `account_enabled`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `membership_date`, `picture`) VALUES
-(1,	00001,	'1376-2000001',	'0415916a',	1,	'757efdfdd2d522485fc7d2abca265f5a',	0,	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-09-29 05:55:41',	'ci1g9s0y35.png'),
-(2,	00002,	'0421-2000002',	'040af172',	1,	'5315626f5051ccf7ae91bb13e54df81f',	0,	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'09123321456',	'ruby.glass@ymeal.com',	'2020-09-29 08:56:51',	'3dfffc5385f89a93.png'),
-(3,	00003,	'0421-2000003',	'04e29172',	1,	'bd3fb7aeedec139792338edf6b9e5d77',	1,	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-29 05:46:47',	'j6bo6kqm07.png'),
-(4,	00004,	'0421-2000004',	'046c6d6a',	1,	'b1383705b102fb7e7f09bd3419f15ae8',	1,	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-09-29 05:46:47',	'ci1g9s0y35.png'),
-(5,	00005,	'1376-2000005',	'043af50a',	1,	'c105429a85eb404596dea1812efe4f3f',	1,	'Olimpia',	'',	'Ollis',	'1998-01-01',	'9',	NULL,	'olimpia.ollis@ymeal.com',	'2020-09-29 05:46:47',	'j6bo6kqm07.png'),
-(6,	00006,	'1339-2000006',	'04d84c72',	1,	'c422a05eb4e88b81e1edce1bdcb1b10d',	1,	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-09-29 05:46:47',	'ci1g9s0y35.png'),
+(1,	00001,	'1376-2000001',	'0415916a',	0,	'757efdfdd2d522485fc7d2abca265f5a',	0,	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-09-29 12:37:14',	'ccb86849502cfe13.png'),
+(2,	00002,	'0421-2000002',	'040af172',	0,	'5315626f5051ccf7ae91bb13e54df81f',	1,	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'09123321456',	'ruby.glass@ymeal.com',	'2020-09-29 12:37:14',	'3dfffc5385f89a93.png'),
+(3,	00003,	'0421-2000003',	'04e29172',	1,	'bd3fb7aeedec139792338edf6b9e5d77',	0,	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-29 12:37:14',	'60e578119317e05e.png'),
+(4,	00004,	'0421-2000004',	'046c6d6a',	1,	'b1383705b102fb7e7f09bd3419f15ae8',	1,	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-09-29 11:29:32',	'6811abb5c7bbfd20.png'),
+(5,	00005,	'1376-2000005',	'043af50a',	1,	'c105429a85eb404596dea1812efe4f3f',	1,	'Olimpia',	'',	'Ollis',	'1940-01-01',	'2',	'09123654289',	'olimpia.ollis@ymeal.com',	'2020-09-28 16:00:00',	'1d26cf63b13047dd.png'),
+(6,	00006,	'1339-2000006',	'04d84c72',	1,	'c422a05eb4e88b81e1edce1bdcb1b10d',	1,	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-09-29 11:31:09',	'1cec786e41a51f75.png'),
 (7,	00007,	'0421-2000007',	'04cc3672',	1,	'bcf19899b934b970cf38180f435ac92b',	1,	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'2',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-29 05:46:47',	'a488ceea8a1f5aed.jpg'),
-(8,	00008,	'1376-2000008',	'04df6e72 ',	1,	'08b18de87a0ec3bfda4b71f8cfcf96bd',	1,	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-09-29 05:46:47',	'j6bo6kqm07.png'),
+(8,	00008,	'1376-2000008',	'04df6e72 ',	1,	'08b18de87a0ec3bfda4b71f8cfcf96bd',	1,	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-09-29 11:32:09',	'855b118640814457.png'),
 (9,	00009,	'0410-2000009',	'04499172',	1,	'6c51ba20aa60e52ef80ce1cd7ecdec65',	1,	'Khaleed',	'',	'Dawson',	'1900-01-01',	'2',	'12341234',	'khaleed.dawson@ymeal.com',	'2020-09-29 08:56:36',	'599cc2fdde9ba53f.png'),
-(10,	00010,	'0369-2000010',	'5678567856785678',	1,	'9ece80d16df210a3565dd6bb8087b635',	1,	'Ernestine',	'Kyle',	'Ayers',	'1960-08-11',	'2',	'56785678',	'ernestine.ayers@ymeal.com',	'2020-09-29 05:46:47',	'ci1g9s0y35.png'),
-(11,	00011,	'0434-2000011',	'12341234asdfasdf',	1,	'a5f2e92c99938d340841bc8ae88fd3e8',	1,	'Noburu',	'Danya',	'Lea',	'1940-08-29',	'2',	'12341234',	'noburu.lea@ymeal.com',	'2020-09-29 05:46:47',	'ci1g9s0y35.png'),
+(10,	00010,	'0369-2000010',	'5678567856785678',	1,	'9ece80d16df210a3565dd6bb8087b635',	1,	'Ernestine',	'Kyle',	'Ayers',	'1960-08-11',	'2',	'56785678',	'ernestine.ayers@ymeal.com',	'2020-09-29 11:29:49',	'4b865ace81ac3abb.png'),
+(11,	00011,	'0434-2000011',	'12341234asdfasdf',	1,	'a5f2e92c99938d340841bc8ae88fd3e8',	1,	'Noburu',	'Danya',	'Lea',	'1940-08-29',	'2',	'12341234',	'noburu.lea@ymeal.com',	'2020-09-29 11:30:47',	'9ff897383d1eede5.png'),
 (12,	00012,	'1339-2000012',	'2A6B9CE2A46B1DE9',	1,	'03ebc74ab3befe4f8c01ead8c1675c8a',	1,	'Vasanti',	'Elpidio',	'Hippolyte',	'1800-12-25',	'2',	'0279281684',	'vasanti.hippolyte@ymeal.com',	'2020-09-29 08:57:56',	'7c7cc230591ba5dc.png'),
 (13,	00013,	'0314-2000013',	'2A6B9CE2A4DB4DE9',	1,	'0433d5db98e86fd7686339b27ace91fe',	1,	'McKenzie ',	'Houston',	'Jessye',	'1948-12-08',	'2',	'0279281684',	'mckenzie.jessye@ymeal.com',	'2020-09-29 08:55:25',	'c74391e2ef0cbfd5.png'),
 (14,	00014,	'0410-2000014',	'7890acde7890acde',	1,	'4893a53f8f7e6d89938f539c7a910f12',	1,	'Christian',	'',	'Murphy',	'1958-10-25',	'1',	'0948654123',	'asdsa@aa.afx',	'2020-09-29 08:54:17',	'b423e08f7a5206c6.png'),
@@ -3033,4 +3017,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29),
 (9,	85,	'Pasay to Guadalupe | Senior - SJT',	22.32,	4.46,	17.86);
 
--- 2020-09-29 09:54:11
+-- 2020-09-29 13:23:00
