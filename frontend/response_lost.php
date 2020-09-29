@@ -13,7 +13,7 @@ if(isset($_POST['id']) &&
             include("../backend/conn.php");
             include("../backend/php_functions.php");
             {
-                $selected_id = $_POST['id'];
+                $id = $_POST['id'];
                 $lost_id = $_POST['lost_id'];
                 $mysqli1 = new mysqli($host,$user,$pass,$schema) or die($mysqli1->error);
                 $error_msg = "<p class='lead'>No address on record</p>";
@@ -21,7 +21,7 @@ if(isset($_POST['id']) &&
                 $query_1 = " SELECT *
                             FROM `view_lost_report` v
                             INNER JOIN `member` m on v.member_id = m.id
-                            WHERE v.`osca_id` = '$selected_id'
+                            WHERE v.`osca_id` = '$id'
                             AND v.`lost_id` = '$lost_id';";
                             ?>
                             <script>
@@ -49,7 +49,7 @@ if(isset($_POST['id']) &&
                         $account_enabled = ($row['account_enabled'] == 1)? true:false;
                         
                         ?>
-                        <input type="hidden" name="selected_id" value="<?php echo $member_id;?>">
+                        <input type="hidden" name="id" value="<?php echo $member_id;?>">
                         <input type="hidden" name="lost_id" value="<?php echo $lost_id;?>">
                         
                         <div class="container py-3">
@@ -57,7 +57,7 @@ if(isset($_POST['id']) &&
 
                             <div class="desc">
                                 <label for="desc">Action taken</label>
-                                <textarea wrap="off" cols="30" rows="5" class="form-control" name="desc" id ="desc"></textarea>
+                                <textarea wrap="on" cols="30" rows="5" class="form-control" name="desc" id ="desc" placeholder="Enter action done to submit" ><?php echo $desc; ?></textarea>
                             </div>
                             <div class="date">
                                 <label for="address_1">Date Reported</label>
@@ -88,7 +88,6 @@ if(isset($_POST['id']) &&
                         </div>
                         <script>
                         $(document).ready(function(){
-
                             function setDescValue() {
                                 var today = new Date();
                                 var ttt = today.toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
@@ -100,7 +99,14 @@ if(isset($_POST['id']) &&
                                 txtNFC = $('#nfc_status_text').val();
                                 txtAcct = $('#account_status_text').val();
                                 var newline = String.fromCharCode(13, 10);
-                                $('#desc').val("On " + today + " " + ttt + newline +txtNFC + newline + txtAcct);
+                                $('#desc').val("On " + today + " " + ttt + "; " + txtNFC + "; " + txtAcct + "; ");
+                            }
+                            function checkInputs() {
+                                if ($("#desc").val().length == 0) {
+                                    $("#submit_response").attr("disabled", true);
+                                } else {
+                                    $("#submit_response").removeAttr("disabled");
+                                }
                             }
 
                             $('input[type=checkbox]#nfc_status').click(function () {
@@ -111,6 +117,7 @@ if(isset($_POST['id']) &&
                                     $('#nfc_status_text').val('NFC Deactivated');
                                 }
                                 setDescValue();
+                                checkInputs();
                             });
                             $('input[type=checkbox]#account_status').click(function () {
                                 if ($('input[type=checkbox]').is(':checked')) {
@@ -120,25 +127,54 @@ if(isset($_POST['id']) &&
                                     $('#account_status_text').val('Account Deactivated');
                                 }
                                 setDescValue();
+                                checkInputs();
                             });
+
+                            var oldVal = "";
+                            $('#desc').on('change keyup paste', function() {
+                                var currentVal = $(this).val();
+                                if(currentVal == oldVal) {
+                                    return; //check to prevent multiple simultaneous triggers
+                                }
+
+                                oldVal = currentVal;
+                                $(':input[type="submit"]').prop('disabled', false);
+                                checkInputs();
+                            });
+                            $("#desc").blur(function(){
+                                checkInputs();
+                            });
+
                             $("#submit_response").click(function(){
-                                var aaa = $('#desc').val();
-                                alert(aaa);
+                                var nfc_status = "0";
+                                var account_status = "0";
+                                if ($('input#nfc_status').is(':checked')) {
+                                    nfc_status = "1";
+                                }
+                                if ($('input#account_status').is(':checked')) {
+                                    account_status = "1";
+                                }
+
+                                var desc = $('#desc').val();
+                                $.post("../backend/update_lost_report.php", $("#lost_response_form").serialize(), function(d){
+                                    if(d.trim() == "true") {
+                                        location.reload();
+                                    } else {
+                                        alert(d);
+                                    }
+                                });
                             });
                         });
-
-
                         </script>
                         <?php
                     }
                 } else {
                     include('../backend/fail_data.php');
                 }
-                
                 mysqli_close($mysqli1);
             }
             ?>
-            <button type="button" class="btn btn-light btn-lg btn-block" id="submit_response">Submit</button>
+            <button type="button" class="btn btn-light btn-lg btn-block" id="submit_response" disabled="true">Submit</button>
             <button type="button" data-dismiss="modal" class="btn btn-close btn-lg btn-block">Close</button>
         </form>
     </div>

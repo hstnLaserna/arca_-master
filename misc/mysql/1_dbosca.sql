@@ -1,4 +1,4 @@
--- LAST UPDATE: 2020-09-19 07:24
+-- LAST UPDATE: 2020-09-30 05:28
 
 -- Adminer 4.6.3 MySQL dump
 
@@ -174,7 +174,7 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `add_lost_report`;;
-CREATE PROCEDURE `add_lost_report`(IN `osca_id_` VARCHAR(20), IN `report_date_` TIMESTAMP, OUT `msg` INT(1))
+CREATE PROCEDURE `add_lost_report`(IN `osca_id_` varchar(20), IN `report_date_` timestamp, OUT `msg` int(1))
 BEGIN
   IF ((SELECT COUNT(*)
     FROM `member` AS m
@@ -561,6 +561,29 @@ BEGIN
     END IF;
 END;;
 
+DROP PROCEDURE IF EXISTS `edit_lost_report`;;
+CREATE PROCEDURE `edit_lost_report`(IN `lost_id_` varchar(20), IN `osca_id_` varchar(20), IN `desc_` varchar(120), IN `nfc_active_` INT(1), IN `account_enabled_` INT(1), OUT `msg` int(1))
+BEGIN
+  IF ((SELECT COUNT(*)
+    FROM `member` AS m
+    WHERE m.id = osca_id_) = 1)
+  THEN
+    UPDATE lost_report 
+    SET `desc` = `desc_`
+    WHERE `id` = `lost_id_`;
+    
+    UPDATE `member` SET
+    `nfc_active` = `nfc_active_`,
+    `account_enabled` = `account_enabled_`
+    WHERE `id` = `osca_id_`;
+    
+    SET msg = 1;
+  ELSE
+  
+    SET msg = 0;
+  END IF;
+END;;
+
 DROP PROCEDURE IF EXISTS `edit_member_address`;;
 CREATE PROCEDURE `edit_member_address`(IN `add1_` varchar(120), IN `add2_` varchar(120), IN `city_` varchar(120), IN `province_` varchar(120), IN `is_active_` varchar(120), IN `id_` int(11), IN `member_id_` varchar(120), OUT `msg` varchar(120))
 BEGIN
@@ -702,7 +725,7 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `forgot_pw_admin`;;
-CREATE DEFINER=`dbosca`@`localhost` PROCEDURE `forgot_pw_admin`(IN `uname` varchar(120), IN `ans1` varchar(100), IN `ans2` varchar(100), OUT `tempopw` varchar(6), OUT `msg` int(10))
+CREATE PROCEDURE `forgot_pw_admin`(IN `uname` varchar(120), IN `ans1` varchar(100), IN `ans2` varchar(100), OUT `tempopw` varchar(6), OUT `msg` int(10))
 IF ((SELECT EXISTS(SELECT * FROM `admin` WHERE (user_name = uname AND answer1 = ans1) OR (user_name = uname AND answer2=ans2))) = 1)
 THEN
   SET `tempopw`= (SELECT substring(MD5(RAND()), -6));
@@ -713,7 +736,7 @@ ELSE
 END IF;;
 
 DROP PROCEDURE IF EXISTS `invalid_login`;;
-CREATE DEFINER=`dbosca`@`localhost` PROCEDURE `invalid_login`(IN `uname` varchar(20))
+CREATE PROCEDURE `invalid_login`(IN `uname` varchar(20))
 BEGIN
   DECLARE SELECTed_id INT(8);
   SET SELECTed_id = (SELECT id FROM `admin` WHERE `user_name`=uname);
@@ -742,7 +765,7 @@ BEGIN
 END;;
 
 DROP PROCEDURE IF EXISTS `validate_login`;;
-CREATE DEFINER=`dbosca`@`localhost` PROCEDURE `validate_login`(IN `osca_id` varchar(20), IN `password` VARCHAR(120))
+CREATE PROCEDURE `validate_login`(IN `osca_id` varchar(20), IN `password` VARCHAR(120))
 BEGIN
   SELECT user.osca_id, user.password, concat(first_name, " ", middle_name, " ", last_name) as full_name, user.birth_date, user.sex, user.membership_date, user.avatar, concat(address1, " ", address2, ", " , city, ", ", province) as address
   FROM user
@@ -2789,8 +2812,8 @@ INSERT INTO `lost_report` (`id`, `desc`, `report_date`, `member_id`) VALUES
 (3,	'',	'2020-08-27 19:40:41',	2),
 (4,	'',	'2020-08-27 19:41:16',	2),
 (5,	'',	'2020-08-27 19:43:30',	2),
-(6,	'',	'2020-08-27 19:43:30',	2),
-(7,	'',	'2020-09-07 02:28:54',	2),
+(6,	'On 09/30/2020 5:36 AM; NFC Activated; Account Deactivated; ',	'2020-09-29 21:37:06',	5),
+(7,	'',	'2020-09-29 21:26:35',	5),
 (8,	'',	'2020-09-23 22:10:08',	2),
 (9,	'',	'2020-09-24 02:36:35',	2);
 
@@ -2817,17 +2840,17 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 INSERT INTO `member` (`id`, `member_count`, `osca_id`, `nfc_serial`, `nfc_active`, `password`, `account_enabled`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `membership_date`, `picture`) VALUES
-(1,	00001,	'1376-2000001',	'0415916a',	0,	'757efdfdd2d522485fc7d2abca265f5a',	0,	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-09-29 12:37:14',	'ccb86849502cfe13.png'),
+(1,	00001,	'1376-2000001',	'0415916a',	0,	'757efdfdd2d522485fc7d2abca265f5a',	0,	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-09-29 14:01:08',	'6283f9c3b7aefb1f.png'),
 (2,	00002,	'0421-2000002',	'040af172',	0,	'5315626f5051ccf7ae91bb13e54df81f',	1,	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'09123321456',	'ruby.glass@ymeal.com',	'2020-09-29 12:37:14',	'3dfffc5385f89a93.png'),
-(3,	00003,	'0421-2000003',	'04e29172',	1,	'bd3fb7aeedec139792338edf6b9e5d77',	0,	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-29 12:37:14',	'60e578119317e05e.png'),
-(4,	00004,	'0421-2000004',	'046c6d6a',	1,	'b1383705b102fb7e7f09bd3419f15ae8',	1,	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-09-29 11:29:32',	'6811abb5c7bbfd20.png'),
-(5,	00005,	'1376-2000005',	'043af50a',	1,	'c105429a85eb404596dea1812efe4f3f',	1,	'Olimpia',	'',	'Ollis',	'1940-01-01',	'2',	'09123654289',	'olimpia.ollis@ymeal.com',	'2020-09-28 16:00:00',	'1d26cf63b13047dd.png'),
-(6,	00006,	'1339-2000006',	'04d84c72',	1,	'c422a05eb4e88b81e1edce1bdcb1b10d',	1,	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-09-29 11:31:09',	'1cec786e41a51f75.png'),
-(7,	00007,	'0421-2000007',	'04cc3672',	1,	'bcf19899b934b970cf38180f435ac92b',	1,	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'2',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-29 05:46:47',	'a488ceea8a1f5aed.jpg'),
-(8,	00008,	'1376-2000008',	'04df6e72 ',	1,	'08b18de87a0ec3bfda4b71f8cfcf96bd',	1,	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-09-29 11:32:09',	'855b118640814457.png'),
+(3,	00003,	'0421-2000003',	'04e29172',	1,	'bd3fb7aeedec139792338edf6b9e5d77',	0,	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-29 14:01:54',	'52448de14aa059fb.png'),
+(4,	00004,	'0421-2000004',	'046c6d6a',	1,	'b1383705b102fb7e7f09bd3419f15ae8',	1,	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-09-29 14:01:20',	'c44a971857566659.png'),
+(5,	00005,	'1376-2000005',	'043af50a',	1,	'c105429a85eb404596dea1812efe4f3f',	0,	'Olimpia',	'',	'Ollis',	'1940-01-01',	'2',	'09123654289',	'olimpia.ollis@ymeal.com',	'2020-09-29 21:35:44',	'30286704964f2216.png'),
+(6,	00006,	'1339-2000006',	'04d84c72',	1,	'c422a05eb4e88b81e1edce1bdcb1b10d',	1,	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-09-29 14:02:11',	'db790b1dd0875bf8.png'),
+(7,	00007,	'0421-2000007',	'04cc3672',	1,	'bcf19899b934b970cf38180f435ac92b',	1,	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'1',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-29 14:02:57',	'a5e20bf9e82bcbcd.png'),
+(8,	00008,	'1376-2000008',	'04df6e72 ',	1,	'08b18de87a0ec3bfda4b71f8cfcf96bd',	1,	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-09-29 14:02:33',	'724a1268e8e3e80e.png'),
 (9,	00009,	'0410-2000009',	'04499172',	1,	'6c51ba20aa60e52ef80ce1cd7ecdec65',	1,	'Khaleed',	'',	'Dawson',	'1900-01-01',	'2',	'12341234',	'khaleed.dawson@ymeal.com',	'2020-09-29 08:56:36',	'599cc2fdde9ba53f.png'),
-(10,	00010,	'0369-2000010',	'5678567856785678',	1,	'9ece80d16df210a3565dd6bb8087b635',	1,	'Ernestine',	'Kyle',	'Ayers',	'1960-08-11',	'2',	'56785678',	'ernestine.ayers@ymeal.com',	'2020-09-29 11:29:49',	'4b865ace81ac3abb.png'),
-(11,	00011,	'0434-2000011',	'12341234asdfasdf',	1,	'a5f2e92c99938d340841bc8ae88fd3e8',	1,	'Noburu',	'Danya',	'Lea',	'1940-08-29',	'2',	'12341234',	'noburu.lea@ymeal.com',	'2020-09-29 11:30:47',	'9ff897383d1eede5.png'),
+(10,	00010,	'0369-2000010',	'5678567856785678',	1,	'9ece80d16df210a3565dd6bb8087b635',	1,	'Ernestine',	'Kyle',	'Ayers',	'1960-08-11',	'2',	'56785678',	'ernestine.ayers@ymeal.com',	'2020-09-29 14:00:32',	'488d72933f722163.png'),
+(11,	00011,	'0434-2000011',	'12341234asdfasdf',	1,	'a5f2e92c99938d340841bc8ae88fd3e8',	1,	'Noburu',	'Danya',	'Lea',	'1940-08-29',	'2',	'12341234',	'noburu.lea@ymeal.com',	'2020-09-29 14:01:34',	'64705d03e4205626.png'),
 (12,	00012,	'1339-2000012',	'2A6B9CE2A46B1DE9',	1,	'03ebc74ab3befe4f8c01ead8c1675c8a',	1,	'Vasanti',	'Elpidio',	'Hippolyte',	'1800-12-25',	'2',	'0279281684',	'vasanti.hippolyte@ymeal.com',	'2020-09-29 08:57:56',	'7c7cc230591ba5dc.png'),
 (13,	00013,	'0314-2000013',	'2A6B9CE2A4DB4DE9',	1,	'0433d5db98e86fd7686339b27ace91fe',	1,	'McKenzie ',	'Houston',	'Jessye',	'1948-12-08',	'2',	'0279281684',	'mckenzie.jessye@ymeal.com',	'2020-09-29 08:55:25',	'c74391e2ef0cbfd5.png'),
 (14,	00014,	'0410-2000014',	'7890acde7890acde',	1,	'4893a53f8f7e6d89938f539c7a910f12',	1,	'Christian',	'',	'Murphy',	'1958-10-25',	'1',	'0948654123',	'asdsa@aa.afx',	'2020-09-29 08:54:17',	'b423e08f7a5206c6.png'),
@@ -3018,4 +3041,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29),
 (9,	85,	'Pasay to Guadalupe | Senior - SJT',	22.32,	4.46,	17.86);
 
--- 2020-09-29 13:23:00
+-- 2020-09-29 21:38:06

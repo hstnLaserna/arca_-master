@@ -360,6 +360,43 @@
         unset($user_type);
     }
 
+    
+
+    if(isset($lost_report) && $lost_report)
+    {
+        if(isset($_POST['desc']) &&
+        isset($_POST['lost_id']) && 
+        isset($_POST['id']))
+        {
+            $desc = $mysqli->real_escape_string($_POST['desc']);
+            $lost_id = $mysqli->real_escape_string($_POST['lost_id']);
+            $id = $mysqli->real_escape_string($_POST['id']);
+            $nfc_status = (isset($_POST['nfc_status'])) ? 1 : 0;
+            $account_status = (isset($_POST['account_status'])) ? 1 : 0;
+            
+            // --------------
+            // VALIDATION
+            // --------------
+            if(strlen($desc) < 1)
+            {
+                array_push($errors, "Action must not be empty");
+            }
+            if(strlen($lost_id) < 1)
+            {
+                array_push($errors, "Invalid Lost Report number");
+            }
+            if(strlen($id) < 1)
+            {
+                array_push($errors, "Invalid Member");
+            }
+        } else {
+            if(!isset($_POST['desc'])){array_push($errors, "Missing field: desc");}
+            if(!isset($_POST['lost_id'])){array_push($errors, "Missing field: lost_id");}
+            if(!isset($_POST['id'])){array_push($errors, "Missing field: id");}
+            $validated = false;
+        }
+    }
+
 
     
     if(isset($errors)) {

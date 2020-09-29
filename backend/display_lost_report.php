@@ -74,9 +74,9 @@
         mysqli_close($mysqli);
     }
     ?>
+    <div id="_8d9s02" class="modal fade" role="dialog">
+    </div>
 
-</div>
-<div id="_8d9s02" class="modal fade" role="dialog">
 </div>
 
 <button class="btn btn-block btn-dark" id="expand-lost-report">Show More</button>
@@ -91,10 +91,10 @@ $(document).ready(function(){
         $("#lost-report-list").load("../backend/display_lost_report.php #lost-report-list", {osca_id : "<?php echo $osca_id;?>", counter: ctr_lost_report});
     });
 
-    $(".lost_row").click(function(){
-        var osca_id= "<?php echo $osca_id;?>";
+    $("body").on('click', ".lost_row", function () {
+        var id= "<?php echo $osca_id;?>";
         var lost_id = $(this).attr("id").replace("lostid_", "");
-        $('#_8d9s02').load("../frontend/response_lost.php", {id:osca_id, lost_id:lost_id},function(){
+        $('#_8d9s02').load("../frontend/response_lost.php", {id:id, lost_id:lost_id},function(){
             $('#_8d9s02').modal();
         });
 

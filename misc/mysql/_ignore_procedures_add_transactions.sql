@@ -91,21 +91,28 @@ BEGIN
     END IF;
 END;;
 DELIMITER ;
-/*
 
-btnAuthorize_click()
-{
-  Open Fillup Form. Input Authorized meds to buy
-}
-
-btnSubmit_button_from_fillup_form(){
-  generate random string as `token`. Example in php below
-  // $token = substr(MD5(rand(100000,999999)),0,16);
-
-  call stored proceduure: `add_qr_request`('$osca_id', 'desc', '$token', @`msg`);
-}
-
-
-
-
-
+DROP PROCEDURE IF EXISTS `edit_lost_report`;
+DELIMITER ;;
+CREATE PROCEDURE `edit_lost_report` (IN `lost_id_` varchar(20), IN `osca_id_` varchar(20), IN `desc_` varchar(120), IN `nfc_active_` INT(1), IN `account_enabled_` INT(1), OUT `msg` int(1))
+BEGIN
+  IF ((SELECT COUNT(*)
+    FROM `member` AS m
+    WHERE m.id = osca_id_) = 1)
+  THEN
+    UPDATE lost_report 
+    SET `desc` = `desc_`
+    WHERE `id` = `lost_id_`;
+    
+    UPDATE `member` SET
+    `nfc_active` = `nfc_active_`,
+    `account_enabled` = `account_enabled_`
+    WHERE `id` = `osca_id_`;
+    
+    SET msg = 1;
+  ELSE
+  
+    SET msg = 0;
+  END IF;
+END;;
+DELIMITER ;
