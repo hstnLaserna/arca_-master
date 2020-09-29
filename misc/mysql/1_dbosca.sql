@@ -1,4 +1,4 @@
--- LAST UPDATE: 2020-09-30 05:28
+-- LAST UPDATE: 2020-09-30 06:46
 
 -- Adminer 4.6.3 MySQL dump
 
@@ -762,6 +762,94 @@ BEGIN
     AND `password` = md5(`password_`)
     AND `a_is_active` = 1
     AND `account_enabled` = 1;
+END;;
+
+DROP PROCEDURE IF EXISTS `toggle_admin_acct`;;
+CREATE PROCEDURE `toggle_admin_acct`(IN `user_name_` varchar(60), OUT `msg` int(1))
+BEGIN
+  IF( (SELECT count(*) FROM `admin` WHERE `user_name` = `user_name_`) = 1) 
+  THEN
+    IF((SELECT `is_enabled` FROM `admin` WHERE `user_name` = `user_name_`) = 1)
+    THEN
+      UPDATE `admin` SET
+      `is_enabled` = 0,
+      `log_attempts` = 0
+      WHERE `user_name` = `user_name_`;
+    ELSE
+      UPDATE `admin` SET
+      `is_enabled` = 1,
+      `log_attempts` = 0
+      WHERE `user_name` = `user_name_`;
+    END IF;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
+END;;
+
+DROP PROCEDURE IF EXISTS `toggle_company_acct`;;
+CREATE PROCEDURE `toggle_company_acct`(IN `company_id_` int(20), OUT `msg` int(1))
+BEGIN
+  IF( (SELECT count(*) FROM `company_accounts` WHERE `company_id` = `company_id_`) = 1) 
+  THEN
+    IF((SELECT `is_enabled` FROM `company_accounts` WHERE `company_id` = `company_id_`) = 1)
+    THEN
+      UPDATE `company_accounts` SET
+      `is_enabled` = 0,
+      `log_attempts` = 0
+      WHERE `company_id` = `company_id_`;
+    ELSE
+      UPDATE `company_accounts` SET
+      `is_enabled` = 1,
+      `log_attempts` = 0
+      WHERE `company_id` = `company_id_`;
+    END IF;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
+END;;
+
+DROP PROCEDURE IF EXISTS `toggle_member_acct`;;
+CREATE PROCEDURE `toggle_member_acct`(IN `id_` varchar(60), OUT `msg` int(1))
+BEGIN
+  IF( (SELECT count(*) FROM `member` WHERE `id` = `id_`) = 1) 
+  THEN
+    IF((SELECT `account_enabled` FROM `member` WHERE `id` = `id_`) = 1)
+    THEN
+      UPDATE `member` SET
+      `account_enabled` = 0
+      WHERE `id` = `id_`;
+    ELSE
+      UPDATE `member` SET
+      `account_enabled` = 1
+      WHERE `id` = `id_`;
+    END IF;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
+END;;
+
+DROP PROCEDURE IF EXISTS `toggle_member_nfc`;;
+CREATE PROCEDURE `toggle_member_nfc`(IN `id_` varchar(60), OUT `msg` int(1))
+BEGIN
+  IF( (SELECT count(*) FROM `member` WHERE `id` = `id_`) = 1) 
+  THEN
+    IF((SELECT `nfc_active` FROM `member` WHERE `id` = `id_`) = 1)
+    THEN
+      UPDATE `member` SET
+      `nfc_active` = 0
+      WHERE `id` = `id_`;
+    ELSE
+      UPDATE `member` SET
+      `nfc_active` = 1
+      WHERE `id` = `id_`;
+    END IF;
+    SET `msg` = "1";
+  ELSE 
+    SET `msg` = "0";
+  END IF;
 END;;
 
 DROP PROCEDURE IF EXISTS `validate_login`;;
@@ -2812,7 +2900,7 @@ INSERT INTO `lost_report` (`id`, `desc`, `report_date`, `member_id`) VALUES
 (3,	'',	'2020-08-27 19:40:41',	2),
 (4,	'',	'2020-08-27 19:41:16',	2),
 (5,	'',	'2020-08-27 19:43:30',	2),
-(6,	'On 09/30/2020 5:36 AM; NFC Activated; Account Deactivated; ',	'2020-09-29 21:37:06',	5),
+(6,	'On 09/30/2020 5:40 AM; NFC Activated; Account Activated; ',	'2020-09-29 21:41:00',	5),
 (7,	'',	'2020-09-29 21:26:35',	5),
 (8,	'',	'2020-09-23 22:10:08',	2),
 (9,	'',	'2020-09-24 02:36:35',	2);
@@ -2842,11 +2930,11 @@ CREATE TABLE `member` (
 INSERT INTO `member` (`id`, `member_count`, `osca_id`, `nfc_serial`, `nfc_active`, `password`, `account_enabled`, `first_name`, `middle_name`, `last_name`, `birth_date`, `sex`, `contact_number`, `email`, `membership_date`, `picture`) VALUES
 (1,	00001,	'1376-2000001',	'0415916a',	0,	'757efdfdd2d522485fc7d2abca265f5a',	0,	'Lai',	'Arbiol',	'Girardi',	'1953-06-17',	'2',	'0912-456-7890',	'lai.girardi@ymeal.com',	'2020-09-29 14:01:08',	'6283f9c3b7aefb1f.png'),
 (2,	00002,	'0421-2000002',	'040af172',	0,	'5315626f5051ccf7ae91bb13e54df81f',	1,	'Ruby',	'Ildefonso',	'Glass',	'1960-01-25',	'2',	'09123321456',	'ruby.glass@ymeal.com',	'2020-09-29 12:37:14',	'3dfffc5385f89a93.png'),
-(3,	00003,	'0421-2000003',	'04e29172',	1,	'bd3fb7aeedec139792338edf6b9e5d77',	0,	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-29 14:01:54',	'52448de14aa059fb.png'),
+(3,	00003,	'0421-2000003',	'04e29172',	1,	'bd3fb7aeedec139792338edf6b9e5d77',	1,	'Cordell',	'Castro',	'Broxton',	'1940-06-15',	'1',	'09654123789',	'cordell.broxton@ymeal.com',	'2020-09-29 22:44:20',	'52448de14aa059fb.png'),
 (4,	00004,	'0421-2000004',	'046c6d6a',	1,	'b1383705b102fb7e7f09bd3419f15ae8',	1,	'Stephine',	'Gaco',	'Lamagna',	'1932-07-17',	'2',	'0917-325-5200',	'stephine.lamagna@ymeal.com',	'2020-09-29 14:01:20',	'c44a971857566659.png'),
-(5,	00005,	'1376-2000005',	'043af50a',	1,	'c105429a85eb404596dea1812efe4f3f',	0,	'Olimpia',	'',	'Ollis',	'1940-01-01',	'2',	'09123654289',	'olimpia.ollis@ymeal.com',	'2020-09-29 21:35:44',	'30286704964f2216.png'),
+(5,	00005,	'1376-2000005',	'043af50a',	1,	'c105429a85eb404596dea1812efe4f3f',	1,	'Olimpia',	'',	'Ollis',	'1940-01-01',	'2',	'09123654289',	'olimpia.ollis@ymeal.com',	'2020-09-29 21:41:00',	'30286704964f2216.png'),
 (6,	00006,	'1339-2000006',	'04d84c72',	1,	'c422a05eb4e88b81e1edce1bdcb1b10d',	1,	'Harriette',	'Flavell',	'Milbourn',	'1945-01-25',	'2',	'09-253-1028',	'harriette.milbourn@ymeal.com',	'2020-09-29 14:02:11',	'db790b1dd0875bf8.png'),
-(7,	00007,	'0421-2000007',	'04cc3672',	1,	'bcf19899b934b970cf38180f435ac92b',	1,	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'1',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-29 14:02:57',	'a5e20bf9e82bcbcd.png'),
+(7,	00007,	'0421-2000007',	'04cc3672',	1,	'bcf19899b934b970cf38180f435ac92b',	1,	'Elise',	'Trump',	'Benjamin',	'1960-02-22',	'1',	'09123456987',	'elise.benjamin@ymeal.com',	'2020-09-29 22:19:35',	'a5e20bf9e82bcbcd.png'),
 (8,	00008,	'1376-2000008',	'04df6e72 ',	1,	'08b18de87a0ec3bfda4b71f8cfcf96bd',	1,	'Hermine',	'Bridgman',	'Poirer',	'1990-01-01',	'1',	'0909-123-4567',	'hermine.poirer@ymeal.com',	'2020-09-29 14:02:33',	'724a1268e8e3e80e.png'),
 (9,	00009,	'0410-2000009',	'04499172',	1,	'6c51ba20aa60e52ef80ce1cd7ecdec65',	1,	'Khaleed',	'',	'Dawson',	'1900-01-01',	'2',	'12341234',	'khaleed.dawson@ymeal.com',	'2020-09-29 08:56:36',	'599cc2fdde9ba53f.png'),
 (10,	00010,	'0369-2000010',	'5678567856785678',	1,	'9ece80d16df210a3565dd6bb8087b635',	1,	'Ernestine',	'Kyle',	'Ayers',	'1960-08-11',	'2',	'56785678',	'ernestine.ayers@ymeal.com',	'2020-09-29 14:00:32',	'488d72933f722163.png'),
@@ -3041,4 +3129,4 @@ INSERT INTO `transportation` (`id`, `transaction_id`, `desc`, `vat_exempt_price`
 (8,	77,	'LRT Gil Puyat to LRT United Nations',	267.86,	53.57,	214.29),
 (9,	85,	'Pasay to Guadalupe | Senior - SJT',	22.32,	4.46,	17.86);
 
--- 2020-09-29 21:38:06
+-- 2020-09-29 22:46:01
