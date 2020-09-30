@@ -141,27 +141,28 @@
                 </table>
                 
                 <?php
+                    if($displayed_items < $row_count_orig){
+                        echo '<button class="btn btn-block btn-dark" id="expand-ph">Show More</button>';
+                    } else {
+                        echo "<div class='eol'> * * *</div>";
+                    }
                 
             } else {
-                echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No transaction in the record for this user</div>";
+                echo "<div class='eol'> * * *</div>";
             }
             
-            //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
             mysqli_close($mysqli);
         }
     }
     ?>
-
 </div>
-
-<button class="btn btn-block btn-dark" id="expand-ph">Show More</button>
 
 <script>
 $(document).ready(function(){
     var member_id = <?php echo $member_id; ?>;
     var ctr2 = 1;
 
-    $("#expand-ph").click(function() {
+    $("body").on('click', "#expand-ph", function () {
         ctr2++;
         $("#trans-ph").load("../backend/display_transactions_pharmacy.php #trans-ph", {member_id : member_id, ctr2: ctr2 });
     });

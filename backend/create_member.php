@@ -10,14 +10,11 @@
   // '$nfc_serial', '$osca_id', 
   if($array_length == 0 && isset($validated) && $validated)
   {
-    $query1 = "SELECT `osca_id` FROM `member` WHERE `osca_id` = '$osca_id';";
+    $query1 = "SELECT `nfc_serial` FROM `member` WHERE `nfc_serial` = '$nfc_serial';";
     $result1 = $mysqli->query($query1);
     $rows1 = mysqli_num_rows($result1);
-    $query2 = "SELECT `nfc_serial` FROM `member` WHERE `nfc_serial` = '$nfc_serial';";
-    $result2 = $mysqli->query($query2);
-    $rows2 = mysqli_num_rows($result2);
 
-    if ($rows1 == 0 && $rows2 == 0) { // OSCA ID is unique
+    if ($rows1 == 0) { // OSCA ID is unique
       $query = "CALL `add_member`('$firstname', '$middlename', '$lastname', '$birthdate', 
                   '$sex2', '$contact_number', '$email', '$membership_date',
                   '$address_line1', '$address_line2', '$address_city', '$address_province', '$password', 
@@ -31,8 +28,7 @@
       }
     }
     else {
-      if($rows1 > 0){echo "OSCA ID exists \r\n";} else {}
-      if($rows2 > 0){echo "NFC Serial exists";} else {}
+      if($rows1 > 0){echo "NFC Serial exists";} else {}
     }
   }
   else {

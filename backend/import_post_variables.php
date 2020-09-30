@@ -315,13 +315,12 @@
         {
             if(isset($_POST['password']) && 
             isset($_POST['membership_date']) && 
-            isset($_POST['osca_id']) && 
             isset($_POST['nfc_serial']))
             {
                 $password = $mysqli->real_escape_string($_POST['password']);
                 $membership_date = $mysqli->real_escape_string($_POST['membership_date']);
                 $birthdate = $mysqli->real_escape_string($_POST['birthdate']);
-                $osca_id = $mysqli->real_escape_string($_POST['osca_id']);
+                $osca_id = (isset($_POST['osca_id']))? $mysqli->real_escape_string($_POST['osca_id']): "";
                 $nfc_serial = $mysqli->real_escape_string($_POST['nfc_serial']);
 
                 // --------------
@@ -346,8 +345,9 @@
                     }
                 }
             } else {
+                if(!isset($_POST['password'])){array_push($errors, "Missing field: password");}
                 if(!isset($_POST['membership_date'])){array_push($errors, "Missing field: membership_date");}
-                if(!isset($_POST['osca_id'])){array_push($errors, "Missing field: osca_id");}
+                if(!isset($_POST['birthdate'])){array_push($errors, "Missing field: birthdate");}
                 if(!isset($_POST['nfc_serial'])){array_push($errors, "Missing field: nfc_serial");}
                 $validated = false;
             }

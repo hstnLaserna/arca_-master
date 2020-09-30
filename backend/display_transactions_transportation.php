@@ -112,29 +112,29 @@
                     ?>
 
                 </table>
-                
                 <?php
+                    if($displayed_items < $row_count_orig){
+                        echo '<button class="btn btn-block btn-dark" id="expand-tr">Show More</button>';
+                    } else {
+                        echo "<div class='eol'> * * *</div>";
+                    }
                 
             } else {
-                echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No transaction in the record for this user</div>";
+                echo "<div class='eol'> * * *</div>";
             }
             
-            //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
             mysqli_close($mysqli);
         }
     }
     ?>
-
 </div>
-
-<button class="btn btn-block btn-dark" id="expand-tr">Show More</button>
 
 <script>
 $(document).ready(function(){
     var member_id = <?php echo $member_id; ?>;
     var ctr4 = 1;
 
-    $("#expand-tr").click(function() {
+    $("body").on('click', "#expand-tr", function () {
         ctr4++;
         $("#trans-tr").load("../backend/display_transactions_transportation.php #trans-tr", {member_id : member_id, ctr4: ctr4 });
     });

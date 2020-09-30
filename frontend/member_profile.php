@@ -272,8 +272,6 @@ include('../frontend/foot.php');
 ?>
 
 <script>
-$(document).ready(function(){
-    $('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
     var loadFile = function(event) {
         var output = document.getElementById('output');
         output.src = URL.createObjectURL(event.target.files[0]);
@@ -309,6 +307,8 @@ $(document).ready(function(){
     //input.addEventListener('focus', function(){ input.classList.add('has-focus'); });
     //input.addEventListener('blur', function(){ input.classList.remove('has-focus'); });
 
+$(document).ready(function(){
+    $('title').replaceWith('<title>Member profile - <?php echo "$first_name $last_name"; ?></title>');
 
     var member_id = <?php echo $member_id; ?>;
     var osca_id = "<?php echo $osca_id; ?>";

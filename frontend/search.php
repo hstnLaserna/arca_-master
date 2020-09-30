@@ -3,7 +3,7 @@
 
 ?>
 <div class="dropdown">
-    <button class="btn btn-secondary btn-block dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button type="button" class="btn btn-light btn-block dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Search
     </button>
     <div class="dropdown-menu w-100" aria-labelledby="dropdown_search">
@@ -15,7 +15,7 @@
                 <input type="text" class="w-100 form-control mb-1"  name="oid" id="oid" placeholder="OSCA ID">
             </div>
             <div class="dropdown-divider"></div> 
-            <button class="btn btn-dark btn-block" type="button" id="search_" data-toggle="dropdown"> Search </button>
+            <button type="button" class="btn btn-light btn-block" id="search_" data-toggle="dropdown"> Search </button>
         </form>
     </div>
 </div>

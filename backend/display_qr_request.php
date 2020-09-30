@@ -80,9 +80,14 @@
             </table>
             
             <?php
+            if($displayed_items < $row_count_orig){
+                echo '<button class="btn btn-block btn-dark" id="expand-qr">Show More</button>';
+            } else {
+                echo "<div class='eol'> * * *</div>";
+            }
             
         } else {
-            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No Authorization Request yet </div>";
+            echo "<div class='eol'> * * *</div>";
         }
         
         //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
@@ -94,14 +99,12 @@
 <div class="_dfg987">
 </div>
 
-<button class="btn btn-block btn-dark" id="expand-qr">Show More</button>
-
 <script>
 $(document).ready(function(){
     var osca_id = <?php echo $osca_id; ?>;
     var ctr_qr = 1;
 
-    $("#expand-qr").click(function() {
+    $("body").on('click', "#expand-qr", function () {
         ctr_qr++;
         $("#qr-request-list").load("../backend/display_qr_request.php #qr-request-list", {osca_id : "<?php echo $osca_id;?>", counter: ctr_qr});
     });

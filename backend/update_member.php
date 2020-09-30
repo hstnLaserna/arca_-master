@@ -7,7 +7,7 @@
         $query = "SELECT `id` FROM `member` WHERE `osca_id` = '$selected_id'";
         $result = $mysqli->query($query);
         $row_count = mysqli_num_rows($result);
-        if($row_count == 0) { echo "ID Does not exist Member's ID : $selected_id";} else {
+        if($row_count == 0) { echo "ID Does not exist. Member's ID : $selected_id";} else {
 
             $row = mysqli_fetch_array($result);
             $selected_id = $row['id'];

@@ -72,11 +72,18 @@
                 ?>
 
             </table>
+            <?php 
+                if($displayed_items < $row_count_orig){
+                    echo '<button class="btn btn-block btn-dark" id="expand-complaints">Show More</button>';
+                } else {
+                    echo "<div class='eol'> * * *</div>";
+                }
+            ?>
             
             <?php
             
         } else {
-            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No filed complaints </div>";
+            echo "<div class='eol'> * * *</div>";
         }
         
         //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
@@ -88,14 +95,14 @@
 <div class="_dfg987">
 </div>
 
-<button class="btn btn-block btn-dark" id="expand-complaints">Show More</button>
+
 
 <script>
 $(document).ready(function(){
     var osca_id = <?php echo $osca_id; ?>;
     var ctr_complaints = 1;
 
-    $("#expand-complaints").click(function() {
+    $("body").on('click', "#expand-complaints", function () {
         ctr_complaints++;
         $("#complaints-list").load("../backend/display_complaints_member.php #complaints-list", {osca_id : "<?php echo $osca_id;?>", counter: ctr_complaints});
     });

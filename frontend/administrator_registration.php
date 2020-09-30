@@ -81,7 +81,7 @@
           -->
        </div>
       </form>
-      <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
+      <button type="button" class="btn btn-light btn-lg btn-block" id="submit">Submit</button>
     </div>
 
   </div>

@@ -37,23 +37,24 @@
         $transaction_query = "SELECT *
                                 FROM `view_lost_report`
                                 WHERE `osca_id` = '$osca_id'
-                                ORDER BY `report_date` ASC
+                                ORDER BY `report_date` DESC
                                 LIMIT $displayed_items;";
         $result = $mysqli->query($transaction_query);
         $row_count_display = mysqli_num_rows($result);
         if($row_count_display != 0)
         {?>
-            <table class="table table-hover">
-                <th>Date Reported</th>
-                <th>Status</th>
+            <table class="table">
+                <th class="lost">Date Reported</th>
+                <th class="lost">Status</th>
                 <?php
                 while($row = mysqli_fetch_array($result))
                 {
                     $report_date = $row['report_date'];
                     $id = $row['lost_id'];
                     $desc = ($row['desc'] == null || $row['desc'] == "")? "Unserved": $row['desc'];
+                    $is_served = ($row['desc'] != null || $row['desc'] != "")? "served": "unserved";
                     ?>
-                    <tr id="lostid_<?php echo $id?>" class="lost_row">
+                    <?php echo "<tr id='lostid_$id' class='lost_row $is_served'>"?>
                         <td><?php echo $report_date ?></td>
                         <td><?php echo $desc ?></td>
                     </tr>
@@ -63,11 +64,15 @@
                 ?>
 
             </table>
-            
-            <?php
+            <?php 
+                if($displayed_items < $row_count_orig){
+                    echo '<button class="btn btn-block btn-dark" id="expand-lost-report">Show More</button>';
+                } else {
+                    echo "<div class='eol'> * * *</div>";
+                }
             
         } else {
-            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No loss reported</div>";
+            echo "<div class='eol'> * * *</div>";
         }
         
         //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
@@ -79,19 +84,17 @@
 
 </div>
 
-<button class="btn btn-block btn-dark" id="expand-lost-report">Show More</button>
-
 <script>
 $(document).ready(function(){
     var osca_id = <?php echo $osca_id; ?>;
     var ctr_lost_report = 1;
 
-    $("#expand-lost-report").click(function() {
+    $("body").on('click', "#expand-lost-report", function () {
         ctr_lost_report++;
         $("#lost-report-list").load("../backend/display_lost_report.php #lost-report-list", {osca_id : "<?php echo $osca_id;?>", counter: ctr_lost_report});
     });
 
-    $("body").on('click', ".lost_row", function () {
+    $("body").on('click', ".unserved", function () {
         var id= "<?php echo $osca_id;?>";
         var lost_id = $(this).attr("id").replace("lostid_", "");
         $('#_8d9s02').load("../frontend/response_lost.php", {id:id, lost_id:lost_id},function(){

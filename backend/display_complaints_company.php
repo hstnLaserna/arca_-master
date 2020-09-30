@@ -22,7 +22,7 @@
         if($row_count == 1){
 
             $counter = 1;
-            $items_per_page = 2;
+            $items_per_page = 5;
             $WHERE_CLAUSE = " WHERE company_tin = '$company_tin' ";
 
             if(isset($_POST['counter'])){ // Meaning user prompted to view more transaction data. Disable the "transactions for the last month" condition.
@@ -77,8 +77,11 @@
                     ?>
 
                 </table>
-                
                 <?php
+                    echo "($displayed_items < $row_count_orig)";
+                    if($displayed_items < $row_count_orig){
+                        echo '<button class="btn btn-block btn-dark" id="expand">Show More</button>';
+                    }
                 
             } else {
                 echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No Complaints for this Company</div>";
@@ -94,14 +97,14 @@
 <div class="_dfg987">
 </div>
 
-<button class="btn btn-block btn-dark" id="expand">Show More</button>
+
 
 <script>
 $(document).ready(function(){
     var osca_id = <?php echo $osca_id; ?>;
     var counter = 1;
 
-    $("#expand").click(function() {
+    $("body").on('click', "#expand", function () {
         counter++;
         var type = "<?php echo $type; ?>";
         $("#comps").load("../backend/display_complaints_company.php #comps", {company_tin : "<?php echo $company_tin;?>", counter: counter});

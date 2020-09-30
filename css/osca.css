@@ -22,6 +22,9 @@ a:hover {
 a.dropdown-item:active {
   background-color: #58b3be;
   text-decoration: none;
+  outline: 0;
+  border: none;
+  -moz-outline-style: none;
 }
 
 .page-link {
@@ -219,6 +222,18 @@ img.avatar:hover {
   display: block;
 }
 
+th.lost {
+  cursor: default;
+}
+
+.unserved {
+  cursor: pointer;
+}
+
+.unserved:hover {
+  background-color: #f7f8f6;
+  cursor: pointer;
+}
 
 .profile-item {
   background-color: #fff;
@@ -316,6 +331,17 @@ table.modal-form td{
   vertical-align: middle !important;
 }
 
+div.eol{
+  display: block;
+  text-align: center;
+  color: #7e7e7e;
+  border-top: 1px solid #dee2e6 !important;
+  padding: 2rem 0 !important;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
 
 table.users td{
   vertical-align: middle !important;
@@ -570,9 +596,12 @@ i.sort_icon{
 }
 
 .profile-picture-container {
-  margin: auto;
+  background-color: #fff;
   position: relative;
   max-width: 150px !important;
+  margin: auto;
+  padding: 0.3rem;
+  border-radius: 10%;
 }
 .profile-picture{
   border-radius: 1rem;
@@ -597,7 +626,7 @@ i.sort_icon{
 }
 
 .profile-picture-container:hover .profile-picture {
-  background-color: rgba(0, 0, 0);
+  /*background-color: rgba(0, 0, 0);*/
   opacity: 0.6;
 }
 

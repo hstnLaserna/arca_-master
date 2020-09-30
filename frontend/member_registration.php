@@ -139,10 +139,6 @@
                         <input type="text" class="form-control" name="nfc_serial">
                     </div>
                     <div>
-                        OSCA Number
-                        <input type="text" class="form-control" name="osca_id" id="osca_id">
-                    </div> 
-                    <div>
                         Membership date <small>Default: <em>(<?php echo date("Y-m-d"); ?>)</em></small>
                         <input type="date" class="form-control" name="membership_date" value ="<?php echo date("Y-m-d"); ?>">
                     </div>
@@ -152,7 +148,7 @@
                     </div>
                 </div>
             </form>
-            <button type="button" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
+            <button type="button" class="btn btn-light btn-lg btn-block" id="submit">Submit</button>
         </div>
     </div>
 </div>
@@ -172,14 +168,8 @@ $('title').replaceWith('<title>OSCA - Member Registration</title>');
         $("#submit").click(function(){
             $.post("../backend/create_member.php", $("#newMember").serialize(), function(d){
             var osca_id = $('#osca_id').val();
-            if(d == "true") {
-                
-                var url = '../frontend/member_profile.php';
-                var form = $('<form action="' + url + '" method="get">' +
-                                    '<input type="hidden" name="member_id" value="' + osca_id + '" />' +
-                            '</form>');
-                $('div#_1asg2').append(form);
-                form.submit();
+            if(d.trim() == "true") {
+                location.replace("../frontend/members.php");
             } else {
                 alert(d);
             }

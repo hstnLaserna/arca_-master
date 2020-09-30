@@ -125,14 +125,17 @@
                 ?>
 
             </table>
-            
             <?php
+                if($displayed_items < $row_count_orig){
+                    echo '<button class="btn btn-block btn-dark" id="expand">Show More</button>';
+                } else {
+                    echo "<div class='eol'> * * *</div>";
+                }
             
         } else {
-            echo "<div class='rounded col col-sm-6 m-auto p-3 text-center'>No transaction in the record for this Company</div>";
+            echo "<div class='eol'> * * *</div>";
         }
         
-        //echo "Displayed: $row_count_display All: $row_count_orig Displayed Items: $displayed_items";
         mysqli_close($mysqli);
     }
     ?>
@@ -141,14 +144,12 @@
 <div class="_dfg987">
 </div>
 
-<button class="btn btn-block btn-dark" id="expand">Show More</button>
-
 <script>
 $(document).ready(function(){
     var osca_id = <?php echo $osca_id; ?>;
     var counter = 1;
 
-    $("#expand").click(function() {
+    $("body").on('click', "#expand", function () {
         counter++;
         var type = "<?php echo $type; ?>";
         $("#trans").load("../backend/display_transactions_company.php #trans", {company_tin : "<?php echo $company_tin;?>", counter: counter, business_type: "<?php echo $type; ?>" });
