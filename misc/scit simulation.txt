@@ -1,0 +1,10 @@
+TO simulate without serial:
+
+BE/new_transaction.php[52] = uncommented
+
+BE/create_drug.php[10 - 32] = uncommented simulation codeblock
+BE/create_drug.php[35] = commented serial_read();
+
+
+BE/terminal_scripts.php[87] = commented
+BE/terminal_scripts.php[88] = uncommented

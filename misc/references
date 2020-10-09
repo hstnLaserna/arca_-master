@@ -60,13 +60,6 @@ Notes:
 
 
 
-Recommendations:
-    For future studies, expand customer coverage to PWDs.
-
-    Create study /statistics to determine the effects of the system. If helpful.
-
-
-
 // 2020-08-16
 hi, tanong po.
 
@@ -141,3 +134,13 @@ AN10927 - MIFARE product and handling of UIDs - 5 July 2018 - Rev. 4.1 - 190741
 
 
 [1]
+
+
+
+Recommendations:
+    For future studies, expand customer coverage to PWDs.
+
+    Create study/statistics to determine the effects of the system. If helpful.
+    gibberish data e.g. if either POS or Terminal is newly booted up
+        Replug Serial port
+        

@@ -1,0 +1,46 @@
+-- pharmacy
+
+-- general
+./
+after read, can't press tarns history. If pressed, after receiving transaction data from POS, will display trans history instead of displaying received transaction details
+
+./ transaction history
+	still waiting for transaction
+
+./ external PHP script:  read from serial
+
+
+./ if the data from serila != null
+	redirect to transaction page
+
+./ check FE/read.php
+
+./ running of serial ports in all FE/BE scripts
+
+[ ] SUPPLEMENT DRUGS NOT DISCOUNTED
+
+
+./  dawson khaleed di nagdisplay yung history
+./ items doesnt display in trans
+./ no display in disabled nfc
+
+
+-----
+
+./ invalid dosage -> still calling create_drug.php
+./ incorrect computation of dosage (dose from previous is not being included)
+./ looping ng invalid drug kahit isang beses lang pinindot
+./ read from cardless senior transaction
+./ override
+
+./ display 'guardians list' on SCIT
+	-> view_members_with_guardians
+	-> arca_-master -> member profile
+	-> scit -> read
+
+RECOMMENDATION
+	[] request additional guardian with guardian's registration on mobile app.
+		\-> submit details using mobile and wait for OSCA to approve the registered guardian
+		
+	[] include which guardian bought the authorized
+	transaction

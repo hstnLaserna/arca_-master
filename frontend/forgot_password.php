@@ -21,9 +21,9 @@ if (isset($_SESSION['login_user'])) {
     <div class="container">
         <div class="content">
             <div class="first-column">
-                <img class="img-logo" src="../resources/images/osca_logo_new.png" class="icon" alt="User Icon">
+                <img class="img-logo" src="../resources/images/OSCA logo.png" class="icon" alt="User Icon">
                 <h2 class="title title-primary">OFFICE FOR THE SENIOR CITIZEN AFFAIRS</h2>
-                <p class="description description-primary">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p class="description description-primary">Giving our beloved Senior Citizens the possibilities of a Smart City experience!</p>
                 <!-- <p class="description description-primary">please login with your personal info</p> -->
             </div>
             <div class="second-column">
@@ -45,7 +45,7 @@ if (isset($_SESSION['login_user'])) {
                         <!-- <input type="password" name="password" placeholder="Pasword" required=""> -->
                     </label>
                     <p class="message"><?php echo $error; ?></p>
-                    <button class="btn btn-second" type="submit" name="submit" value=" Login ">Login</button>
+                    <button class="btn btn-second" type="submit" name="submit" value=" Login ">Submit</button>
                     <!-- <p class=footer>Copyright © 2020</p> -->
                 </form>
             </div>

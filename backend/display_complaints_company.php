@@ -78,9 +78,10 @@
 
                 </table>
                 <?php
-                    echo "($displayed_items < $row_count_orig)";
                     if($displayed_items < $row_count_orig){
                         echo '<button class="btn btn-block btn-dark" id="expand">Show More</button>';
+                    } else {
+                        echo "<div class='eol'> * * *</div>";
                     }
                 
             } else {

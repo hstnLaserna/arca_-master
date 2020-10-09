@@ -147,9 +147,8 @@ LEFT JOIN company c ON cr.company_id = c.id
 
 DROP VIEW IF EXISTS `view_drugs`;
 CREATE VIEW `view_drugs` AS 
-SELECT id FROM `db_osca`.`drug`;
+SELECT * FROM `db_osca`.`drug`;
 
-use db_osca;
 DROP VIEW IF EXISTS `view_qr_request`;
 CREATE VIEW `view_qr_request` AS 
 SELECT *, IF(`trans_date` >(now() - INTERVAL 1 DAY), 0, 1) as `is_expired` FROM `db_osca`.`qr_request`;

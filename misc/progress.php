@@ -259,3 +259,20 @@ The OSCA can still issue physical IDs for the senior citizens. Pero to avail dis
 
 
     //read from nfc
+
+new_transaction[69]
+	$_SESSION['transaction_from_pos'] = $json_string;
+terminal_scripts[88]
+	$json_file = fopen("../script/serial_invalid_drug.json", "w") or die("Unable to open file!");
+	
+	
+powers of override:
+	still transact even if invalid dosage
+	still transact even if drugs are unknown (store in desc column)
+	cardless senior
+	
+DELETE FROM pharmacy WHERE transaction_id = 86;
+DELETE FROM transaction WHERE id = 86;
+DELETE FROM drug WHERE id >= 13;
+
+ALTER TABLE drug AUTO_INCREMENT = 13;

@@ -1,6 +1,20 @@
 body {
   background-color: #F7F8F6;
 }
+/*
+.user-dashboard{
+  height: 100vh - 66px;
+}
+*/
+
+.landing-page{
+  height: 80vh;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-x: unset;
+  /*text-align: center;*/
+}
 
 .container, .container-lg, .container-md, .container-sm, .container-xl {
   max-width: 1140px;
@@ -37,15 +51,16 @@ a.dropdown-item:active {
   border-color: #dae0e5;
   margin-top: 3px;
 }
-.btn-link {
-  color: #58b3be !important;
-}
-
 .btn-light:hover {
   color: #000;
   background-color: #9ce0df;
   border-color: #dae0e5;
 }
+
+.btn-link {
+  color: #58b3be !important;
+}
+
 /* ----------- */
 .btn-close {
   color: #fff;
