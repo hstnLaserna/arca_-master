@@ -1,0 +1,10 @@
+changes:
+home.css
+	- added outline: none
+osca.css
+	- added on nav-link {outline:none}
+header.php
+	- reposition administrator
+	- commented scan
+member registration
+	- password {display: none;}

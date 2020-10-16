@@ -223,7 +223,8 @@ BEGIN
     INNER JOIN address a ON ajt.address_id = a.id
     INNER JOIN city_code cc ON LOWER(a.city) = LOWER(cc.citymunDesc)
       SET
-      m.osca_id =  CONCAT(provCode, '-', substr(year(membership_date), 3,3), m.member_count)
+      m.osca_id =  CONCAT(provCode, '-', substr(year(membership_date), 3,3), m.member_count),
+      m.password = MD5(CONCAT(provCode, '-', substr(year(membership_date), 3,3), m.member_count))
     WHERE m.id = @member_inserted_id;
 
 END;;

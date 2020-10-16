@@ -41,6 +41,32 @@ after read, can't press tarns history. If pressed, after receiving transaction d
 RECOMMENDATION
 	[] request additional guardian with guardian's registration on mobile app.
 		\-> submit details using mobile and wait for OSCA to approve the registered guardian
-		
-	[] include which guardian bought the authorized
-	transaction
+	
+	[] include which guardian bought the authorized transaction
+	
+transactions list on the admin page, necessary ba? why: data privacy
+
+
+[./]acceptance
+[./]mktg reqs
+	page 42-46
+	71, 76 [table XIX, XXIV]
+	144
+[./] screenshots
+[]reco conclu
+[./]objectives: dagdag yung software:
+	- validation drug transactions
+	- cardless and authorization of reps
+	- trans history (on pharmacy)
+	- override 
+	 
+
+[]From Appendix to Researchers Profile.docx
+	- Appendix of poster
+	- codes sa dulo
+	
+	
+QR code for non pharma establishments
+
+
+Any clerk who can type a Senior CItizen's Tag can see the senior citizen's details and transactions
