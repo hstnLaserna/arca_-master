@@ -3,6 +3,7 @@
 A web application which  manages the registered senior  citizen members. This also  contains and manages the  status of on-line SCIT, or  Senior Citizen Information  Terminals. It is created as part of our Design Project. 
 
 # Demo
+[![Watch the video](https://img.youtube.com/vi/https://youtu.be/880fpJ4VjQ0/maxresdefault.jpg)](https://youtu.be/880fpJ4VjQ0)
 
 # Developer
 * **Justine Laserna** - github.com/hstnLaserna
