@@ -1,4 +1,4 @@
-# OSCA Web App (Design Project)
+# OSCA Administration Web App (Design Project)
 <img src="https://user-images.githubusercontent.com/42314281/109276946-9dcbdf00-7851-11eb-9d85-b8ba567e2190.png" align="center" width="150" alt="OSCA">
 A web application which  manages the registered senior  citizen members. This also  contains and manages the  status of on-line SCIT, or  Senior Citizen Information  Terminals. It is created as part of our Design Project. 
 
